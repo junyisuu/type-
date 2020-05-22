@@ -1,12 +1,45 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Segment, Divider, Input, Button, Grid, Form } from 'semantic-ui-react';
+import { Link, Redirect } from 'react-router-dom';
+import { Segment, Input, Button, Grid } from 'semantic-ui-react';
 
 export default class Play extends PureComponent {
+	state = {
+		created: false,
+	};
+
+	async createRoom(event) {
+		event.preventDefault();
+
+		const { selfUser } = this.props;
+		const { apiPath } = this.props;
+
+		try {
+			const res = await fetch(`${apiPath}/createRoom`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			});
+			console.log(res);
+			this.setState({
+				created: true,
+			});
+		} catch (err) {
+			console.log(err);
+		}
+	}
+
 	render() {
+		const { created } = this.state;
+
+		if (created) {
+			return <Redirect to='/lobby' />;
+		}
+
 		return (
 			<Segment placeholder>
 				<Grid>
-					<Grid.Row columns={3} stackable='true'>
+					<Grid.Row columns={2} stackable='true'>
 						<Grid.Column>
 							<Button
 								color='teal'
@@ -14,11 +47,12 @@ export default class Play extends PureComponent {
 								icon='add'
 								labelPosition='left'
 								style={{ marginBottom: '10px' }}
+								onClick={this.createRoom.bind(this)}
 							/>
 						</Grid.Column>
-						<Grid.Column>
+						{/* <Grid.Column>
 							<Button color='teal'>Join Random Room</Button>
-						</Grid.Column>
+						</Grid.Column> */}
 						<Grid.Column>
 							<Input
 								action={{ color: 'teal', content: 'Join' }}

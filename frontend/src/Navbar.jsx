@@ -47,7 +47,6 @@ export default class Navbar extends PureComponent {
 							<Menu.Item
 								name='logout'
 								active={activeItem === 'logout'}
-								onClick={this.handleItemClick}
 								onClick={() => {
 									setSelfUser(null);
 									localStorage.removeItem('token');
