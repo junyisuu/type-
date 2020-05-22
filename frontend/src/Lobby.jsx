@@ -1,11 +1,11 @@
 import React, { PureComponent, Fragment } from 'react';
 
 export default class Lobby extends PureComponent {
-	state = {};
+	// state = {};
 
-	componentDidMount() {
-		const { createRoom } = this.props.location.state;
-	}
+	// componentDidMount() {
+	// 	const { createRoom } = this.props.location.state;
+	// }
 
 	render() {
 		return (

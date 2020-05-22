@@ -3,10 +3,13 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Navbar from './Navbar';
 import Landing from './Landing';
-import Play from './Play';
 import Login from './Login';
 import Profile from './Profile';
 import Register from './Register';
+
+import Play from './Play';
+import Lobby from './Lobby';
+import Type from './Type';
 
 export default class App extends PureComponent {
 	state = {
@@ -77,7 +80,6 @@ export default class App extends PureComponent {
 							path='/'
 							render={() => <Landing selfUser={selfUser} />}
 						/>
-						<Route exact path='/play' render={() => <Play />} />
 						<Route
 							exact
 							path='/login'
@@ -99,6 +101,33 @@ export default class App extends PureComponent {
 							path='/register'
 							render={() => (
 								<Register
+									apiPath={apiPath}
+									selfUser={selfUser}
+									setSelfUser={setSelfUser}
+								/>
+							)}
+						/>
+						<Route
+							exact
+							path='/play'
+							render={() => <Play apiPath={apiPath} />}
+						/>
+						<Route
+							exact
+							path='/lobby'
+							render={() => (
+								<Lobby
+									apiPath={apiPath}
+									selfUser={selfUser}
+									setSelfUser={setSelfUser}
+								/>
+							)}
+						/>
+						<Route
+							exact
+							path='/type'
+							render={() => (
+								<Type
 									apiPath={apiPath}
 									selfUser={selfUser}
 									setSelfUser={setSelfUser}

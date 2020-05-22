@@ -1,5 +1,5 @@
-import React, { PureComponent, Fragment } from 'react';
-import { Link, Redirect } from 'react-router-dom';
+import React, { PureComponent } from 'react';
+import { Redirect } from 'react-router-dom';
 import { Segment, Input, Button, Grid } from 'semantic-ui-react';
 
 export default class Play extends PureComponent {
@@ -10,9 +10,8 @@ export default class Play extends PureComponent {
 	async createRoom(event) {
 		event.preventDefault();
 
-		const { selfUser } = this.props;
+		// const { selfUser } = this.props;
 		const { apiPath } = this.props;
-
 		try {
 			const res = await fetch(`${apiPath}/createRoom`, {
 				method: 'POST',
