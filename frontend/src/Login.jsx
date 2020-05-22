@@ -3,13 +3,10 @@ import { Redirect, Link } from 'react-router-dom';
 import AbortController from 'abort-controller';
 import {
 	Segment,
-	Divider,
-	Input,
 	Button,
 	Grid,
 	Form,
 	Header,
-	Image,
 	Message,
 } from 'semantic-ui-react';
 
