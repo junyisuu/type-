@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import Navbar from './Navbar';
 import Landing from './Landing';
-import About from './About';
+import Play from './Play';
 import Login from './Login';
 import Profile from './Profile';
 import Register from './Register';
@@ -77,7 +77,7 @@ export default class App extends PureComponent {
 							path='/'
 							render={() => <Landing selfUser={selfUser} />}
 						/>
-						<Route exact path='/about' render={() => <About />} />
+						<Route exact path='/play' render={() => <Play />} />
 						<Route
 							exact
 							path='/login'

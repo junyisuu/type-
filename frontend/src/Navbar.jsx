@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Menu } from 'semantic-ui-react';
 
 export default class Navbar extends PureComponent {
@@ -13,7 +13,7 @@ export default class Navbar extends PureComponent {
 
 		return (
 			<div>
-				<Menu pointing secondary>
+				<Menu pointing secondary style={{ 'font-size': '120%' }}>
 					<Menu.Item
 						as={NavLink}
 						exact
@@ -34,12 +34,12 @@ export default class Navbar extends PureComponent {
 					<Menu.Item
 						as={NavLink}
 						exact
-						to='/about'
-						name='about'
-						active={activeItem === 'about'}
+						to='/play'
+						name='play'
+						active={activeItem === 'play'}
 						onClick={this.handleItemClick}
 					>
-						About
+						Play
 					</Menu.Item>
 
 					<Menu.Menu position='right'>
