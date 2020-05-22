@@ -5,27 +5,32 @@ export default class Play extends PureComponent {
 	render() {
 		return (
 			<Segment placeholder>
-				<Grid centered columns={2} relaxed='very' stackable>
-					<Grid.Column>
-						<Button
-							color='teal'
-							content='Create New Room'
-							icon='add'
-							labelPosition='left'
-						/>
-					</Grid.Column>
-
-					<Grid.Column verticalAlign='middle'>
-						<Input
-							action={{ color: 'blue', content: 'Join' }}
-							icon='search'
-							iconPosition='left'
-							placeholder='Room ID'
-						/>
-					</Grid.Column>
+				<Grid>
+					<Grid.Row columns={3} stackable='true'>
+						<Grid.Column>
+							<Button
+								color='teal'
+								content='Create New Room'
+								icon='add'
+								labelPosition='left'
+								style={{ marginBottom: '10px' }}
+							/>
+						</Grid.Column>
+						<Grid.Column>
+							<Button color='teal'>Join Random Room</Button>
+						</Grid.Column>
+						<Grid.Column>
+							<Input
+								action={{ color: 'teal', content: 'Join' }}
+								icon='search'
+								iconPosition='left'
+								placeholder='Room ID'
+								centered='true'
+							/>
+						</Grid.Column>
+					</Grid.Row>
+					<Grid.Row></Grid.Row>
 				</Grid>
-
-				<Divider vertical>Or</Divider>
 			</Segment>
 		);
 	}
