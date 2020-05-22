@@ -134,6 +134,8 @@ export default class Register extends PureComponent {
 					<div class='ui pointing below red basic label'>{errorMessage}</div>
 				) : null}
 
+				<h1>Sign Up</h1>
+
 				<form className='ui form'>
 					<div className='field'>
 						<label>Username</label>
@@ -158,17 +160,6 @@ export default class Register extends PureComponent {
 							placeholder='Password'
 							value={password}
 							onChange={this.onPasswordChange.bind(this)}
-						/>
-					</div>
-
-					<div className='field'>
-						<label>Confirm Password</label>
-						<input
-							type='password'
-							name='password-confirm'
-							placeholder='Confirm Password'
-							value={passwordConfirmed}
-							onChange={this.onPasswordConfirmedChange.bind(this)}
 						/>
 					</div>
 
