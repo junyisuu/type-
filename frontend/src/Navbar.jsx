@@ -13,7 +13,7 @@ export default class Navbar extends PureComponent {
 
 		return (
 			<div>
-				<Menu pointing secondary style={{ 'font-size': '120%' }}>
+				<Menu pointing secondary style={{ fontSize: '120%' }}>
 					<Menu.Item
 						as={NavLink}
 						exact
@@ -47,7 +47,6 @@ export default class Navbar extends PureComponent {
 							<Menu.Item
 								name='logout'
 								active={activeItem === 'logout'}
-								onClick={this.handleItemClick}
 								onClick={() => {
 									setSelfUser(null);
 									localStorage.removeItem('token');

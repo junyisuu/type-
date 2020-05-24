@@ -1,5 +1,13 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
+import {
+	Segment,
+	Button,
+	Grid,
+	Form,
+	Header,
+	Message,
+} from 'semantic-ui-react';
 
 export default class Register extends PureComponent {
 	state = {
@@ -9,7 +17,6 @@ export default class Register extends PureComponent {
 		checked: false,
 		username: '',
 		password: '',
-		passwordConfirmed: '',
 		errorMessage: '',
 	};
 
@@ -43,7 +50,7 @@ export default class Register extends PureComponent {
 
 		const { setSelfUser } = this.props;
 
-		const { username, password, passwordConfirmed } = this.state;
+		const { username, password } = this.state;
 		console.log(username, password);
 
 		if (username.length < 3 || username.length > 32) {
@@ -62,15 +69,6 @@ export default class Register extends PureComponent {
 				loading: false,
 				errorMessage:
 					'Your password must be at least 5 characters and can not be more than 256 characters.',
-			});
-			return;
-		}
-
-		if (passwordConfirmed !== password) {
-			this.setState({
-				failedPassword: true,
-				loading: false,
-				errorMessage: 'The passwords you typed in does not match.',
 			});
 			return;
 		}
@@ -104,10 +102,6 @@ export default class Register extends PureComponent {
 		this.setState({ password: event.target.value });
 	}
 
-	onPasswordConfirmedChange(event) {
-		this.setState({ passwordConfirmed: event.target.value });
-	}
-
 	handleCheckboxChange = (event) =>
 		this.setState({ checked: event.target.checked });
 
@@ -121,7 +115,6 @@ export default class Register extends PureComponent {
 		const {
 			username,
 			password,
-			passwordConfirmed,
 			loading,
 			failedUsername,
 			failedPassword,
@@ -130,48 +123,67 @@ export default class Register extends PureComponent {
 
 		return (
 			<Fragment>
-				{failedUsername ? (
-					<div class='ui pointing below red basic label'>{errorMessage}</div>
-				) : null}
+				<Grid
+					textAlign='center'
+					style={{ height: '80vh' }}
+					verticalAlign='middle'
+				>
+					<Grid.Column style={{ maxWidth: 450 }}>
+						<Header as='h2' color='teal' textAlign='center'>
+							{/* <Image src='/logo.png' />  */}
+							Sign up for free to start typing!
+						</Header>
+						<Form size='large'>
+							<Segment stacked>
+								{failedUsername ? (
+									<div class='ui pointing below red basic label'>
+										{errorMessage}
+									</div>
+								) : null}
+								<Form.Input
+									autoFocus
+									fluid
+									icon='user'
+									iconPosition='left'
+									placeholder='Username'
+									maxLength='32'
+									value={username}
+									onChange={this.onUsernameChange.bind(this)}
+								/>
 
-				<h1>Sign Up</h1>
+								{failedPassword ? (
+									<div class='ui pointing below red basic label'>
+										{errorMessage}
+									</div>
+								) : null}
 
-				<form className='ui form'>
-					<div className='field'>
-						<label>Username</label>
-						<input
-							type='text'
-							ame='username'
-							placeholder='Username'
-							value={username}
-							onChange={this.onUsernameChange.bind(this)}
-						/>
-					</div>
+								<Form.Input
+									fluid
+									icon='lock'
+									iconPosition='left'
+									placeholder='Password'
+									type='password'
+									maxLength='256'
+									value={password}
+									onChange={this.onPasswordChange.bind(this)}
+								/>
 
-					{failedPassword ? (
-						<div class='ui pointing below red basic label'>{errorMessage}</div>
-					) : null}
-
-					<div className='field'>
-						<label>Password</label>
-						<input
-							type='password'
-							name='password'
-							placeholder='Password'
-							value={password}
-							onChange={this.onPasswordChange.bind(this)}
-						/>
-					</div>
-
-					<button
-						className='ui primary button'
-						type='button'
-						onClick={() => this.createAccount()}
-						disabled={loading}
-					>
-						Submit
-					</button>
-				</form>
+								<Button
+									color='teal'
+									fluid
+									size='large'
+									disabled={loading}
+									onClick={() => this.createAccount()}
+								>
+									Sign Up
+								</Button>
+							</Segment>
+						</Form>
+						<Message>
+							Already have an account? <Link to='/login'>Log In</Link>
+						</Message>
+					</Grid.Column>
+				</Grid>
 			</Fragment>
 		);
 	}

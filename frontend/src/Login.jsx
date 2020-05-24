@@ -1,6 +1,14 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 import AbortController from 'abort-controller';
+import {
+	Segment,
+	Button,
+	Grid,
+	Form,
+	Header,
+	Message,
+} from 'semantic-ui-react';
 
 export default class Login extends PureComponent {
 	state = {
@@ -81,35 +89,61 @@ export default class Login extends PureComponent {
 
 		return (
 			<Fragment>
-				<h1>Login</h1>
-				<p>This is a placeholder</p>
-				<div className='ui input'>
-					<input
-						type='text'
-						placeholder='Username'
-						maxLength='32'
-						autoFocus
-						value={username}
-						onChange={this.onUsernameChange.bind(this)}
-					/>
-				</div>
-				<div className='ui input'>
-					<input
-						type='password'
-						placeholder='Password'
-						maxLength='256'
-						value={password}
-						onChange={this.onPasswordChange.bind(this)}
-					/>
-				</div>
-				<button
-					className='ui primary button'
-					onClick={() => this.login()}
-					disabled={loading}
+				<Grid
+					textAlign='center'
+					style={{ height: '80vh' }}
+					verticalAlign='middle'
 				>
-					Log In
-				</button>
-				{failed ? <p>Failed to log in</p> : null}
+					<Grid.Column style={{ maxWidth: 450 }}>
+						<Header as='h2' color='teal' textAlign='center'>
+							{/* <Image src='/logo.png' />  */}
+							Log-in to your account
+						</Header>
+						<Form size='large'>
+							<Segment stacked>
+								{failed ? (
+									<p style={{ color: 'red' }}>
+										Incorrect username or password.
+									</p>
+								) : null}
+								<Form.Input
+									autoFocus
+									fluid
+									icon='user'
+									iconPosition='left'
+									placeholder='Username'
+									maxLength='32'
+									value={username}
+									onChange={this.onUsernameChange.bind(this)}
+								/>
+
+								<Form.Input
+									fluid
+									icon='lock'
+									iconPosition='left'
+									placeholder='Password'
+									type='password'
+									maxLength='256'
+									value={password}
+									onChange={this.onPasswordChange.bind(this)}
+								/>
+
+								<Button
+									color='teal'
+									fluid
+									size='large'
+									disabled={loading}
+									onClick={() => this.login()}
+								>
+									Login
+								</Button>
+							</Segment>
+						</Form>
+						<Message>
+							Don't have an account? <Link to='/register'>Sign Up</Link>
+						</Message>
+					</Grid.Column>
+				</Grid>
 			</Fragment>
 		);
 	}
