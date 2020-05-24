@@ -137,7 +137,7 @@ export default class Type extends PureComponent {
 			this.setState({
 				// if Shift then gets e.code which is either "ShiftLeft" or "ShiftRight"
 				keyPressed: e.key === 'Shift' ? e.code : e.key,
-				keyCode: e.keyCode,
+				// keyCode: e.keyCode,
 			});
 
 			const { keyPressed } = this.state;
@@ -170,19 +170,107 @@ export default class Type extends PureComponent {
 					this.handleWordEnd();
 				}
 
+				// if it's a space character
 				if (keyPressed == ' ') {
 					this.refs.screen.setScrollPosition();
 				}
+
+				// if we're at the end of the excerpt
+				if (
+					this.state.remainingText === '' ||
+					this.state.remainingText === ' '
+				) {
+					clearInterval(this.intervalID);
+					this.handleWordEnd();
+					this.setState({
+						showStats: true,
+					});
+				}
+			} else {
+				// if user typed the incorrect character
+				this.setState({
+					// because it is incorrect, add it to the incorrectArray
+					// concatenate incorrectArray with textLetter using spread syntax (...)
+					incorrectArray: [...incorrectArray, textLetter],
+					incorrect: true,
+					incorrectWordCurrent: true,
+				});
+				this.setState({
+					accuracy: String(
+						(
+							(this.state.completedText.length /
+								(this.state.completedText.length +
+									this.state.incorrectArray.length)) *
+							100
+						).toFixed(0)
+					),
+				});
 			}
 		}
 	}
 
+	handleWordEnd() {
+		// if (this.state.incorrectWordCurrent === true) {
+		// 	let misspeltWord = this.state.completedText.split(" ").splice(-1)[0];
+		// 	this.setState(prevState => ({
+
+		// 	}))
+		// }
+
+		this.setState({
+			wpm:
+				this.state.currentCount > 0
+					? (
+							(this.state.wordCount + 1) /
+							(this.state.currentCount / 60)
+					  ).toFixed(0)
+					: 0,
+			wordCount: this.state.wordCount + 1,
+			incorrectWordCurrent: false,
+		});
+	}
+
 	render() {
+		const {
+			accuracy,
+			showStats,
+			incorrectArr,
+			wpm,
+			currentCount,
+			inputSelected,
+			incorrectWordsArr,
+			screenFade,
+			completedText,
+			inputText,
+			remainingText,
+			keyCode,
+			incorrect,
+			correctLetter,
+			correctLetterCase,
+			caps,
+			keyboardScaler,
+			showMenu,
+		} = this.state;
 		return (
-			<Fragment>
-				<h1>Type Page</h1>
-				<p>This is a placeholder</p>
-			</Fragment>
+			<div className='Type'>
+				<div className='main' ref='main'>
+					<Progress
+						accuracy={accuracy}
+						incorrectArr={incorrectArr}
+						wpm={wpm}
+						currentCount={currentCount}
+						incorrectWordsArr={incorrectWordsArr}
+						displayText={this.displayText}
+					/>
+					<Screen
+						screenFade={screenFade}
+						completedText={completedText}
+						inputText={inputText}
+						remainingText={remainingText}
+						ref='screen'
+					/>
+				</div>
+			</div>
 		);
 	}
 }
