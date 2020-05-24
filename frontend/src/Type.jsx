@@ -1,6 +1,182 @@
 import React, { PureComponent, Fragment } from 'react';
 
 export default class Type extends PureComponent {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			inputText: '',
+			keyPressed: null,
+			keyCode: null,
+			progress: 0,
+			incorrectArray: [],
+			remainingText: '',
+			completedText: '',
+			accuracy: 100,
+			incorrect: false,
+			wordCount: 0,
+			wpm: 0,
+			currentCount: 0,
+			timeIncreasing: false,
+			correctLetter: '',
+			correctLetterCase: '',
+			inputSelected: null,
+			showStats: false,
+			keyboardScaler: '100%',
+			incorrectWordsArray: [],
+			incorrectWordCurrent: false,
+			screenFade: true,
+			caps: '',
+			showMenu: false,
+		};
+
+		this.genFocus = this.genFocus.bind(this);
+		this.genBlur = this.genBlur.bind(this);
+		this.displayText = this.displayText.bind(this);
+	}
+
+	componentDidMount() {
+		// listen for keyboard typing
+		document.addEventListener('keydown', (e) => {
+			this.handleKeyPress(e);
+		});
+	}
+
+	displayText(inputType, fromResults = false) {
+		let contentText = '';
+		let nextText = false;
+
+		if (inputType === 'nextText') {
+			nextText = true;
+			inputType = this.state.inputSelected;
+		}
+
+		// contentText = fetch (GET excerpt from database)
+
+		while (nextText === true && contentText === this.state.inputText) {
+			// contentText = fetch (GET excerpt from database)
+			nextText = false;
+		}
+
+		this.setState({
+			inputText: contentText,
+			remainingText: contentText,
+			completedText: '',
+			progress: 0,
+			incorrectArray: [],
+			accuracy: 100,
+			incorrect: false,
+			currentCount: 0,
+			wordCount: 0,
+			wpm: 0,
+			timeIncreasing: false,
+			correctLetter: contentText.charAt(0).toLowerCase(),
+			correctLetterCase:
+				contentText.charAt(0) === contentText.charAt(0).toUpperCase()
+					? 'uppercase'
+					: 'lowercase',
+			inputSelected: inputType,
+			showStats: false,
+			incorrectWordsArray: [],
+			incorrectWordCurrent: false,
+			screenFade: false,
+			showMenu: false,
+		});
+		clearInterval(this.intervalID);
+		setTimeout(() => this.refs.screen.setScrollPosition(), 0);
+
+		let fadeTime = 1;
+		// fromResults ? (fadeTime = 1000) : (fadeTime = 1);
+		fadeTime = fromResults ? 1000 : 1;
+
+		setTimeout(
+			() =>
+				this.setState({
+					screenFade: true,
+				}),
+			fadeTime
+		);
+	}
+
+	handleKeyPress(e) {
+		if (
+			e.key !== 'Tab' &&
+			e.key !== 'CapsLock' &&
+			e.key !== 'Shift' &&
+			e.key !== 'Control' &&
+			e.key !== 'Backspace' &&
+			(this.state.showStats === false) & (this.state.generatorFocus === false)
+		) {
+			const {
+				inputText,
+				progress,
+				completedText,
+				remainingText,
+				incorrectArray,
+				timeIncreasing,
+			} = this.state;
+
+			if (progress === 0 && timeIncreasing === false) {
+				this.intervalID = setInterval(
+					function () {
+						const { currentCount, inputSelected } = this.state;
+
+						this.setState({
+							currentCount: currentCount + 1,
+						});
+					}.bind(this),
+					1000
+				);
+				this.setState({
+					timeIncreasing: true,
+				});
+			}
+
+			const textLetter = inputText.charAt(progress);
+
+			this.setState({
+				// if Shift then gets e.code which is either "ShiftLeft" or "ShiftRight"
+				keyPressed: e.key === 'Shift' ? e.code : e.key,
+				keyCode: e.keyCode,
+			});
+
+			const { keyPressed } = this.state;
+
+			if (keyPressed === textLetter) {
+				this.setState({
+					completedText: completedText + remainingText.charAt(0),
+					remainingText: remainingText.slice(1),
+					correctLetter: inputText.charAt(progress + 1).toLowerCase(),
+					correctLetterCase:
+						inputText.charAt(progress + 1) ===
+						inputText.charAt(progress + 1).toUpperCase()
+							? 'uppercase'
+							: 'lowercase',
+					progress: progress + 1,
+					// accuracy is calculated as the percent of completed text out of the total number of characters typed (completed + incorrect)
+					accuracy: String(
+						(
+							(this.state.completedText.length /
+								(this.state.completedText.length +
+									this.state.incorrectArray.length)) *
+							100
+						).toFixed(0)
+					),
+					incorrect: false,
+				});
+
+				// if the next character is a space
+				if (inputText.charAt(progress + 1) === ' ') {
+					this.handleWordEnd();
+				}
+
+				if (keyPressed == ' ') {
+					this.refs.screen.setScrollPosition();
+				}
+			}
+		}
+	}
+
 	render() {
 		return (
 			<Fragment>
