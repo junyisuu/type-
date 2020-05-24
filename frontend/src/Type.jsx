@@ -1,4 +1,7 @@
-import React, { PureComponent, Fragment } from 'react';
+import React, { PureComponent } from 'react';
+
+import { Progress } from './components/Progress';
+import { Screen } from './components/Screen';
 
 export default class Type extends PureComponent {
 	constructor(props) {
@@ -83,7 +86,7 @@ export default class Type extends PureComponent {
 			showMenu: false,
 		});
 		clearInterval(this.intervalID);
-		setTimeout(() => this.refs.screen.setScrollPosition(), 0);
+		// setTimeout(() => this.refs.screen.setScrollPosition(), 0);
 
 		let fadeTime = 1;
 		// fromResults ? (fadeTime = 1000) : (fadeTime = 1);
@@ -171,9 +174,9 @@ export default class Type extends PureComponent {
 				}
 
 				// if it's a space character
-				if (keyPressed == ' ') {
-					this.refs.screen.setScrollPosition();
-				}
+				// if (keyPressed == ' ') {
+				// 	this.refs.screen.setScrollPosition();
+				// }
 
 				// if we're at the end of the excerpt
 				if (
