@@ -57,7 +57,8 @@ export default class Type extends PureComponent {
 			inputType = this.state.inputSelected;
 		}
 
-		contentText = 'Test Message 123';
+		contentText =
+			'Those around her do the same. “I will be watching you,” she warns. “Should anything happen to the king while you are sworn in his service—”With two hands, Xin Zhao clasps the flat sides of her blade. “Take this as my oath to you. ”';
 
 		while (nextText === true && contentText === this.state.inputText) {
 			contentText = 'This was the next message in line';
@@ -138,7 +139,17 @@ export default class Type extends PureComponent {
 				});
 			}
 
-			const textLetter = inputText.charAt(progress);
+			let textLetter = inputText.charAt(progress);
+
+			// Check for special unicode characters and standardize them
+			if (textLetter === '“' || textLetter === '”') {
+				textLetter = '"';
+			}
+			if (textLetter === '—') {
+				textLetter = '-';
+			}
+
+			console.log('textletter', textLetter);
 
 			this.setState({
 				// if Shift then gets e.code which is either "ShiftLeft" or "ShiftRight"
@@ -289,7 +300,7 @@ export default class Type extends PureComponent {
 						completedText={completedText}
 						inputText={inputText}
 						remainingText={remainingText}
-						ref='screen'
+						// ref='screen'
 					/>
 					{/* <Button onClick={this.displayText}>Start</Button> */}
 				</div>

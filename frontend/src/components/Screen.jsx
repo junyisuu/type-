@@ -3,14 +3,6 @@ import React, { PureComponent } from 'react';
 import './Screen.css';
 
 export class Screen extends PureComponent {
-	// setScrollPosition() {
-	// 	const elementNode = findDOMNode(this.refs.progressMarker);
-	// 	let containerNode = findDOMNode(this.refs.screenRef);
-
-	// 	var topPost = elementNode.offsetTop;
-	// 	containerNode.scrollTop = topPos - 140;
-	// }
-
 	render() {
 		const {
 			screenFade,
@@ -35,9 +27,6 @@ export class Screen extends PureComponent {
 						<span ref='progressMarker' className='remainingText'>
 							{remainingText}
 						</span>
-					</div>
-					<div className='progressMeter'>
-						{((completedText.length / inputText.length) * 100).toFixed(0) + '%'}
 					</div>
 				</div>
 			</div>

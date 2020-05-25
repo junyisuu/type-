@@ -18,7 +18,9 @@ export class RaceProgress extends PureComponent {
 		return (
 			<div>
 				{/* link to total progress */}
-				<Progress percent={percentComplete} indicating />
+				<Progress percent={percentComplete}>
+					<span>WPM</span>
+				</Progress>
 			</div>
 		);
 	}
