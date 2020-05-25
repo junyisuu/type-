@@ -58,7 +58,7 @@ export default class Type extends PureComponent {
 		}
 
 		contentText =
-			'Those around her do the same. “I will be watching you,” she warns. “Should anything happen to the king while you are sworn in his service—”With two hands, Xin Zhao clasps the flat sides of her blade. “Take this as my oath to you. ”';
+			'“I hear a beating heart!” said Wolf, his black eyes twinkling with delight. “May I have it?” “Perhaps,” replied Lamb. “I sense she is afraid. Speak, beautiful one. Tell us your name. ” “I-I would have yours first,” stammered Magga, stepping backward. Her slow escape was halted by the speedy Wolf, who materialized unsettlingly close behind her.';
 
 		while (nextText === true && contentText === this.state.inputText) {
 			contentText = 'This was the next message in line';
@@ -148,8 +148,9 @@ export default class Type extends PureComponent {
 			if (textLetter === '—') {
 				textLetter = '-';
 			}
-
-			console.log('textletter', textLetter);
+			if (textLetter === '’') {
+				textLetter = "'";
+			}
 
 			this.setState({
 				// if Shift then gets e.code which is either "ShiftLeft" or "ShiftRight"
@@ -300,6 +301,7 @@ export default class Type extends PureComponent {
 						completedText={completedText}
 						inputText={inputText}
 						remainingText={remainingText}
+						incorrect={incorrect}
 						// ref='screen'
 					/>
 					{/* <Button onClick={this.displayText}>Start</Button> */}
