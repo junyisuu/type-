@@ -2,6 +2,9 @@ import React, { PureComponent } from 'react';
 import { Button } from 'semantic-ui-react';
 import { RaceProgress } from './components/RaceProgress';
 import { Screen } from './components/Screen';
+import { RaceSummary } from './components/RaceSummary';
+
+// Reference: https://github.com/RodneyCumming/react-typing
 
 export default class Type extends PureComponent {
 	constructor(props) {
@@ -57,8 +60,7 @@ export default class Type extends PureComponent {
 			inputType = this.state.inputSelected;
 		}
 
-		contentText =
-			'“I hear a beating heart!” said Wolf, his black eyes twinkling with delight. “May I have it?” “Perhaps,” replied Lamb. “I sense she is afraid. Speak, beautiful one. Tell us your name. ” “I-I would have yours first,” stammered Magga, stepping backward. Her slow escape was halted by the speedy Wolf, who materialized unsettlingly close behind her.';
+		contentText = 'Test 123';
 
 		while (nextText === true && contentText === this.state.inputText) {
 			contentText = 'This was the next message in line';
@@ -302,8 +304,17 @@ export default class Type extends PureComponent {
 						inputText={inputText}
 						remainingText={remainingText}
 						incorrect={incorrect}
+						showStats={showStats}
 						// ref='screen'
 					/>
+					{showStats ? (
+						<RaceSummary
+							accuracy={accuracy}
+							wpm={wpm}
+							currentCount={currentCount}
+							incorrectArray={incorrectArray}
+						/>
+					) : null}
 					{/* <Button onClick={this.displayText}>Start</Button> */}
 				</div>
 			</div>

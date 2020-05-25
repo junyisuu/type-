@@ -19,6 +19,28 @@
 	background: #dfcac9;
 }
 
+.screen__inner__incorrect {
+	height: 270px;
+	padding: 0 30px;
+	border-top: 30px solid #dfcac9;
+	overflow: hidden;
+	opacity: 1;
+	transition: opacity 1s;
+}
+
+.screen__complete {
+	background: #c9dfc9;
+}
+
+.screen__inner__complete {
+	height: 270px;
+	padding: 0 30px;
+	border-top: 30px solid #c9dfc9;
+	overflow: hidden;
+	opacity: 1;
+	transition: opacity 1s;
+}
+
 .screen__inner__wrapper {
 	height: 270px;
 	padding: 0 30px;
@@ -31,15 +53,6 @@
 	height: 270px;
 	padding: 0 30px;
 	border-top: 30px solid gainsboro;
-	overflow: hidden;
-	opacity: 1;
-	transition: opacity 1s;
-}
-
-.screen__inner__incorrect {
-	height: 270px;
-	padding: 0 30px;
-	border-top: 30px solid #dfcac9;
 	overflow: hidden;
 	opacity: 1;
 	transition: opacity 1s;
