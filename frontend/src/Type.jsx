@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
-
-import { Progress } from './components/Progress';
+import { Button } from 'semantic-ui-react';
+import { RaceProgress } from './components/RaceProgress';
 import { Screen } from './components/Screen';
 
 export default class Type extends PureComponent {
@@ -31,11 +31,13 @@ export default class Type extends PureComponent {
 			screenFade: true,
 			caps: '',
 			showMenu: false,
+			percentComplete: 0,
 		};
 
-		this.genFocus = this.genFocus.bind(this);
-		this.genBlur = this.genBlur.bind(this);
+		// this.genFocus = this.genFocus.bind(this);
+		// this.genBlur = this.genBlur.bind(this);
 		this.displayText = this.displayText.bind(this);
+		this.calculatePercentComplete = this.calculatePercentComplete.bind(this);
 	}
 
 	componentDidMount() {
@@ -43,6 +45,7 @@ export default class Type extends PureComponent {
 		document.addEventListener('keydown', (e) => {
 			this.handleKeyPress(e);
 		});
+		this.displayText();
 	}
 
 	displayText(inputType, fromResults = false) {
@@ -54,10 +57,10 @@ export default class Type extends PureComponent {
 			inputType = this.state.inputSelected;
 		}
 
-		// contentText = fetch (GET excerpt from database)
+		contentText = 'Test Message 123';
 
 		while (nextText === true && contentText === this.state.inputText) {
-			// contentText = fetch (GET excerpt from database)
+			contentText = 'This was the next message in line';
 			nextText = false;
 		}
 
@@ -108,7 +111,7 @@ export default class Type extends PureComponent {
 			e.key !== 'Shift' &&
 			e.key !== 'Control' &&
 			e.key !== 'Backspace' &&
-			(this.state.showStats === false) & (this.state.generatorFocus === false)
+			this.state.showStats === false
 		) {
 			const {
 				inputText,
@@ -209,6 +212,10 @@ export default class Type extends PureComponent {
 					),
 				});
 			}
+			let percentComplete = this.calculatePercentComplete();
+			this.setState({
+				percentComplete: percentComplete,
+			});
 		}
 	}
 
@@ -233,15 +240,24 @@ export default class Type extends PureComponent {
 		});
 	}
 
+	calculatePercentComplete() {
+		const { completedText, inputText } = this.state;
+		let percentComplete = (
+			(completedText.length / inputText.length) *
+			100
+		).toFixed(0);
+		return percentComplete;
+	}
+
 	render() {
 		const {
 			accuracy,
 			showStats,
-			incorrectArr,
+			incorrectArray,
 			wpm,
 			currentCount,
 			inputSelected,
-			incorrectWordsArr,
+			incorrectWordsArray,
 			screenFade,
 			completedText,
 			inputText,
@@ -253,17 +269,20 @@ export default class Type extends PureComponent {
 			caps,
 			keyboardScaler,
 			showMenu,
+			percentComplete,
 		} = this.state;
 		return (
 			<div className='Type'>
-				<div className='main' ref='main'>
-					<Progress
+				<div className='main'>
+					<RaceProgress
 						accuracy={accuracy}
-						incorrectArr={incorrectArr}
+						incorrectArray={incorrectArray}
 						wpm={wpm}
 						currentCount={currentCount}
-						incorrectWordsArr={incorrectWordsArr}
-						displayText={this.displayText}
+						incorrectWordsArray={incorrectWordsArray}
+						completedText={completedText}
+						inputText={inputText}
+						percentComplete={percentComplete}
 					/>
 					<Screen
 						screenFade={screenFade}
@@ -272,6 +291,7 @@ export default class Type extends PureComponent {
 						remainingText={remainingText}
 						ref='screen'
 					/>
+					{/* <Button onClick={this.displayText}>Start</Button> */}
 				</div>
 			</div>
 		);
