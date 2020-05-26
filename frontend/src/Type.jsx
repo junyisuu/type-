@@ -60,7 +60,7 @@ export default class Type extends PureComponent {
 			inputType = this.state.inputSelected;
 		}
 
-		contentText = 'Test 123';
+		contentText = '123';
 
 		while (nextText === true && contentText === this.state.inputText) {
 			contentText = 'This was the next message in line';

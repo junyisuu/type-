@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Progress } from 'semantic-ui-react';
+import { Progress, Container } from 'semantic-ui-react';
+import './RaceProgress.css';
 
 export class RaceProgress extends PureComponent {
 	state = {
@@ -16,12 +17,12 @@ export class RaceProgress extends PureComponent {
 			percentComplete,
 		} = this.props;
 		return (
-			<div>
+			<Container className='race_progress'>
 				{/* link to total progress */}
-				<Progress percent={percentComplete}>
-					<span>WPM</span>
+				<Progress percent={percentComplete} progress>
+					<div className='progress_text'>Username</div>
 				</Progress>
-			</div>
+			</Container>
 		);
 	}
 }

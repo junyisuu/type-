@@ -1,0 +1,9 @@
+.race_progress {
+	margin: 50px;
+}
+
+.progress_text {
+	text-align: left !important;
+	right: 0 !important;
+	left: 0 !important;
+}

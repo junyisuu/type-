@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 // import { findDOMNode } from 'react-dom';
 import './Screen.css';
 import classNames from 'classnames';
+import { Container } from 'semantic-ui-react';
 
 export class Screen extends PureComponent {
 	render() {
@@ -29,7 +30,7 @@ export class Screen extends PureComponent {
 		});
 
 		return (
-			<div className={screenClass}>
+			<Container className={screenClass}>
 				<div className={screenInnerClass} ref='screenRef'>
 					<div className=''>
 						<span className='completedText'>{completedText}</span>
@@ -39,7 +40,7 @@ export class Screen extends PureComponent {
 						</span>
 					</div>
 				</div>
-			</div>
+			</Container>
 		);
 	}
 }
