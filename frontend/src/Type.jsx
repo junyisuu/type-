@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Button } from 'semantic-ui-react';
+import { Redirect } from 'react-router-dom';
 import { RaceProgress } from './components/RaceProgress';
 import { Screen } from './components/Screen';
 import { RaceSummary } from './components/RaceSummary';
@@ -285,6 +286,13 @@ export default class Type extends PureComponent {
 			showMenu,
 			percentComplete,
 		} = this.state;
+
+		const { selfUser } = this.props;
+
+		if (!selfUser) {
+			return <Redirect to='/' />;
+		}
+
 		return (
 			<div className='Type'>
 				<div className='main'>

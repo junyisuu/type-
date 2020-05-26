@@ -3,7 +3,6 @@ module.exports = (router) => {
 		// Do socket create room
 		// return room id
 		// redirect to lobby page
-		console.log('crate');
 		res.json({ created: 'created room!' });
 	});
 };

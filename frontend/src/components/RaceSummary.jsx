@@ -8,7 +8,7 @@ export class RaceSummary extends PureComponent {
 
 		return (
 			<Container className='race_summary'>
-				<h3>Congrats, you finished!</h3>
+				<h3>Race Complete!</h3>
 				<Grid columns='equal' divided>
 					<Grid.Row>
 						<Grid.Column width={6}>
