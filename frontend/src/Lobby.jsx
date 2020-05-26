@@ -1,4 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
+import { Link } from 'react-router-dom';
+import { Button, Icon } from 'semantic-ui-react';
 
 export default class Lobby extends PureComponent {
 	// state = {};
@@ -11,7 +13,14 @@ export default class Lobby extends PureComponent {
 		return (
 			<Fragment>
 				<h1>Lobby</h1>
-				<p>This is a placeholder</p>
+				<div>
+					<Link to='/type'>
+						<Button icon labelPosition='right'>
+							Play
+							<Icon name='play' />
+						</Button>
+					</Link>
+				</div>
 			</Fragment>
 		);
 	}
