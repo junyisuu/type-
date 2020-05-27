@@ -1,15 +1,15 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { Button, Icon } from 'semantic-ui-react';
 
 export default class Lobby extends PureComponent {
-	// state = {};
-
-	// componentDidMount() {
-	// 	const { createRoom } = this.props.location.state;
-	// }
-
 	render() {
+		const { selfUser } = this.props;
+
+		if (!selfUser) {
+			return <Redirect to='/' />;
+		}
+
 		return (
 			<Fragment>
 				<h1>Lobby</h1>

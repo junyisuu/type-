@@ -15,12 +15,14 @@ export class RaceProgress extends PureComponent {
 			currentCount,
 			incorrectWordsArray,
 			percentComplete,
+			selfUser,
 		} = this.props;
+
 		return (
 			<Container className='race_progress'>
 				{/* link to total progress */}
 				<Progress percent={percentComplete} progress>
-					<div className='progress_text'>Username</div>
+					<div className='progress_text'>{selfUser.username}</div>
 				</Progress>
 			</Container>
 		);
