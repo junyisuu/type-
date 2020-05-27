@@ -19,19 +19,19 @@ const userSchema = new Schema(
 
 const excerptSchema = new Schema(
 	{
-		URL: {
+		url: {
 			type: String,
 			required: true,
 		},
-		Title: {
+		title: {
 			type: String,
 			required: true,
 		},
-		// Author: {
-		// 	type: String,
-		// 	required: true,
-		// },
-		Excerpt: {
+		author: {
+			type: String,
+			required: true,
+		},
+		excerpt: {
 			type: String,
 			required: true,
 		},

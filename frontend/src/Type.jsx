@@ -12,6 +12,10 @@ export default class Type extends PureComponent {
 		super(props);
 
 		this.state = {
+			excerpt: '',
+			author: '',
+			title: '',
+			url: '',
 			inputText: '',
 			keyPressed: null,
 			keyCode: null,
@@ -38,10 +42,27 @@ export default class Type extends PureComponent {
 			percentComplete: 0,
 		};
 
-		// this.genFocus = this.genFocus.bind(this);
-		// this.genBlur = this.genBlur.bind(this);
 		this.displayText = this.displayText.bind(this);
 		this.calculatePercentComplete = this.calculatePercentComplete.bind(this);
+		this.getExcerpt = this.getExcerpt.bind(this);
+	}
+
+	async getExcerpt() {
+		// GET request - retrieve all topics
+		const { apiPath } = this.props;
+		const res = await fetch(`${apiPath}/excerpt`, {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		});
+		const { excerpt } = await res.json();
+		this.setState({
+			excerpt: excerpt[0].excerpt,
+			author: excerpt[0].author,
+			title: excerpt[0].title,
+			url: excerpt[0].url,
+		});
 	}
 
 	componentDidMount() {
@@ -52,7 +73,7 @@ export default class Type extends PureComponent {
 		this.displayText();
 	}
 
-	displayText(inputType, fromResults = false) {
+	async displayText(inputType, fromResults = false) {
 		let contentText = '';
 		let nextText = false;
 
@@ -61,7 +82,9 @@ export default class Type extends PureComponent {
 			inputType = this.state.inputSelected;
 		}
 
-		contentText = '123';
+		await this.getExcerpt();
+		contentText = this.state.excerpt;
+		// contentText = 'Test123';
 
 		while (nextText === true && contentText === this.state.inputText) {
 			contentText = 'This was the next message in line';
@@ -266,6 +289,9 @@ export default class Type extends PureComponent {
 
 	render() {
 		const {
+			title,
+			author,
+			url,
 			accuracy,
 			showStats,
 			incorrectArray,
@@ -287,7 +313,7 @@ export default class Type extends PureComponent {
 			percentComplete,
 		} = this.state;
 
-		const { selfUser } = this.props;
+		const { selfUser, excerpts } = this.props;
 
 		if (!selfUser) {
 			return <Redirect to='/' />;
@@ -305,6 +331,7 @@ export default class Type extends PureComponent {
 						completedText={completedText}
 						inputText={inputText}
 						percentComplete={percentComplete}
+						selfUser={selfUser}
 					/>
 					<Screen
 						screenFade={screenFade}
@@ -317,6 +344,9 @@ export default class Type extends PureComponent {
 					/>
 					{showStats ? (
 						<RaceSummary
+							title={title}
+							author={author}
+							url={url}
 							accuracy={accuracy}
 							wpm={wpm}
 							currentCount={currentCount}
