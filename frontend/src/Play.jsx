@@ -18,6 +18,7 @@ export default class Play extends PureComponent {
 	state = {
 		created: false,
 		room_id: '',
+		no_room: false,
 	};
 
 	// https://stackoverflow.com/questions/51632679/retrieve-input-value-from-action-onclick-in-semanticui
@@ -33,12 +34,22 @@ export default class Play extends PureComponent {
 		socket.emit('create_room', room_id);
 	}
 
-	joinRoom() {
-		console.log('trying to join', this.state.room_id);
+	joinRoom(parent) {
+		socket.emit('join_room', this.state.room_id, function (data) {
+			if (data === "room doesn't exist") {
+				parent.setState({
+					no_room: true,
+				});
+			} else if (data === 'room exists') {
+				parent.setState({
+					no_room: false,
+				});
+			}
+		});
 	}
 
 	render() {
-		const { created } = this.state;
+		const { created, no_room } = this.state;
 
 		if (created) {
 			return <Redirect to='/lobby' />;
@@ -66,7 +77,7 @@ export default class Play extends PureComponent {
 								action={{
 									color: 'teal',
 									content: 'Join',
-									onClick: () => this.joinRoom(),
+									onClick: () => this.joinRoom(this),
 								}}
 								icon='search'
 								iconPosition='left'
@@ -74,6 +85,11 @@ export default class Play extends PureComponent {
 								centered='true'
 								onChange={this.handleRoomInputChange}
 							/>
+							{no_room ? (
+								<p style={{ color: 'red' }}>
+									Room ID not found. Please try again.
+								</p>
+							) : null}
 						</Grid.Column>
 					</Grid.Row>
 					<Grid.Row></Grid.Row>
