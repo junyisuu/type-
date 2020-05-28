@@ -7,7 +7,7 @@ module.exports = function (socket) {
 		console.log('User Disconnected');
 	});
 
-	socket.on('create_room', function () {
+	socket.on('create_room', function (callback) {
 		let room_id = shortid.generate().slice(0, 5);
 		let exist = socket.adapter.rooms[room_id];
 		while (exist) {
@@ -16,6 +16,7 @@ module.exports = function (socket) {
 		}
 		socket.join(room_id);
 		console.log('created room: ', room_id);
+		callback(room_id);
 	});
 
 	socket.on('join_room', function (room_id, callback) {
@@ -26,7 +27,7 @@ module.exports = function (socket) {
 			console.log('joined room: ', room_id);
 			callback('room exists');
 		} else {
-			callback("room doesn't exist");
+			callback("room doesn't exist", room_id);
 		}
 	});
 };

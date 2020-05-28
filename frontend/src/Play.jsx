@@ -17,23 +17,35 @@ export default class Play extends PureComponent {
 
 	state = {
 		created: false,
-		room_id: '',
+		input_room_id: '',
 		no_room: false,
+		joined_room_id: '',
 	};
 
 	// https://stackoverflow.com/questions/51632679/retrieve-input-value-from-action-onclick-in-semanticui
 	handleRoomInputChange(event) {
 		this.setState({
-			room_id: event.target.value,
+			input_room_id: event.target.value,
 		});
 	}
 
 	createRoom() {
-		socket.emit('create_room');
+		let parent = this;
+		socket.emit('create_room', function (created_room_id) {
+			if (created_room_id) {
+				parent.setState({
+					created: true,
+					joined_room_id: created_room_id,
+				});
+			}
+		});
 	}
 
 	joinRoom(parent) {
-		socket.emit('join_room', this.state.room_id, function (data) {
+		socket.emit('join_room', this.state.input_room_id, function (
+			data,
+			return_room_id
+		) {
 			if (data === "room doesn't exist") {
 				parent.setState({
 					no_room: true,
@@ -41,22 +53,33 @@ export default class Play extends PureComponent {
 			} else if (data === 'room exists') {
 				parent.setState({
 					no_room: false,
+					joined_room_id: return_room_id,
 				});
 			}
 		});
 	}
 
 	render() {
-		const { created, no_room } = this.state;
+		const { created, no_room, joined_room_id } = this.state;
 
 		if (created) {
-			return <Redirect to='/lobby' />;
+			return (
+				<Redirect
+					to={{
+						pathname: '/lobby',
+						state: { room_id: joined_room_id },
+					}}
+				/>
+			);
 		}
 
 		return (
 			<Segment placeholder>
 				<Grid>
 					<Grid.Row columns={2} stackable='true'>
+						{joined_room_id ? (
+							<p style={{ color: 'red' }}>{joined_room_id}</p>
+						) : null}
 						<Grid.Column>
 							<Button
 								color='teal'
