@@ -1,12 +1,19 @@
-// https://stackoverflow.com/questions/24815106/can-i-separate-socket-io-event-listeners-into-different-modules
+const shortid = require('shortid');
 
+// https://stackoverflow.com/questions/24815106/can-i-separate-socket-io-event-listeners-into-different-modules
 module.exports = function (socket) {
 	console.log('a user connected' + socket.id);
 	socket.on('disconnect', function () {
 		console.log('User Disconnected');
 	});
 
-	socket.on('create_room', function (room_id) {
+	socket.on('create_room', function () {
+		let room_id = shortid.generate().slice(0, 5);
+		let exist = socket.adapter.rooms[room_id];
+		while (exist) {
+			room_id = shortid.generate().slice(0, 5);
+			exist = socket.adapter.rooms[room_id];
+		}
 		socket.join(room_id);
 		console.log('created room: ', room_id);
 	});

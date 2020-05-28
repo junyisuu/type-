@@ -29,9 +29,7 @@ export default class Play extends PureComponent {
 	}
 
 	createRoom() {
-		let room_id = shortid.generate();
-		room_id = room_id.slice(0, 5);
-		socket.emit('create_room', room_id);
+		socket.emit('create_room');
 	}
 
 	joinRoom(parent) {
