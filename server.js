@@ -27,6 +27,16 @@ app.use(
 );
 app.use(bodyParser.json());
 
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+
+const socketHandler = require('./src/socket');
+
+io.on('connection', function (socket) {
+	socketHandler(socket);
+});
+io.listen(8000);
+
 app.use(require('./routes/index'));
 
 const mongoUrl = process.env.MONGO_URL;

@@ -78,13 +78,14 @@ export default class App extends PureComponent {
 						<Route
 							exact
 							path='/'
-							render={() => <Landing selfUser={selfUser} />}
+							render={(props) => <Landing {...props} selfUser={selfUser} />}
 						/>
 						<Route
 							exact
 							path='/login'
-							render={() => (
+							render={(props) => (
 								<Login
+									{...props}
 									apiPath={apiPath}
 									selfUser={selfUser}
 									setSelfUser={setSelfUser}
@@ -94,13 +95,16 @@ export default class App extends PureComponent {
 						<Route
 							exact
 							path='/profile'
-							render={() => <Profile apiPath={apiPath} selfUser={selfUser} />}
+							render={(props) => (
+								<Profile {...props} apiPath={apiPath} selfUser={selfUser} />
+							)}
 						/>
 						<Route
 							exact
 							path='/register'
-							render={() => (
+							render={(props) => (
 								<Register
+									{...props}
 									apiPath={apiPath}
 									selfUser={selfUser}
 									setSelfUser={setSelfUser}
@@ -110,13 +114,14 @@ export default class App extends PureComponent {
 						<Route
 							exact
 							path='/play'
-							render={() => <Play apiPath={apiPath} />}
+							render={(props) => <Play {...props} apiPath={apiPath} />}
 						/>
 						<Route
 							exact
 							path='/lobby'
-							render={() => (
+							render={(props) => (
 								<Lobby
+									{...props}
 									apiPath={apiPath}
 									selfUser={selfUser}
 									setSelfUser={setSelfUser}
@@ -126,8 +131,9 @@ export default class App extends PureComponent {
 						<Route
 							exact
 							path='/type'
-							render={() => (
+							render={(props) => (
 								<Type
+									{...props}
 									apiPath={apiPath}
 									selfUser={selfUser}
 									setSelfUser={setSelfUser}
