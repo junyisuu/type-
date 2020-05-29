@@ -14,7 +14,7 @@ export default class Play extends PureComponent {
 	}
 
 	state = {
-		created: false,
+		room_joined: false,
 		input_room_id: '',
 		no_room: false,
 		joined_room_id: '',
@@ -28,11 +28,12 @@ export default class Play extends PureComponent {
 	}
 
 	createRoom() {
+		const { selfUser } = this.props;
 		let parent = this;
-		socket.emit('create_room', function (created_room_id) {
+		socket.emit('create_room', selfUser.username, function (created_room_id) {
 			if (created_room_id) {
 				parent.setState({
-					created: true,
+					room_joined: true,
 					joined_room_id: created_room_id,
 				});
 			}
@@ -40,32 +41,36 @@ export default class Play extends PureComponent {
 	}
 
 	joinRoom(parent) {
-		socket.emit('join_room', this.state.input_room_id, function (
-			data,
-			return_room_id
-		) {
-			if (data === "room doesn't exist") {
-				parent.setState({
-					no_room: true,
-				});
-			} else if (data === 'room exists') {
-				parent.setState({
-					no_room: false,
-					joined_room_id: return_room_id,
-				});
+		const { selfUser } = this.props;
+		socket.emit(
+			'join_room',
+			this.state.input_room_id,
+			selfUser.username,
+			function (data, return_room_id) {
+				if (data === "room doesn't exist") {
+					parent.setState({
+						no_room: true,
+					});
+				} else if (data === 'room exists') {
+					parent.setState({
+						no_room: false,
+						joined_room_id: parent.state.input_room_id,
+						room_joined: true,
+					});
+				}
 			}
-		});
+		);
 	}
 
 	render() {
-		const { created, no_room, joined_room_id } = this.state;
+		const { room_joined, no_room, joined_room_id } = this.state;
 
-		if (created) {
+		if (room_joined) {
 			return (
 				<Redirect
 					to={{
 						pathname: '/lobby',
-						state: { room_id: joined_room_id },
+						state: { room_id: joined_room_id, socket: socket },
 					}}
 				/>
 			);

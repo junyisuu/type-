@@ -1,5 +1,8 @@
 import React, { PureComponent } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+// import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+
+// https://stackoverflow.com/a/56562801
+import { MemoryRouter, Route, Switch } from 'react-router-dom';
 
 import Navbar from './Navbar';
 import Landing from './Landing';
@@ -72,7 +75,7 @@ export default class App extends PureComponent {
 					paddingBottom: '1em',
 				}}
 			>
-				<Router>
+				<MemoryRouter>
 					<Navbar selfUser={selfUser} setSelfUser={setSelfUser} />
 					<Switch>
 						<Route
@@ -114,7 +117,14 @@ export default class App extends PureComponent {
 						<Route
 							exact
 							path='/play'
-							render={(props) => <Play {...props} apiPath={apiPath} />}
+							render={(props) => (
+								<Play
+									{...props}
+									apiPath={apiPath}
+									selfUser={selfUser}
+									setSelfUser={setSelfUser}
+								/>
+							)}
 						/>
 						<Route
 							exact
@@ -141,7 +151,7 @@ export default class App extends PureComponent {
 							)}
 						/>
 					</Switch>
-				</Router>
+				</MemoryRouter>
 			</div>
 		);
 	}
