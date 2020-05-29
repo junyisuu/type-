@@ -4,6 +4,7 @@ import { Button, Icon } from 'semantic-ui-react';
 
 export default class Lobby extends PureComponent {
 	state = {
+		// https://stackoverflow.com/questions/52064303/reactjs-pass-props-with-redirect-component
 		room_id: this.props.location.state.room_id,
 	};
 

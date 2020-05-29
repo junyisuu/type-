@@ -22,7 +22,7 @@ export class RaceSummary extends PureComponent {
 						<Grid.Column width={6}>
 							<h3>
 								Excerpt from:{' '}
-								<a style={{ 'text-decoration': 'underline' }} href={url}>
+								<a style={{ textDecoration: 'underline' }} href={url}>
 									{title}
 								</a>
 							</h3>
