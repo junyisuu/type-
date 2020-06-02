@@ -15,10 +15,16 @@ import Lobby from './Lobby';
 import Type from './Type';
 
 export default class App extends PureComponent {
+	constructor(props) {
+		super(props);
+		this.updateLobbyStatus = this.updateLobbyStatus.bind(this);
+	}
+
 	state = {
 		apiPath: process.env.REACT_APP_API_PATH,
 		selfUser: null,
 		loadingSelf: true,
+		inLobby: false,
 	};
 
 	async componentDidMount() {
@@ -58,8 +64,15 @@ export default class App extends PureComponent {
 		});
 	}
 
+	// https://stackoverflow.com/questions/34734301/passing-data-between-two-sibling-react-js-components
+	updateLobbyStatus(status) {
+		this.setState({
+			inLobby: status,
+		});
+	}
+
 	render() {
-		const { apiPath, selfUser, loadingSelf } = this.state;
+		const { apiPath, selfUser, loadingSelf, inLobby } = this.state;
 
 		if (loadingSelf) {
 			return <div className='ui massive active loader' />;
@@ -76,7 +89,11 @@ export default class App extends PureComponent {
 				}}
 			>
 				<BrowserRouter>
-					<Navbar selfUser={selfUser} setSelfUser={setSelfUser} />
+					<Navbar
+						selfUser={selfUser}
+						setSelfUser={setSelfUser}
+						inLobby={inLobby}
+					/>
 					<Switch>
 						<Route
 							exact
@@ -123,6 +140,8 @@ export default class App extends PureComponent {
 									apiPath={apiPath}
 									selfUser={selfUser}
 									setSelfUser={setSelfUser}
+									inLobby={inLobby}
+									updateLobbyStatus={this.updateLobbyStatus}
 								/>
 							)}
 						/>
@@ -135,6 +154,8 @@ export default class App extends PureComponent {
 									apiPath={apiPath}
 									selfUser={selfUser}
 									setSelfUser={setSelfUser}
+									inLobby={inLobby}
+									updateLobbyStatus={this.updateLobbyStatus}
 								/>
 							)}
 						/>
@@ -147,6 +168,8 @@ export default class App extends PureComponent {
 									apiPath={apiPath}
 									selfUser={selfUser}
 									setSelfUser={setSelfUser}
+									inLobby={inLobby}
+									updateLobbyStatus={this.updateLobbyStatus}
 								/>
 							)}
 						/>

@@ -9,7 +9,7 @@ export default class Navbar extends PureComponent {
 	render() {
 		const { activeItem } = this.state;
 
-		const { selfUser, setSelfUser } = this.props;
+		const { selfUser, setSelfUser, inLobby } = this.props;
 
 		return (
 			<div>
@@ -38,16 +38,29 @@ export default class Navbar extends PureComponent {
 						</Menu.Item>
 					) : null}
 
-					<Menu.Item
-						as={NavLink}
-						exact
-						to='/play'
-						name='play'
-						active={activeItem === 'play'}
-						onClick={this.handleItemClick}
-					>
-						Play
-					</Menu.Item>
+					{inLobby ? (
+						<Menu.Item
+							as={NavLink}
+							exact
+							to='/lobby'
+							name='lobby'
+							active={activeItem === 'lobby'}
+							onClick={this.handleItemClick}
+						>
+							Lobby
+						</Menu.Item>
+					) : (
+						<Menu.Item
+							as={NavLink}
+							exact
+							to='/play'
+							name='play'
+							active={activeItem === 'play'}
+							onClick={this.handleItemClick}
+						>
+							Play
+						</Menu.Item>
+					)}
 
 					<Menu.Menu position='right'>
 						{selfUser ? (

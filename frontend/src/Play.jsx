@@ -38,6 +38,8 @@ export default class Play extends PureComponent {
 				});
 			}
 		});
+
+		this.props.updateLobbyStatus(true);
 	}
 
 	joinRoom(parent) {
@@ -60,6 +62,8 @@ export default class Play extends PureComponent {
 				}
 			}
 		);
+
+		this.props.updateLobbyStatus(true);
 	}
 
 	render() {

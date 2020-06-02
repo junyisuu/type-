@@ -58,6 +58,8 @@ export default class Lobby extends PureComponent {
 		const { room_id } = this.state;
 		let parent = this;
 		socket.emit('leave_room', room_id);
+
+		this.props.updateLobbyStatus(false);
 	}
 
 	render() {
