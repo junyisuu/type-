@@ -2,6 +2,8 @@ import React, { PureComponent, Fragment } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { Button, Icon, Card, Container } from 'semantic-ui-react';
 
+import socket from './socketConfig';
+
 export default class Lobby extends PureComponent {
 	state = {
 		// https://stackoverflow.com/questions/52064303/reactjs-pass-props-with-redirect-component
@@ -10,7 +12,6 @@ export default class Lobby extends PureComponent {
 	};
 
 	componentDidMount() {
-		const socket = this.props.location.state.socket;
 		const { room_id } = this.state;
 		const parent = this;
 		socket.emit('get_lobby_users', room_id, function (usernames) {
@@ -32,7 +33,8 @@ export default class Lobby extends PureComponent {
 
 		const { room_id, lobby_users } = this.state;
 
-		const socket = this.props.location.state.socket;
+		const socket = localStorage.getItem('socket');
+		// const socket = this.props.location.state.socket;
 
 		if (!selfUser) {
 			return <Redirect to='/' />;

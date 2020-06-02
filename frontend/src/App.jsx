@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 // import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 // https://stackoverflow.com/a/56562801
-import { MemoryRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 import Navbar from './Navbar';
 import Landing from './Landing';
@@ -75,7 +75,7 @@ export default class App extends PureComponent {
 					paddingBottom: '1em',
 				}}
 			>
-				<MemoryRouter>
+				<BrowserRouter>
 					<Navbar selfUser={selfUser} setSelfUser={setSelfUser} />
 					<Switch>
 						<Route
@@ -151,7 +151,7 @@ export default class App extends PureComponent {
 							)}
 						/>
 					</Switch>
-				</MemoryRouter>
+				</BrowserRouter>
 			</div>
 		);
 	}
