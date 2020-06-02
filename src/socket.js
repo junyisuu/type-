@@ -17,6 +17,15 @@ module.exports = function (socket, io, username_socket_pair) {
 		}
 	});
 
+	socket.on('leave_room', function (room_id) {
+		try {
+			socket.leave(room_id);
+			io.to(room_id).emit('user_disconnect', room_id);
+		} catch (e) {
+			console.log('Error - leave room: ', e);
+		}
+	});
+
 	socket.on('disconnect', function () {
 		console.log('User Disconnected');
 	});

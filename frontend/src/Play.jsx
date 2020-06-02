@@ -80,9 +80,9 @@ export default class Play extends PureComponent {
 			<Segment placeholder>
 				<Grid>
 					<Grid.Row columns={2} stackable='true'>
-						{joined_room_id ? (
+						{/* {joined_room_id ? (
 							<p style={{ color: 'red' }}>{joined_room_id}</p>
-						) : null}
+						) : null} */}
 						<Grid.Column>
 							<Button
 								color='teal'

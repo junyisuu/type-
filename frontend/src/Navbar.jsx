@@ -26,7 +26,14 @@ export default class Navbar extends PureComponent {
 					</Menu.Item>
 
 					{selfUser ? (
-						<Menu.Item as={NavLink} exact to='/profile'>
+						<Menu.Item
+							as={NavLink}
+							exact
+							to='/profile'
+							name='profile'
+							active={activeItem === 'profile'}
+							onClick={this.handleItemClick}
+						>
 							Profile
 						</Menu.Item>
 					) : null}

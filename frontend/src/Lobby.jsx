@@ -5,6 +5,11 @@ import { Button, Icon, Card, Container } from 'semantic-ui-react';
 import socket from './socketConfig';
 
 export default class Lobby extends PureComponent {
+	constructor(props) {
+		super(props);
+		this.leaveRoom = this.leaveRoom.bind(this);
+	}
+
 	state = {
 		// https://stackoverflow.com/questions/52064303/reactjs-pass-props-with-redirect-component
 		room_id: this.props.location.state.room_id,
@@ -14,11 +19,14 @@ export default class Lobby extends PureComponent {
 	componentDidMount() {
 		const { room_id } = this.state;
 		const parent = this;
+		console.log('room id: ', room_id);
 		socket.emit('get_lobby_users', room_id, function (usernames) {
 			parent.setState({
 				lobby_users: usernames,
 			});
 		});
+
+		// when a new user has joined the lobby
 		socket.on('lobby_new_user', function (room_id) {
 			socket.emit('get_lobby_users', room_id, function (usernames) {
 				if (usernames == 'Lobby error') {
@@ -31,6 +39,7 @@ export default class Lobby extends PureComponent {
 			});
 		});
 
+		// update lobby user list when a user has disconnected
 		socket.on('user_disconnect', function (room_id) {
 			socket.emit('get_lobby_users', room_id, function (usernames) {
 				if (usernames == 'Lobby error') {
@@ -44,10 +53,18 @@ export default class Lobby extends PureComponent {
 		});
 	}
 
+	leaveRoom() {
+		const { selfUser } = this.props;
+		const { room_id } = this.state;
+		let parent = this;
+		socket.emit('leave_room', room_id);
+	}
+
 	render() {
 		const { selfUser } = this.props;
 
 		const { room_id, lobby_users } = this.state;
+		console.log('lobby users: ', lobby_users);
 
 		if (!selfUser) {
 			return <Redirect to='/' />;
@@ -83,8 +100,8 @@ export default class Lobby extends PureComponent {
 					</Link>
 
 					<Link to='/play'>
-						<Button icon labelPosition='right'>
-							Exit Lobby
+						<Button icon labelPosition='right' onClick={this.leaveRoom}>
+							Leave Lobby
 							<Icon name='x' />
 						</Button>
 					</Link>
