@@ -83,9 +83,8 @@ export default class Type extends PureComponent {
 		}
 
 		await this.getExcerpt();
-		// contentText = this.state.excerpt;
-		contentText =
-			'“Wrong? You can’t be wrong. You give me life,” boomed Galio, lowering his huge boulder of a face to her level. “That’s the problem,” said the girl. “You’re not supposed to be moving. The only reason you are moving is me.” Galio reacted in stunned silence for a moment, then erupted with joyful epiphany.';
+		contentText = this.state.excerpt;
+		// contentText = 'Test 123';
 
 		while (nextText === true && contentText === this.state.inputText) {
 			contentText = 'This was the next message in line';

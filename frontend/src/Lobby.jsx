@@ -30,6 +30,18 @@ export default class Lobby extends PureComponent {
 				}
 			});
 		});
+
+		socket.on('user_disconnect', function (room_id) {
+			socket.emit('get_lobby_users', room_id, function (usernames) {
+				if (usernames == 'Lobby error') {
+					console.log('lobby error');
+				} else {
+					parent.setState({
+						lobby_users: usernames,
+					});
+				}
+			});
+		});
 	}
 
 	render() {

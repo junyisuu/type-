@@ -3,6 +3,20 @@ const shortid = require('shortid');
 // https://stackoverflow.com/questions/24815106/can-i-separate-socket-io-event-listeners-into-different-modules
 module.exports = function (socket, io, username_socket_pair) {
 	console.log('a user connected ' + socket.id);
+	socket.on('disconnecting', function () {
+		let room_id = '';
+		if (socket.rooms) {
+			Object.keys(socket.rooms).forEach((room) => {
+				if (room.length == 5) {
+					room_id = room;
+				}
+			});
+		}
+		if (room_id) {
+			io.to(room_id).emit('user_disconnect', room_id);
+		}
+	});
+
 	socket.on('disconnect', function () {
 		console.log('User Disconnected');
 	});
@@ -43,6 +57,7 @@ module.exports = function (socket, io, username_socket_pair) {
 			callback('Lobby error');
 			return;
 		}
+		// from the room, get a list of users (ie. the sockets)
 		let user_socket_list = Object.keys(room.sockets);
 
 		let user_username_list = [];
