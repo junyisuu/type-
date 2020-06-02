@@ -31,13 +31,13 @@ export class Screen extends PureComponent {
 
 		return (
 			<Container className={screenClass}>
-				<div className={screenInnerClass} ref='screenRef'>
+				<div className={screenInnerClass}>
 					<div className=''>
 						<span className='completedText'>{completedText}</span>
-						<span className='progressMarker' ref='progRef'></span>
-						<span ref='progressMarker' className='remainingText'>
-							{remainingText}
+						<span className='firstCharacter'>
+							{remainingText.substring(0, 1)}
 						</span>
+						<span className='remainingText'>{remainingText.substring(1)}</span>
 					</div>
 				</div>
 			</Container>

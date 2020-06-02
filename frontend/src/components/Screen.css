@@ -58,48 +58,11 @@
 	transition: opacity 1s;
 }
 
-.progressMeter {
-	position: absolute;
-	bottom: 4px;
-	right: 15px;
-	font-size: 14px;
-	color: #a4b9d3;
-}
-
 .completedText {
 	color: black;
 }
 
-.progressMarker {
-	position: relative;
-	top: 5px;
-	left: 1px;
-}
-
-.progressMarker::before {
-	content: ' ';
-	height: 20px;
-	position: absolute;
-	font-style: initial;
-	border-left: 1px solid #a7a6a6;
-}
-
-.progressMarkerNum::before {
-	content: ' ';
-	height: 25px;
-	position: absolute;
-	font-style: initial;
-	border-left: 1px solid #a7a6a6;
-}
-
-.progressMarkerSym::before {
-	content: ' ';
-	height: 30px;
-	position: absolute;
-	font-style: initial;
-	border-left: 1px solid #a7a6a6;
-}
-
-.remainingText::first-letter {
-	color: blue;
+.firstCharacter {
+	text-decoration: underline;
+	text-decoration-color: #639cec;
 }

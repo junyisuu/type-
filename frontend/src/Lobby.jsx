@@ -21,9 +21,13 @@ export default class Lobby extends PureComponent {
 		});
 		socket.on('lobby_new_user', function (room_id) {
 			socket.emit('get_lobby_users', room_id, function (usernames) {
-				parent.setState({
-					lobby_users: usernames,
-				});
+				if (usernames == 'Lobby error') {
+					console.log('lobby error');
+				} else {
+					parent.setState({
+						lobby_users: usernames,
+					});
+				}
 			});
 		});
 	}
@@ -32,9 +36,6 @@ export default class Lobby extends PureComponent {
 		const { selfUser } = this.props;
 
 		const { room_id, lobby_users } = this.state;
-
-		const socket = localStorage.getItem('socket');
-		// const socket = this.props.location.state.socket;
 
 		if (!selfUser) {
 			return <Redirect to='/' />;
@@ -59,7 +60,6 @@ export default class Lobby extends PureComponent {
 							pathname: '/type',
 							state: {
 								room_id: room_id,
-								socket: socket,
 								lobby_users: lobby_users,
 							},
 						}}
@@ -67,6 +67,13 @@ export default class Lobby extends PureComponent {
 						<Button icon labelPosition='right'>
 							Play
 							<Icon name='play' />
+						</Button>
+					</Link>
+
+					<Link to='/play'>
+						<Button icon labelPosition='right'>
+							Exit Lobby
+							<Icon name='x' />
 						</Button>
 					</Link>
 				</Container>

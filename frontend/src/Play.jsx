@@ -2,9 +2,6 @@ import React, { PureComponent } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Segment, Input, Button, Grid } from 'semantic-ui-react';
 
-// import openSocket from 'socket.io-client';
-// const socket = openSocket('http://localhost:8000');
-
 // https://stackoverflow.com/questions/36120119/reactjs-how-to-share-a-websocket-between-components
 import socket from './socketConfig';
 
@@ -69,11 +66,6 @@ export default class Play extends PureComponent {
 		const { room_joined, no_room, joined_room_id } = this.state;
 
 		if (room_joined) {
-			// this.props.history.push({
-			// 	pathname: '/lobby',
-			// 	state: { room_id: joined_room_id, socket: socket },
-			// });
-
 			return (
 				<Redirect
 					to={{

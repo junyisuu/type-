@@ -39,6 +39,10 @@ module.exports = function (socket, io, username_socket_pair) {
 	socket.on('get_lobby_users', function (room_id, callback) {
 		// https://stackoverflow.com/questions/9352549/getting-how-many-people-are-in-a-chat-room-in-socket-io#24425207
 		let room = io.sockets.adapter.rooms[room_id];
+		if (!room) {
+			callback('Lobby error');
+			return;
+		}
 		let user_socket_list = Object.keys(room.sockets);
 
 		let user_username_list = [];
