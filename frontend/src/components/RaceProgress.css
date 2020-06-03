@@ -3,7 +3,17 @@
 }
 
 .progress_text {
-	text-align: left !important;
+	/* text-align: left !important;
 	right: 0 !important;
-	left: 0 !important;
+	left: 0 !important; */
+	text-align: center;
+	vertical-align: top;
+}
+
+.row {
+	height: 10px;
+}
+
+.bar {
+	margin-top: 3px;
 }
