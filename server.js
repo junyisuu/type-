@@ -32,8 +32,10 @@ const io = require('socket.io')(http);
 
 const socketHandler = require('./src/socket');
 
+var username_socket_pair = {};
+
 io.on('connection', function (socket) {
-	socketHandler(socket);
+	socketHandler(socket, io, username_socket_pair);
 });
 io.listen(8000);
 

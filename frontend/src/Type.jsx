@@ -84,7 +84,7 @@ export default class Type extends PureComponent {
 
 		await this.getExcerpt();
 		contentText = this.state.excerpt;
-		// contentText = 'Test123';
+		// contentText = 'Test 123';
 
 		while (nextText === true && contentText === this.state.inputText) {
 			contentText = 'This was the next message in line';

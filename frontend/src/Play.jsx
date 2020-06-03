@@ -2,8 +2,8 @@ import React, { PureComponent } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Segment, Input, Button, Grid } from 'semantic-ui-react';
 
-import openSocket from 'socket.io-client';
-const socket = openSocket('http://localhost:8000');
+// https://stackoverflow.com/questions/36120119/reactjs-how-to-share-a-websocket-between-components
+import socket from './socketConfig';
 
 export default class Play extends PureComponent {
 	constructor(props) {
@@ -14,7 +14,7 @@ export default class Play extends PureComponent {
 	}
 
 	state = {
-		created: false,
+		room_joined: false,
 		input_room_id: '',
 		no_room: false,
 		joined_room_id: '',
@@ -28,39 +28,48 @@ export default class Play extends PureComponent {
 	}
 
 	createRoom() {
+		const { selfUser } = this.props;
 		let parent = this;
-		socket.emit('create_room', function (created_room_id) {
+		socket.emit('create_room', selfUser.username, function (created_room_id) {
 			if (created_room_id) {
 				parent.setState({
-					created: true,
+					room_joined: true,
 					joined_room_id: created_room_id,
 				});
 			}
 		});
+
+		this.props.updateLobbyStatus(true);
 	}
 
 	joinRoom(parent) {
-		socket.emit('join_room', this.state.input_room_id, function (
-			data,
-			return_room_id
-		) {
-			if (data === "room doesn't exist") {
-				parent.setState({
-					no_room: true,
-				});
-			} else if (data === 'room exists') {
-				parent.setState({
-					no_room: false,
-					joined_room_id: return_room_id,
-				});
+		const { selfUser } = this.props;
+		socket.emit(
+			'join_room',
+			this.state.input_room_id,
+			selfUser.username,
+			function (data, return_room_id) {
+				if (data === "room doesn't exist") {
+					parent.setState({
+						no_room: true,
+					});
+				} else if (data === 'room exists') {
+					parent.setState({
+						no_room: false,
+						joined_room_id: parent.state.input_room_id,
+						room_joined: true,
+					});
+				}
 			}
-		});
+		);
+
+		this.props.updateLobbyStatus(true);
 	}
 
 	render() {
-		const { created, no_room, joined_room_id } = this.state;
+		const { room_joined, no_room, joined_room_id } = this.state;
 
-		if (created) {
+		if (room_joined) {
 			return (
 				<Redirect
 					to={{
@@ -75,9 +84,9 @@ export default class Play extends PureComponent {
 			<Segment placeholder>
 				<Grid>
 					<Grid.Row columns={2} stackable='true'>
-						{joined_room_id ? (
+						{/* {joined_room_id ? (
 							<p style={{ color: 'red' }}>{joined_room_id}</p>
-						) : null}
+						) : null} */}
 						<Grid.Column>
 							<Button
 								color='teal'
