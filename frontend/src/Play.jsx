@@ -36,10 +36,15 @@ export default class Play extends PureComponent {
 					room_joined: true,
 					joined_room_id: created_room_id,
 				});
+
+				parent.props.updateLobbyStatus(true);
+				window.sessionStorage.setItem('roomID', created_room_id);
 			}
 		});
 
-		this.props.updateLobbyStatus(true);
+		// this.props.updateLobbyStatus(true);
+		// window.localStorage.setItem('roomID', joined_room_id);
+		// console.log('from play storage ', window.localStorage);
 	}
 
 	joinRoom(parent) {
@@ -48,7 +53,7 @@ export default class Play extends PureComponent {
 			'join_room',
 			this.state.input_room_id,
 			selfUser.username,
-			function (data, return_room_id) {
+			function (data) {
 				if (data === "room doesn't exist") {
 					parent.setState({
 						no_room: true,
@@ -59,15 +64,20 @@ export default class Play extends PureComponent {
 						joined_room_id: parent.state.input_room_id,
 						room_joined: true,
 					});
+					parent.props.updateLobbyStatus(true);
+					window.sessionStorage.setItem('roomID', parent.state.input_room_id);
 				}
 			}
 		);
-
-		this.props.updateLobbyStatus(true);
 	}
 
 	render() {
 		const { room_joined, no_room, joined_room_id } = this.state;
+		const { selfUser } = this.props;
+
+		if (!selfUser) {
+			return <Redirect to='/' />;
+		}
 
 		if (room_joined) {
 			return (
@@ -83,7 +93,7 @@ export default class Play extends PureComponent {
 		return (
 			<Segment placeholder>
 				<Grid>
-					<Grid.Row columns={2} stackable='true'>
+					<Grid.Row columns={2}>
 						{/* {joined_room_id ? (
 							<p style={{ color: 'red' }}>{joined_room_id}</p>
 						) : null} */}
@@ -120,7 +130,6 @@ export default class Play extends PureComponent {
 							) : null}
 						</Grid.Column>
 					</Grid.Row>
-					<Grid.Row></Grid.Row>
 				</Grid>
 			</Segment>
 		);

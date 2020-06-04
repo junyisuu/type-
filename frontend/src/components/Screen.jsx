@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-// import { findDOMNode } from 'react-dom';
 import './Screen.css';
 import classNames from 'classnames';
 import { Container } from 'semantic-ui-react';
@@ -8,9 +7,7 @@ export class Screen extends PureComponent {
 	render() {
 		const {
 			screenFade,
-			inputSelected,
 			completedText,
-			inputText,
 			remainingText,
 			incorrect,
 			showStats,

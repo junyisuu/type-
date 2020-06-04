@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Progress, Container } from 'semantic-ui-react';
+import { Progress, Container, Grid, GridColumn } from 'semantic-ui-react';
 import './RaceProgress.css';
 
 export class RaceProgress extends PureComponent {
@@ -8,22 +8,40 @@ export class RaceProgress extends PureComponent {
 	};
 
 	render() {
-		const {
-			accuracy,
-			incorrectArray,
-			wpm,
-			currentCount,
-			incorrectWordsArray,
-			percentComplete,
-			selfUser,
-		} = this.props;
+		const { percentComplete, selfUser } = this.props;
 
 		return (
 			<Container className='race_progress'>
-				{/* link to total progress */}
-				<Progress percent={percentComplete} progress>
-					<div className='progress_text'>{selfUser.username}</div>
-				</Progress>
+				<Grid>
+					<Grid.Row>
+						<Grid.Column width={1}>
+							<div className='progress_text'>
+								<b>{selfUser.username}</b>
+							</div>
+						</Grid.Column>
+						<GridColumn width={15}>
+							<Progress
+								percent={percentComplete}
+								progress
+								size='small'
+							></Progress>
+						</GridColumn>
+					</Grid.Row>
+					<Grid.Row>
+						<Grid.Column width={1}>
+							<div className='progress_text'>
+								<b>{selfUser.username}</b>
+							</div>
+						</Grid.Column>
+						<GridColumn width={15}>
+							<Progress
+								percent={percentComplete}
+								progress
+								size='small'
+							></Progress>
+						</GridColumn>
+					</Grid.Row>
+				</Grid>
 			</Container>
 		);
 	}
