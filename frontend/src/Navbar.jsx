@@ -18,7 +18,7 @@ export default class Navbar extends PureComponent {
 						as={NavLink}
 						exact
 						to='/'
-						name='type'
+						name='home'
 						active={activeItem === 'home'}
 						onClick={this.handleItemClick}
 					>
@@ -38,29 +38,31 @@ export default class Navbar extends PureComponent {
 						</Menu.Item>
 					) : null}
 
-					{inLobby ? (
-						<Menu.Item
-							as={NavLink}
-							exact
-							to='/lobby'
-							name='lobby'
-							active={activeItem === 'lobby'}
-							onClick={this.handleItemClick}
-						>
-							Lobby
-						</Menu.Item>
-					) : (
-						<Menu.Item
-							as={NavLink}
-							exact
-							to='/play'
-							name='play'
-							active={activeItem === 'play'}
-							onClick={this.handleItemClick}
-						>
-							Play
-						</Menu.Item>
-					)}
+					{selfUser ? (
+						inLobby ? (
+							<Menu.Item
+								as={NavLink}
+								exact
+								to='/lobby'
+								name='lobby'
+								active={activeItem === 'lobby'}
+								onClick={this.handleItemClick}
+							>
+								Lobby
+							</Menu.Item>
+						) : (
+							<Menu.Item
+								as={NavLink}
+								exact
+								to='/play'
+								name='play'
+								active={activeItem === 'play'}
+								onClick={this.handleItemClick}
+							>
+								Play
+							</Menu.Item>
+						)
+					) : null}
 
 					<Menu.Menu position='right'>
 						{selfUser ? (

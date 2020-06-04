@@ -68,6 +68,11 @@ export default class Play extends PureComponent {
 
 	render() {
 		const { room_joined, no_room, joined_room_id } = this.state;
+		const { selfUser } = this.props;
+
+		if (!selfUser) {
+			return <Redirect to='/' />;
+		}
 
 		if (room_joined) {
 			return (
