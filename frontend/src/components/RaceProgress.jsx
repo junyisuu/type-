@@ -8,15 +8,7 @@ export class RaceProgress extends PureComponent {
 	};
 
 	render() {
-		const {
-			accuracy,
-			incorrectArray,
-			wpm,
-			currentCount,
-			incorrectWordsArray,
-			percentComplete,
-			selfUser,
-		} = this.props;
+		const { percentComplete, selfUser } = this.props;
 
 		return (
 			<Container className='race_progress'>

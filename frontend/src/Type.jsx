@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { Button } from 'semantic-ui-react';
 import { Redirect } from 'react-router-dom';
 import { RaceProgress } from './components/RaceProgress';
 import { Screen } from './components/Screen';
@@ -152,7 +151,7 @@ export default class Type extends PureComponent {
 			if (progress === 0 && timeIncreasing === false) {
 				this.intervalID = setInterval(
 					function () {
-						const { currentCount, inputSelected } = this.state;
+						const { currentCount } = this.state;
 
 						this.setState({
 							currentCount: currentCount + 1,
@@ -297,23 +296,16 @@ export default class Type extends PureComponent {
 			incorrectArray,
 			wpm,
 			currentCount,
-			inputSelected,
 			incorrectWordsArray,
 			screenFade,
 			completedText,
 			inputText,
 			remainingText,
-			keyCode,
 			incorrect,
-			correctLetter,
-			correctLetterCase,
-			caps,
-			keyboardScaler,
-			showMenu,
 			percentComplete,
 		} = this.state;
 
-		const { selfUser, excerpts } = this.props;
+		const { selfUser } = this.props;
 
 		if (!selfUser) {
 			return <Redirect to='/' />;
