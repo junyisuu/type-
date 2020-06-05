@@ -53,7 +53,14 @@ export default class Lobby extends PureComponent {
 		this._isMounted = true;
 		let room_id = '';
 		let joined = true;
+		const { inLobby } = this.props;
 		console.log('local storage...', window.sessionStorage);
+
+		// correct use of inLobby?
+		console.log('In a lobby? ', inLobby);
+
+		// upon page refresh, props are refreshed and therefore inLobby will be false
+		// right now if user navigates back to lobby from type page, they will re-join as a new user to that socket room
 		if (window.sessionStorage.getItem('roomID')) {
 			console.log('true');
 			room_id = window.sessionStorage.getItem('roomID');
@@ -155,7 +162,7 @@ export default class Lobby extends PureComponent {
 				<Container>
 					<Card.Group itemsPerRow={6}>
 						{lobby_users.map((user) => (
-							<Card centered>
+							<Card centered key={user}>
 								<Card.Header textAlign={'center'}>{user}</Card.Header>
 							</Card>
 						))}
