@@ -5,6 +5,8 @@ import { Button, Icon, Card, Container } from 'semantic-ui-react';
 import socket from './socketConfig';
 
 export default class Lobby extends PureComponent {
+	_isMounted = false;
+
 	constructor(props) {
 		super(props);
 		this.leaveRoom = this.leaveRoom.bind(this);
@@ -15,81 +17,121 @@ export default class Lobby extends PureComponent {
 		// room_id: this.props.location.state.room_id,
 		room_id: '',
 		lobby_users: [],
+		redirectPlay: false,
 	};
 
-	rejoinRoom(room_id) {
-		const { selfUser } = this.props;
-		const parent = this;
-		socket.emit('join_room', room_id, selfUser.username, function (data) {
-			if (data === 'room exists') {
-				parent.setState({
-					room_id: room_id,
-				});
-				console.log('rejoined room');
-			} else {
-				console.log(data);
-			}
-		});
+	async rejoinRoom(room_id) {
+		// https://www.freecodecamp.org/news/how-to-write-a-javascript-promise-4ed8d44292b8/#:~:text=A%20promise%20is%20simply%20an,two%20arguments%3A%20resolve%20and%20reject%20.
+		return new Promise((resolve, reject) => {
+			const { selfUser } = this.props;
+			const parent = this;
 
-		this.props.updateLobbyStatus(true);
-		window.sessionStorage.setItem('roomID', room_id);
+			socket.emit('join_room', room_id, selfUser.username, function (data) {
+				if (data === 'room exists') {
+					if (this._isMounted) {
+						parent.setState({
+							room_id: room_id,
+						});
+					}
+
+					console.log('rejoined room');
+
+					parent.props.updateLobbyStatus(true);
+					window.sessionStorage.setItem('roomID', room_id);
+
+					resolve('rejoined room');
+				} else if (data === "room doesn't exist") {
+					console.log(data);
+					window.sessionStorage.setItem('roomID', '');
+					reject(data);
+				}
+			});
+		});
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
+		this._isMounted = true;
 		let room_id = '';
+		let joined = true;
+		const { inLobby } = this.props;
 		console.log('local storage...', window.sessionStorage);
+
+		// correct use of inLobby?
+		console.log('In a lobby? ', inLobby);
+
+		// upon page refresh, props are refreshed and therefore inLobby will be false
+		// right now if user navigates back to lobby from type page, they will re-join as a new user to that socket room
 		if (window.sessionStorage.getItem('roomID')) {
 			console.log('true');
 			room_id = window.sessionStorage.getItem('roomID');
-			this.rejoinRoom(room_id);
+			try {
+				await this.rejoinRoom(room_id);
+				joined = true;
+			} catch (err) {
+				console.log(err);
+				joined = false;
+			}
 		} else {
 			console.log('false');
 			room_id = this.props.location.state.room_id;
 		}
 		console.log('roomID check ', room_id);
+		console.log('joined check ', joined);
 
-		this.setState({
-			room_id: room_id,
-			lobby_users: [],
-		});
+		if (!joined) {
+			this.setState({
+				redirectPlay: true,
+			});
+		} else {
+			console.log('in here');
+			this.setState({
+				room_id: room_id,
+				lobby_users: [],
+				redirectPlay: false,
+			});
 
-		const parent = this;
-		socket.emit('get_lobby_users', room_id, function (usernames) {
-			console.log('usernames', usernames);
-			if (usernames === 'Lobby error') {
-				console.log('Error getting lobby users');
-			} else {
-				parent.setState({
-					lobby_users: usernames,
+			const parent = this;
+			socket.emit('get_lobby_users', room_id, function (usernames) {
+				console.log('usernames', usernames);
+				if (usernames === 'Lobby error') {
+					console.log('Error getting lobby users');
+				} else {
+					parent.setState({
+						lobby_users: usernames,
+					});
+				}
+			});
+
+			// when a new user has joined the lobby
+			socket.on('lobby_new_user', function (room_id) {
+				socket.emit('get_lobby_users', room_id, function (usernames) {
+					if (usernames === 'Lobby error') {
+						console.log('lobby error');
+					} else {
+						parent.setState({
+							lobby_users: usernames,
+						});
+					}
 				});
-			}
-		});
-
-		// when a new user has joined the lobby
-		socket.on('lobby_new_user', function (room_id) {
-			socket.emit('get_lobby_users', room_id, function (usernames) {
-				if (usernames === 'Lobby error') {
-					console.log('lobby error');
-				} else {
-					parent.setState({
-						lobby_users: usernames,
-					});
-				}
 			});
-		});
 
-		// update lobby user list when a user has disconnected
-		socket.on('user_disconnect', function (room_id) {
-			socket.emit('get_lobby_users', room_id, function (usernames) {
-				if (usernames === 'Lobby error') {
-					console.log('lobby error');
-				} else {
-					parent.setState({
-						lobby_users: usernames,
-					});
-				}
+			// update lobby user list when a user has disconnected
+			socket.on('user_disconnect', function (room_id) {
+				socket.emit('get_lobby_users', room_id, function (usernames) {
+					if (usernames === 'Lobby error') {
+						console.log('lobby error');
+					} else {
+						parent.setState({
+							lobby_users: usernames,
+						});
+					}
+				});
 			});
-		});
+		}
+	}
+
+	componentWillUnmount() {
+		this._isMounted = false;
 	}
 
 	leaveRoom() {
@@ -103,10 +145,14 @@ export default class Lobby extends PureComponent {
 	render() {
 		const { selfUser } = this.props;
 
-		const { room_id, lobby_users } = this.state;
+		const { room_id, lobby_users, redirectPlay } = this.state;
 
 		if (!selfUser) {
 			return <Redirect to='/' />;
+		}
+
+		if (redirectPlay) {
+			return <Redirect to='/play' />;
 		}
 
 		return (
@@ -116,7 +162,7 @@ export default class Lobby extends PureComponent {
 				<Container>
 					<Card.Group itemsPerRow={6}>
 						{lobby_users.map((user) => (
-							<Card centered>
+							<Card centered key={user}>
 								<Card.Header textAlign={'center'}>{user}</Card.Header>
 							</Card>
 						))}
