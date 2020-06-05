@@ -1,8 +1,12 @@
 const shortid = require('shortid');
+const axios = require('axios');
+
+const { Excerpt } = require('../src/database');
 
 // https://stackoverflow.com/questions/24815106/can-i-separate-socket-io-event-listeners-into-different-modules
-module.exports = function (socket, io, username_socket_pair) {
+module.exports = function (socket, io, username_socket_pair, all_rooms) {
 	console.log('a user connected ' + socket.id);
+
 	socket.on('disconnecting', function () {
 		let room_id = '';
 		if (socket.rooms) {
@@ -15,6 +19,11 @@ module.exports = function (socket, io, username_socket_pair) {
 		if (room_id) {
 			console.log('user disconnecting from: ', room_id);
 			io.to(room_id).emit('user_disconnect', room_id);
+
+			// if user is disconnecting from a single user lobby, delete the lobby from all_rooms
+			if (Object.keys(io.sockets.adapter.rooms[room_id].sockets).length === 1) {
+				delete all_rooms[room_id];
+			}
 		}
 	});
 
@@ -28,10 +37,16 @@ module.exports = function (socket, io, username_socket_pair) {
 	});
 
 	socket.on('disconnect', function () {
+		delete username_socket_pair[socket.id];
 		console.log('User Disconnected');
 	});
 
-	socket.on('create_room', function (username, callback) {
+	socket.on('get_excerpt', async function (room_id, callback) {
+		const { excerpt_obj } = all_rooms[room_id];
+		callback(excerpt_obj);
+	});
+
+	socket.on('create_room', async function (username, callback) {
 		username_socket_pair[socket.id] = username;
 
 		let room_id = shortid.generate().slice(0, 5);
@@ -41,8 +56,21 @@ module.exports = function (socket, io, username_socket_pair) {
 			exist = socket.adapter.rooms[room_id];
 		}
 		socket.join(room_id);
+
+		let next_excerpt_obj = await getExcerpt();
+		all_rooms[room_id] = {
+			room_id: room_id,
+			excerpt_obj: next_excerpt_obj[0],
+			in_progress: false,
+		};
+
 		callback(room_id);
 	});
+
+	async function getExcerpt() {
+		const excerpt = await Excerpt.aggregate().sample(1).exec();
+		return excerpt;
+	}
 
 	socket.on('join_room', function (room_id, username, callback) {
 		username_socket_pair[socket.id] = username;

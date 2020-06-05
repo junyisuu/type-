@@ -17,7 +17,7 @@ export default class Lobby extends PureComponent {
 		// room_id: this.props.location.state.room_id,
 		room_id: '',
 		lobby_users: [],
-		redirectPlay: false,
+		redirectToPlay: false,
 	};
 
 	async rejoinRoom(room_id) {
@@ -80,14 +80,14 @@ export default class Lobby extends PureComponent {
 
 		if (!joined) {
 			this.setState({
-				redirectPlay: true,
+				redirectToPlay: true,
 			});
 		} else {
 			console.log('in here');
 			this.setState({
 				room_id: room_id,
 				lobby_users: [],
-				redirectPlay: false,
+				redirectToPlay: false,
 			});
 
 			const parent = this;
@@ -145,13 +145,13 @@ export default class Lobby extends PureComponent {
 	render() {
 		const { selfUser } = this.props;
 
-		const { room_id, lobby_users, redirectPlay } = this.state;
+		const { room_id, lobby_users, redirectToPlay } = this.state;
 
 		if (!selfUser) {
 			return <Redirect to='/' />;
 		}
 
-		if (redirectPlay) {
+		if (redirectToPlay) {
 			return <Redirect to='/play' />;
 		}
 

@@ -4,6 +4,8 @@ import { RaceProgress } from './components/RaceProgress';
 import { Screen } from './components/Screen';
 import { RaceSummary } from './components/RaceSummary';
 
+import socket from './socketConfig';
+
 // Reference: https://github.com/RodneyCumming/react-typing
 
 export default class Type extends PureComponent {
@@ -39,6 +41,7 @@ export default class Type extends PureComponent {
 			caps: '',
 			showMenu: false,
 			percentComplete: 0,
+			redirectToPlay: false,
 		};
 
 		this.displayText = this.displayText.bind(this);
@@ -47,29 +50,49 @@ export default class Type extends PureComponent {
 	}
 
 	async getExcerpt() {
-		// GET request - retrieve all topics
-		const { apiPath } = this.props;
-		const res = await fetch(`${apiPath}/excerpt`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		});
-		const { excerpt } = await res.json();
-		this.setState({
-			excerpt: excerpt[0].excerpt,
-			author: excerpt[0].author,
-			title: excerpt[0].title,
-			url: excerpt[0].url,
+		return new Promise((resolve, reject) => {
+			let room_id = window.sessionStorage.getItem('roomID');
+			socket.emit('get_excerpt', room_id, function (received_excerpt) {
+				if (received_excerpt) {
+					resolve(received_excerpt);
+				} else {
+					reject('unable to get excerpt');
+				}
+			});
 		});
 	}
 
-	componentDidMount() {
+	// async getExcerpt() {
+	// 	// GET request - retrieve all topics
+	// 	const { apiPath } = this.props;
+	// 	const res = await fetch(`${apiPath}/excerpt`, {
+	// 		method: 'GET',
+	// 		headers: {
+	// 			'Content-Type': 'application/json',
+	// 		},
+	// 	});
+	// 	const { excerpt } = await res.json();
+	// 	this.setState({
+	// 		excerpt: excerpt[0].excerpt,
+	// 		author: excerpt[0].author,
+	// 		title: excerpt[0].title,
+	// 		url: excerpt[0].url,
+	// 	});
+	// }
+
+	async componentDidMount() {
 		// listen for keyboard typing
 		document.addEventListener('keydown', (e) => {
 			this.handleKeyPress(e);
 		});
-		this.displayText();
+		if (window.sessionStorage.getItem('roomID')) {
+			this.displayText();
+		} else {
+			// there isn't a stored room_id in session...
+			this.setState({
+				redirectToPlay: true,
+			});
+		}
 	}
 
 	async displayText(inputType, fromResults = false) {
@@ -81,7 +104,20 @@ export default class Type extends PureComponent {
 			inputType = this.state.inputSelected;
 		}
 
-		await this.getExcerpt();
+		await this.getExcerpt().then(
+			(excerpt) => {
+				this.setState({
+					excerpt: excerpt.excerpt,
+					author: excerpt.author,
+					title: excerpt.title,
+					url: excerpt.url,
+				});
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
+
 		contentText = this.state.excerpt;
 		// contentText = 'Test 123';
 
@@ -303,12 +339,17 @@ export default class Type extends PureComponent {
 			remainingText,
 			incorrect,
 			percentComplete,
+			redirectToPlay,
 		} = this.state;
 
 		const { selfUser } = this.props;
 
 		if (!selfUser) {
 			return <Redirect to='/' />;
+		}
+
+		if (redirectToPlay) {
+			return <Redirect to='/play' />;
 		}
 
 		return (
