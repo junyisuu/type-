@@ -13,6 +13,7 @@ module.exports = function (socket, io, username_socket_pair) {
 			});
 		}
 		if (room_id) {
+			console.log('user disconnecting from: ', room_id);
 			io.to(room_id).emit('user_disconnect', room_id);
 		}
 	});
