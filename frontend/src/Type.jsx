@@ -34,14 +34,12 @@ export default class Type extends PureComponent {
 			correctLetterCase: '',
 			inputSelected: null,
 			showStats: false,
-			keyboardScaler: '100%',
 			incorrectWordsArray: [],
 			incorrectWordCurrent: false,
 			screenFade: true,
-			caps: '',
-			showMenu: false,
 			percentComplete: 0,
 			redirectToPlay: false,
+			players: { test: 'test' },
 		};
 
 		this.displayText = this.displayText.bind(this);
@@ -62,30 +60,84 @@ export default class Type extends PureComponent {
 		});
 	}
 
-	// async getExcerpt() {
-	// 	// GET request - retrieve all topics
-	// 	const { apiPath } = this.props;
-	// 	const res = await fetch(`${apiPath}/excerpt`, {
-	// 		method: 'GET',
-	// 		headers: {
-	// 			'Content-Type': 'application/json',
-	// 		},
-	// 	});
-	// 	const { excerpt } = await res.json();
-	// 	this.setState({
-	// 		excerpt: excerpt[0].excerpt,
-	// 		author: excerpt[0].author,
-	// 		title: excerpt[0].title,
-	// 		url: excerpt[0].url,
-	// 	});
-	// }
-
 	async componentDidMount() {
+		const { selfUser } = this.props;
+		const parent = this;
 		// listen for keyboard typing
 		document.addEventListener('keydown', (e) => {
 			this.handleKeyPress(e);
 		});
 		if (window.sessionStorage.getItem('roomID')) {
+			let room_id = window.sessionStorage.getItem('roomID');
+
+			socket.emit('get_lobby_users', room_id, function (usernames) {
+				console.log('usernames', usernames);
+				if (usernames === 'Lobby error') {
+					console.log('Error getting lobby users');
+				} else {
+					for (let i = 0; i < usernames.length; i++) {
+						// https://stackoverflow.com/questions/43638938/updating-an-object-with-setstate-in-react
+						parent.setState((prevState) => {
+							let players_copy = Object.assign({}, prevState.players);
+							console.log('players_copy: ', players_copy);
+							let new_player = {
+								user: usernames[i],
+								percentComplete: 0,
+								wpm: 0,
+								finished: false,
+							};
+							players_copy[usernames[i]] = new_player;
+							return { players_copy };
+						});
+					}
+				}
+			});
+
+			// socket.emit('joined_race', room_id, selfUser.username);
+			// socket.on('add_user', function (username) {
+			// 	// let playersState = parent.state.players;
+			// 	// playersState[username] = {
+			// 	// 	username: username,
+			// 	// 	percentComplete: 0,
+			// 	// 	wpm: 0,
+			// 	// 	finished: false,
+			// 	// };
+			// 	// parent.setState({
+			// 	// 	players: playersState,
+			// 	// });
+
+			// 	parent.setState((prevState) => {
+			// 		let players_copy = Object.assign({}, prevState.players);
+			// 		let new_player = {
+			// 			user: username,
+			// 			percentComplete: 0,
+			// 			wpm: 0,
+			// 			finished: false,
+			// 		};
+			// 		players_copy[username] = new_player;
+			// 		return { players_copy };
+			// 	});
+			// });
+
+			// ---------------------------------------
+
+			// socket.on('progress_update', function (username, percentComplete) {
+			// 	// console.log(username, ' percent ', percentComplete);
+			// 	// console.log(parent.state.players[username]);
+			// 	// let playersState = parent.state.players;
+			// 	// playersState[username]['percentComplete'] = percentComplete;
+			// 	// parent.setState({
+			// 	// 	players: playersState,
+			// 	// });
+
+			// 	parent.setState((prevState) => {
+			// 		let players_copy = Object.assign({}, prevState.players);
+			// 		console.log('players copy', players_copy);
+			// 		// players_copy[username]['percentComplete'] = percentComplete;
+			// 		// return { players_copy };
+			// 	});
+			// });
+
 			this.displayText();
 		} else {
 			// there isn't a stored room_id in session...
@@ -148,7 +200,6 @@ export default class Type extends PureComponent {
 			incorrectWordsArray: [],
 			incorrectWordCurrent: false,
 			screenFade: false,
-			showMenu: false,
 		});
 		clearInterval(this.intervalID);
 		// setTimeout(() => this.refs.screen.setScrollPosition(), 0);
@@ -289,17 +340,29 @@ export default class Type extends PureComponent {
 			this.setState({
 				percentComplete: percentComplete,
 			});
+
+			this.updateProgress();
 		}
 	}
 
-	handleWordEnd() {
-		// if (this.state.incorrectWordCurrent === true) {
-		// 	let misspeltWord = this.state.completedText.split(" ").splice(-1)[0];
-		// 	this.setState(prevState => ({
+	updateProgress() {
+		const { selfUser } = this.props;
 
-		// 	}))
+		let room_id = window.sessionStorage.getItem('roomID');
+		socket.emit(
+			'keypress',
+			room_id,
+			selfUser.username,
+			this.state.percentComplete
+		);
+
+		// if the player has finished the race, send update to others
+		// if (this.state.showStats) {
+		// 	socket.broadcast.to(room_id).emit('race_finish', this.state.wpm);
 		// }
+	}
 
+	handleWordEnd() {
 		this.setState({
 			wpm:
 				this.state.currentCount > 0
@@ -332,7 +395,6 @@ export default class Type extends PureComponent {
 			incorrectArray,
 			wpm,
 			currentCount,
-			incorrectWordsArray,
 			screenFade,
 			completedText,
 			inputText,
@@ -340,6 +402,7 @@ export default class Type extends PureComponent {
 			incorrect,
 			percentComplete,
 			redirectToPlay,
+			players,
 		} = this.state;
 
 		const { selfUser } = this.props;
@@ -356,15 +419,9 @@ export default class Type extends PureComponent {
 			<div className='Type'>
 				<div className='main'>
 					<RaceProgress
-						accuracy={accuracy}
-						incorrectArray={incorrectArray}
-						wpm={wpm}
-						currentCount={currentCount}
-						incorrectWordsArray={incorrectWordsArray}
-						completedText={completedText}
-						inputText={inputText}
 						percentComplete={percentComplete}
 						selfUser={selfUser}
+						players={players}
 					/>
 					<Screen
 						screenFade={screenFade}
@@ -373,7 +430,6 @@ export default class Type extends PureComponent {
 						remainingText={remainingText}
 						incorrect={incorrect}
 						showStats={showStats}
-						// ref='screen'
 					/>
 					{showStats ? (
 						<RaceSummary
@@ -386,7 +442,6 @@ export default class Type extends PureComponent {
 							incorrectArray={incorrectArray}
 						/>
 					) : null}
-					{/* <Button onClick={this.displayText}>Start</Button> */}
 				</div>
 			</div>
 		);

@@ -105,4 +105,14 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 
 		callback(user_username_list);
 	});
+
+	socket.on('joined_race', function (room_id, username) {
+		io.to(room_id).emit('add_user', username);
+	});
+
+	socket.on('keypress', function (room_id, username, percentComplete) {
+		socket.broadcast
+			.to(room_id)
+			.emit('progress_update', username, percentComplete);
+	});
 };
