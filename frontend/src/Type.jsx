@@ -291,6 +291,9 @@ export default class Type extends PureComponent {
 
 			this.updateProgress();
 		}
+		if (e.key == 'Backspace') {
+			e.preventDefault();
+		}
 	}
 
 	updateProgress() {
