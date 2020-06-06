@@ -12,6 +12,10 @@ export default class Type extends PureComponent {
 	constructor(props) {
 		super(props);
 
+		let lobby_users = JSON.parse(window.sessionStorage.getItem('lobby_users'));
+
+		console.log('lobby users in TYPE ', lobby_users);
+
 		this.state = {
 			excerpt: '',
 			author: '',
@@ -39,7 +43,7 @@ export default class Type extends PureComponent {
 			screenFade: true,
 			percentComplete: 0,
 			redirectToPlay: false,
-			players: { test: 'test' },
+			lobby_users: lobby_users,
 		};
 
 		this.displayText = this.displayText.bind(this);
@@ -68,75 +72,19 @@ export default class Type extends PureComponent {
 			this.handleKeyPress(e);
 		});
 		if (window.sessionStorage.getItem('roomID')) {
-			let room_id = window.sessionStorage.getItem('roomID');
-
-			socket.emit('get_lobby_users', room_id, function (usernames) {
-				console.log('usernames', usernames);
-				if (usernames === 'Lobby error') {
-					console.log('Error getting lobby users');
-				} else {
-					for (let i = 0; i < usernames.length; i++) {
-						// https://stackoverflow.com/questions/43638938/updating-an-object-with-setstate-in-react
-						parent.setState((prevState) => {
-							let players_copy = Object.assign({}, prevState.players);
-							console.log('players_copy: ', players_copy);
-							let new_player = {
-								user: usernames[i],
-								percentComplete: 0,
-								wpm: 0,
-								finished: false,
-							};
-							players_copy[usernames[i]] = new_player;
-							return { players_copy };
-						});
-					}
-				}
-			});
-
-			// socket.emit('joined_race', room_id, selfUser.username);
-			// socket.on('add_user', function (username) {
-			// 	// let playersState = parent.state.players;
-			// 	// playersState[username] = {
-			// 	// 	username: username,
-			// 	// 	percentComplete: 0,
-			// 	// 	wpm: 0,
-			// 	// 	finished: false,
-			// 	// };
-			// 	// parent.setState({
-			// 	// 	players: playersState,
-			// 	// });
-
-			// 	parent.setState((prevState) => {
-			// 		let players_copy = Object.assign({}, prevState.players);
-			// 		let new_player = {
-			// 			user: username,
-			// 			percentComplete: 0,
-			// 			wpm: 0,
-			// 			finished: false,
-			// 		};
-			// 		players_copy[username] = new_player;
-			// 		return { players_copy };
-			// 	});
-			// });
-
 			// ---------------------------------------
+			// https://stackoverflow.com/questions/43638938/updating-an-object-with-setstate-in-react
 
-			// socket.on('progress_update', function (username, percentComplete) {
-			// 	// console.log(username, ' percent ', percentComplete);
-			// 	// console.log(parent.state.players[username]);
-			// 	// let playersState = parent.state.players;
-			// 	// playersState[username]['percentComplete'] = percentComplete;
-			// 	// parent.setState({
-			// 	// 	players: playersState,
-			// 	// });
-
-			// 	parent.setState((prevState) => {
-			// 		let players_copy = Object.assign({}, prevState.players);
-			// 		console.log('players copy', players_copy);
-			// 		// players_copy[username]['percentComplete'] = percentComplete;
-			// 		// return { players_copy };
-			// 	});
-			// });
+			socket.on('progress_update', function (username, percentComplete) {
+				console.log('percent complete sent ', percentComplete);
+				parent.setState((prevState) => {
+					let lobby_users = Object.assign({}, prevState.lobby_users);
+					// console.log(lobby_users, '_ ', lobby_users[username]);
+					lobby_users[username]['percentComplete'] = percentComplete;
+					return { lobby_users };
+				});
+				console.log('after update: ', parent.state.lobby_users);
+			});
 
 			this.displayText();
 		} else {
@@ -347,14 +295,12 @@ export default class Type extends PureComponent {
 
 	updateProgress() {
 		const { selfUser } = this.props;
+		const { percentComplete } = this.state;
 
 		let room_id = window.sessionStorage.getItem('roomID');
-		socket.emit(
-			'keypress',
-			room_id,
-			selfUser.username,
-			this.state.percentComplete
-		);
+		if (percentComplete != 0) {
+			socket.emit('keypress', room_id, selfUser.username, percentComplete);
+		}
 
 		// if the player has finished the race, send update to others
 		// if (this.state.showStats) {
@@ -402,7 +348,7 @@ export default class Type extends PureComponent {
 			incorrect,
 			percentComplete,
 			redirectToPlay,
-			players,
+			lobby_users,
 		} = this.state;
 
 		const { selfUser } = this.props;
@@ -421,7 +367,7 @@ export default class Type extends PureComponent {
 					<RaceProgress
 						percentComplete={percentComplete}
 						selfUser={selfUser}
-						players={players}
+						lobby_users={lobby_users}
 					/>
 					<Screen
 						screenFade={screenFade}

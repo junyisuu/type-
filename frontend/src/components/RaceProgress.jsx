@@ -4,7 +4,7 @@ import './RaceProgress.css';
 
 export class RaceProgress extends PureComponent {
 	render() {
-		const { percentComplete, selfUser, players } = this.props;
+		const { percentComplete, selfUser, lobby_users } = this.props;
 
 		return (
 			<Container className='race_progress'>
@@ -23,22 +23,24 @@ export class RaceProgress extends PureComponent {
 							></Progress>
 						</GridColumn>
 					</Grid.Row>
-					{Object.keys(players).map((player) => (
-						<Grid.Row>
-							<Grid.Column width={1}>
-								<div className='progress_text'>
-									<b>{player.user}</b>
-								</div>
-							</Grid.Column>
-							<GridColumn width={15}>
-								<Progress
-									percent={player.percentComplete}
-									progress
-									size='small'
-								></Progress>
-							</GridColumn>
-						</Grid.Row>
-					))}
+					{Object.keys(lobby_users)
+						.filter((user) => lobby_users[user].username !== selfUser.username)
+						.map((player) => (
+							<Grid.Row>
+								<Grid.Column width={1}>
+									<div className='progress_text'>
+										<b>{lobby_users[player].username}</b>
+									</div>
+								</Grid.Column>
+								<GridColumn width={15}>
+									<Progress
+										percent={lobby_users[player].percentComplete}
+										progress
+										size='small'
+									></Progress>
+								</GridColumn>
+							</Grid.Row>
+						))}
 				</Grid>
 			</Container>
 		);
