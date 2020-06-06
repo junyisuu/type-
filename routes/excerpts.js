@@ -9,6 +9,7 @@ module.exports = (router) => {
 
 	router.get('/excerpt', async (req, res) => {
 		const excerpt = await Excerpt.aggregate().sample(1).exec();
+		console.log(excerpt);
 		res.json({ excerpt });
 	});
 };

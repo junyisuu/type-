@@ -16,8 +16,8 @@ export default class Lobby extends PureComponent {
 		// https://stackoverflow.com/questions/52064303/reactjs-pass-props-with-redirect-component
 		// room_id: this.props.location.state.room_id,
 		room_id: '',
-		lobby_users: [],
-		redirectPlay: false,
+		lobby_users: {},
+		redirectToPlay: false,
 	};
 
 	async rejoinRoom(room_id) {
@@ -80,25 +80,37 @@ export default class Lobby extends PureComponent {
 
 		if (!joined) {
 			this.setState({
-				redirectPlay: true,
+				redirectToPlay: true,
 			});
 		} else {
 			console.log('in here');
 			this.setState({
 				room_id: room_id,
-				lobby_users: [],
-				redirectPlay: false,
+				lobby_users: {},
+				redirectToPlay: false,
 			});
 
 			const parent = this;
 			socket.emit('get_lobby_users', room_id, function (usernames) {
-				console.log('usernames', usernames);
 				if (usernames === 'Lobby error') {
 					console.log('Error getting lobby users');
 				} else {
+					// https://stackoverflow.com/questions/2274242/how-to-use-a-variable-for-a-key-in-a-javascript-object-literal
+					let players = {};
+					console.log('usernames ', usernames);
+					for (let i = 0; i < usernames.length; i++) {
+						players[usernames[i]] = {
+							username: usernames[i],
+							percentComplete: 0,
+							wpm: 0,
+							finished: false,
+						};
+					}
+					console.log('players ', players);
 					parent.setState({
-						lobby_users: usernames,
+						lobby_users: players,
 					});
+					window.sessionStorage.setItem('lobby_users', JSON.stringify(players));
 				}
 			});
 
@@ -108,9 +120,24 @@ export default class Lobby extends PureComponent {
 					if (usernames === 'Lobby error') {
 						console.log('lobby error');
 					} else {
+						let players = {};
+						console.log('usernames ', usernames);
+						for (let i = 0; i < usernames.length; i++) {
+							players[usernames[i]] = {
+								username: usernames[i],
+								percentComplete: 0,
+								wpm: 0,
+								finished: false,
+							};
+						}
+						console.log('players ', players);
 						parent.setState({
-							lobby_users: usernames,
+							lobby_users: players,
 						});
+						window.sessionStorage.setItem(
+							'lobby_users',
+							JSON.stringify(players)
+						);
 					}
 				});
 			});
@@ -121,9 +148,24 @@ export default class Lobby extends PureComponent {
 					if (usernames === 'Lobby error') {
 						console.log('lobby error');
 					} else {
+						let players = {};
+						console.log('usernames ', usernames);
+						for (let i = 0; i < usernames.length; i++) {
+							players[usernames[i]] = {
+								username: usernames[i],
+								percentComplete: 0,
+								wpm: 0,
+								finished: false,
+							};
+						}
+						console.log('players ', players);
 						parent.setState({
-							lobby_users: usernames,
+							lobby_users: players,
 						});
+						window.sessionStorage.setItem(
+							'lobby_users',
+							JSON.stringify(players)
+						);
 					}
 				});
 			});
@@ -145,13 +187,13 @@ export default class Lobby extends PureComponent {
 	render() {
 		const { selfUser } = this.props;
 
-		const { room_id, lobby_users, redirectPlay } = this.state;
+		const { room_id, lobby_users, redirectToPlay } = this.state;
 
 		if (!selfUser) {
 			return <Redirect to='/' />;
 		}
 
-		if (redirectPlay) {
+		if (redirectToPlay) {
 			return <Redirect to='/play' />;
 		}
 
@@ -161,8 +203,8 @@ export default class Lobby extends PureComponent {
 				<p>Invite your friends with the Room ID: {room_id}</p>
 				<Container>
 					<Card.Group itemsPerRow={6}>
-						{lobby_users.map((user) => (
-							<Card centered key={user}>
+						{Object.keys(lobby_users).map((user) => (
+							<Card centered key={user.username}>
 								<Card.Header textAlign={'center'}>{user}</Card.Header>
 							</Card>
 						))}

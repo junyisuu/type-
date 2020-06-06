@@ -4,11 +4,17 @@ import { RaceProgress } from './components/RaceProgress';
 import { Screen } from './components/Screen';
 import { RaceSummary } from './components/RaceSummary';
 
+import socket from './socketConfig';
+
 // Reference: https://github.com/RodneyCumming/react-typing
 
 export default class Type extends PureComponent {
 	constructor(props) {
 		super(props);
+
+		let lobby_users = JSON.parse(window.sessionStorage.getItem('lobby_users'));
+
+		console.log('lobby users in TYPE ', lobby_users);
 
 		this.state = {
 			excerpt: '',
@@ -32,13 +38,12 @@ export default class Type extends PureComponent {
 			correctLetterCase: '',
 			inputSelected: null,
 			showStats: false,
-			keyboardScaler: '100%',
 			incorrectWordsArray: [],
 			incorrectWordCurrent: false,
 			screenFade: true,
-			caps: '',
-			showMenu: false,
 			percentComplete: 0,
+			redirectToPlay: false,
+			lobby_users: lobby_users,
 		};
 
 		this.displayText = this.displayText.bind(this);
@@ -47,29 +52,47 @@ export default class Type extends PureComponent {
 	}
 
 	async getExcerpt() {
-		// GET request - retrieve all topics
-		const { apiPath } = this.props;
-		const res = await fetch(`${apiPath}/excerpt`, {
-			method: 'GET',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-		});
-		const { excerpt } = await res.json();
-		this.setState({
-			excerpt: excerpt[0].excerpt,
-			author: excerpt[0].author,
-			title: excerpt[0].title,
-			url: excerpt[0].url,
+		return new Promise((resolve, reject) => {
+			let room_id = window.sessionStorage.getItem('roomID');
+			socket.emit('get_excerpt', room_id, function (received_excerpt) {
+				if (received_excerpt) {
+					resolve(received_excerpt);
+				} else {
+					reject('unable to get excerpt');
+				}
+			});
 		});
 	}
 
-	componentDidMount() {
+	async componentDidMount() {
+		const { selfUser } = this.props;
+		const parent = this;
 		// listen for keyboard typing
 		document.addEventListener('keydown', (e) => {
 			this.handleKeyPress(e);
 		});
-		this.displayText();
+		if (window.sessionStorage.getItem('roomID')) {
+			// ---------------------------------------
+			// https://stackoverflow.com/questions/43638938/updating-an-object-with-setstate-in-react
+
+			socket.on('progress_update', function (username, percentComplete) {
+				console.log('percent complete sent ', percentComplete);
+				parent.setState((prevState) => {
+					let lobby_users = Object.assign({}, prevState.lobby_users);
+					// console.log(lobby_users, '_ ', lobby_users[username]);
+					lobby_users[username]['percentComplete'] = percentComplete;
+					return { lobby_users };
+				});
+				console.log('after update: ', parent.state.lobby_users);
+			});
+
+			this.displayText();
+		} else {
+			// there isn't a stored room_id in session...
+			this.setState({
+				redirectToPlay: true,
+			});
+		}
 	}
 
 	async displayText(inputType, fromResults = false) {
@@ -81,7 +104,20 @@ export default class Type extends PureComponent {
 			inputType = this.state.inputSelected;
 		}
 
-		await this.getExcerpt();
+		await this.getExcerpt().then(
+			(excerpt) => {
+				this.setState({
+					excerpt: excerpt.excerpt,
+					author: excerpt.author,
+					title: excerpt.title,
+					url: excerpt.url,
+				});
+			},
+			(error) => {
+				console.log(error);
+			}
+		);
+
 		contentText = this.state.excerpt;
 		// contentText = 'Test 123';
 
@@ -112,7 +148,6 @@ export default class Type extends PureComponent {
 			incorrectWordsArray: [],
 			incorrectWordCurrent: false,
 			screenFade: false,
-			showMenu: false,
 		});
 		clearInterval(this.intervalID);
 		// setTimeout(() => this.refs.screen.setScrollPosition(), 0);
@@ -253,17 +288,27 @@ export default class Type extends PureComponent {
 			this.setState({
 				percentComplete: percentComplete,
 			});
+
+			this.updateProgress();
 		}
 	}
 
-	handleWordEnd() {
-		// if (this.state.incorrectWordCurrent === true) {
-		// 	let misspeltWord = this.state.completedText.split(" ").splice(-1)[0];
-		// 	this.setState(prevState => ({
+	updateProgress() {
+		const { selfUser } = this.props;
+		const { percentComplete } = this.state;
 
-		// 	}))
+		let room_id = window.sessionStorage.getItem('roomID');
+		if (percentComplete != 0) {
+			socket.emit('keypress', room_id, selfUser.username, percentComplete);
+		}
+
+		// if the player has finished the race, send update to others
+		// if (this.state.showStats) {
+		// 	socket.broadcast.to(room_id).emit('race_finish', this.state.wpm);
 		// }
+	}
 
+	handleWordEnd() {
 		this.setState({
 			wpm:
 				this.state.currentCount > 0
@@ -296,13 +341,14 @@ export default class Type extends PureComponent {
 			incorrectArray,
 			wpm,
 			currentCount,
-			incorrectWordsArray,
 			screenFade,
 			completedText,
 			inputText,
 			remainingText,
 			incorrect,
 			percentComplete,
+			redirectToPlay,
+			lobby_users,
 		} = this.state;
 
 		const { selfUser } = this.props;
@@ -311,19 +357,17 @@ export default class Type extends PureComponent {
 			return <Redirect to='/' />;
 		}
 
+		if (redirectToPlay) {
+			return <Redirect to='/play' />;
+		}
+
 		return (
 			<div className='Type'>
 				<div className='main'>
 					<RaceProgress
-						accuracy={accuracy}
-						incorrectArray={incorrectArray}
-						wpm={wpm}
-						currentCount={currentCount}
-						incorrectWordsArray={incorrectWordsArray}
-						completedText={completedText}
-						inputText={inputText}
 						percentComplete={percentComplete}
 						selfUser={selfUser}
+						lobby_users={lobby_users}
 					/>
 					<Screen
 						screenFade={screenFade}
@@ -332,7 +376,6 @@ export default class Type extends PureComponent {
 						remainingText={remainingText}
 						incorrect={incorrect}
 						showStats={showStats}
-						// ref='screen'
 					/>
 					{showStats ? (
 						<RaceSummary
@@ -345,7 +388,6 @@ export default class Type extends PureComponent {
 							incorrectArray={incorrectArray}
 						/>
 					) : null}
-					{/* <Button onClick={this.displayText}>Start</Button> */}
 				</div>
 			</div>
 		);
