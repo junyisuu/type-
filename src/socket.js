@@ -1,5 +1,5 @@
 const shortid = require('shortid');
-const axios = require('axios');
+// const axios = require('axios');
 
 const { Excerpt } = require('../src/database');
 
@@ -18,7 +18,13 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 		}
 		if (room_id) {
 			console.log('user disconnecting from: ', room_id);
-			io.to(room_id).emit('user_disconnect', room_id);
+			io.to(room_id).emit(
+				'user_disconnect',
+				room_id,
+				username_socket_pair[socket.id]
+			);
+
+			all_rooms[room_id].user_count--;
 
 			// if user is disconnecting from a single user lobby, delete the lobby from all_rooms
 			if (Object.keys(io.sockets.adapter.rooms[room_id].sockets).length === 1) {
@@ -30,7 +36,11 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 	socket.on('leave_room', function (room_id) {
 		try {
 			socket.leave(room_id);
-			io.to(room_id).emit('user_disconnect', room_id);
+			io.to(room_id).emit(
+				'user_disconnect',
+				room_id,
+				username_socket_pair[socket.id]
+			);
 		} catch (e) {
 			console.log('Error - leave room: ', e);
 		}
@@ -44,6 +54,24 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 	socket.on('get_excerpt', async function (room_id, callback) {
 		const { excerpt_obj } = all_rooms[room_id];
 		callback(excerpt_obj);
+	});
+
+	socket.on('ready', function (room_id, username, ready) {
+		io.in(room_id).emit('ready_toggle', username, ready);
+		if (!all_rooms[room_id]) {
+			console.log('Error finding room data');
+			return;
+		}
+
+		if (ready) {
+			all_rooms[room_id].ready_count++;
+		} else {
+			all_rooms[room_id].ready_count--;
+		}
+
+		if (all_rooms[room_id].ready_count === all_rooms[room_id].user_count) {
+			io.in(room_id).emit('race_starting');
+		}
 	});
 
 	socket.on('create_room', async function (username, callback) {
@@ -62,6 +90,8 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 			room_id: room_id,
 			excerpt_obj: next_excerpt_obj[0],
 			in_progress: false,
+			ready_count: 0,
+			user_count: 1,
 		};
 
 		callback(room_id);
@@ -81,7 +111,8 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 			socket.join(room_id);
 			// io.in is to all sockets including the sender
 			// io.to is to all sockets excluding the sender
-			io.to(room_id).emit('lobby_new_user', room_id);
+			io.to(room_id).emit('lobby_new_user', room_id, username);
+			all_rooms[room_id].user_count++;
 			callback('room exists');
 		} else {
 			callback("room doesn't exist", room_id);
