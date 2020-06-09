@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { Container, Button, Grid } from 'semantic-ui-react';
+import { Link } from 'react-router-dom';
+import { Container, Button, Grid, Icon } from 'semantic-ui-react';
 import './RaceSummary.css';
 
 export class RaceSummary extends PureComponent {
@@ -37,7 +38,16 @@ export class RaceSummary extends PureComponent {
 							<p>Typos: {incorrectArray.length}</p>
 						</Grid.Column>
 						<Grid.Column textAlign={'center'} width={4}>
-							<Button>Next Race</Button>
+							<Link
+								to={{
+									pathname: '/lobby',
+								}}
+							>
+								<Button icon labelPosition='right'>
+									Back to Lobby
+									<Icon name='home' />
+								</Button>
+							</Link>
 						</Grid.Column>
 					</Grid.Row>
 				</Grid>

@@ -65,25 +65,19 @@ export default class Type extends PureComponent {
 	}
 
 	async componentDidMount() {
-		const { selfUser } = this.props;
 		const parent = this;
 		// listen for keyboard typing
 		document.addEventListener('keydown', (e) => {
 			this.handleKeyPress(e);
 		});
 		if (window.sessionStorage.getItem('roomID')) {
-			// ---------------------------------------
 			// https://stackoverflow.com/questions/43638938/updating-an-object-with-setstate-in-react
-
 			socket.on('progress_update', function (username, percentComplete) {
-				console.log('percent complete sent ', percentComplete);
 				parent.setState((prevState) => {
 					let lobby_users = Object.assign({}, prevState.lobby_users);
-					// console.log(lobby_users, '_ ', lobby_users[username]);
 					lobby_users[username]['percentComplete'] = percentComplete;
 					return { lobby_users };
 				});
-				console.log('after update: ', parent.state.lobby_users);
 			});
 
 			this.displayText();
@@ -211,6 +205,9 @@ export default class Type extends PureComponent {
 			if (textLetter === '’') {
 				textLetter = "'";
 			}
+			if (textLetter === '–') {
+				textLetter = '-';
+			}
 
 			this.setState({
 				// if Shift then gets e.code which is either "ShiftLeft" or "ShiftRight"
@@ -291,6 +288,9 @@ export default class Type extends PureComponent {
 
 			this.updateProgress();
 		}
+		if (e.key === 'Backspace') {
+			e.preventDefault();
+		}
 	}
 
 	updateProgress() {
@@ -298,7 +298,7 @@ export default class Type extends PureComponent {
 		const { percentComplete } = this.state;
 
 		let room_id = window.sessionStorage.getItem('roomID');
-		if (percentComplete != 0) {
+		if (percentComplete !== 0) {
 			socket.emit('keypress', room_id, selfUser.username, percentComplete);
 		}
 
