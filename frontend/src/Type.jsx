@@ -205,6 +205,9 @@ export default class Type extends PureComponent {
 			if (textLetter === '’') {
 				textLetter = "'";
 			}
+			if (textLetter === '–') {
+				textLetter = '-';
+			}
 
 			this.setState({
 				// if Shift then gets e.code which is either "ShiftLeft" or "ShiftRight"

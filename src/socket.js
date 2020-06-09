@@ -70,7 +70,20 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 		}
 
 		if (all_rooms[room_id].ready_count === all_rooms[room_id].user_count) {
+			// https://stackoverflow.com/questions/42398795/countdown-timer-broadcast-with-socket-io-and-node-js
 			io.in(room_id).emit('race_starting');
+			let raceCountdown = setInterval(function () {
+				io.in(room_id).emit(
+					'start_counter',
+					all_rooms[room_id].start_race_counter
+				);
+				all_rooms[room_id].start_race_counter--;
+				if (all_rooms[room_id].start_race_counter === 0) {
+					io.in(room_id).emit('race_started');
+					clearInterval(raceCountdown);
+					all_rooms[room_id].start_race_counter = 10;
+				}
+			}, 1000);
 		}
 	});
 
@@ -92,6 +105,7 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 			in_progress: false,
 			ready_count: 0,
 			user_count: 1,
+			start_race_counter: 10,
 		};
 
 		callback(room_id);
@@ -109,10 +123,10 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 		let exist = socket.adapter.rooms[room_id];
 		if (exist) {
 			socket.join(room_id);
+			all_rooms[room_id].user_count++;
 			// io.in is to all sockets including the sender
 			// io.to is to all sockets excluding the sender
 			io.to(room_id).emit('lobby_new_user', room_id, username);
-			all_rooms[room_id].user_count++;
 			callback('room exists');
 		} else {
 			callback("room doesn't exist", room_id);

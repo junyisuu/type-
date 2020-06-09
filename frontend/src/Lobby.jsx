@@ -1,6 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { Button, Icon, Card, Container } from 'semantic-ui-react';
+import { Button, Icon, Card, Container, Message } from 'semantic-ui-react';
 
 import socket from './socketConfig';
 
@@ -20,6 +20,9 @@ export default class Lobby extends PureComponent {
 		lobby_users: {},
 		redirectToPlay: false,
 		ready: false,
+		race_starting: false,
+		countdown: 10,
+		race_started: false,
 	};
 
 	async rejoinRoom(room_id) {
@@ -151,7 +154,6 @@ export default class Lobby extends PureComponent {
 			});
 
 			socket.on('ready_toggle', function (username, ready_status) {
-				console.log('got ready event ', ready_status);
 				parent.setState((prevState) => {
 					let lobby_users = Object.assign({}, prevState.lobby_users);
 					lobby_users[username].ready = ready_status;
@@ -161,6 +163,24 @@ export default class Lobby extends PureComponent {
 					'lobby_users',
 					JSON.stringify(parent.state.lobby_users)
 				);
+			});
+
+			socket.on('race_starting', function () {
+				parent.setState({
+					race_starting: true,
+				});
+			});
+
+			socket.on('start_counter', function (countdown) {
+				parent.setState({
+					countdown: countdown,
+				});
+			});
+
+			socket.on('race_started', function () {
+				parent.setState({
+					race_started: true,
+				});
 			});
 		}
 	}
@@ -187,7 +207,15 @@ export default class Lobby extends PureComponent {
 	render() {
 		const { selfUser } = this.props;
 
-		const { room_id, lobby_users, redirectToPlay, ready } = this.state;
+		const {
+			room_id,
+			lobby_users,
+			redirectToPlay,
+			ready,
+			race_starting,
+			countdown,
+			race_started,
+		} = this.state;
 
 		if (!selfUser) {
 			return <Redirect to='/' />;
@@ -197,10 +225,38 @@ export default class Lobby extends PureComponent {
 			return <Redirect to='/play' />;
 		}
 
+		if (race_started) {
+			return (
+				<Redirect
+					to={{
+						pathname: '/type',
+						state: {
+							room_id: room_id,
+							lobby_users: lobby_users,
+						},
+					}}
+				/>
+			);
+		}
+
 		return (
 			<Fragment>
 				<h1>Lobby</h1>
-				<p>Invite your friends with the Room ID: {room_id}</p>
+				<p style={{ marginBottom: '3px' }}>
+					Invite your friends with the Room ID: {room_id}
+				</p>
+				{race_starting ? (
+					<Message positive compact size='tiny'>
+						<Message.Header>Race starting in {countdown}</Message.Header>
+					</Message>
+				) : (
+					<Message compact size='tiny'>
+						<Message.Header>
+							Race will start when all players are ready.
+						</Message.Header>
+					</Message>
+				)}
+
 				<Container>
 					<Card.Group itemsPerRow={6}>
 						{Object.keys(lobby_users).map((user) => (
@@ -221,16 +277,23 @@ export default class Lobby extends PureComponent {
 					</Card.Group>
 				</Container>
 				<Container style={{ marginTop: '20px' }}>
-					<Button
-						toggle
-						active={ready}
-						onClick={this.toggleReady}
-						icon
-						labelPosition='right'
-					>
-						Ready
-						<Icon name='check square outline' />
-					</Button>
+					{race_starting ? (
+						<Button toggle disabled icon labelPosition='right'>
+							Ready
+							<Icon name='check square outline' />
+						</Button>
+					) : (
+						<Button
+							toggle
+							active={ready}
+							onClick={this.toggleReady}
+							icon
+							labelPosition='right'
+						>
+							Ready
+							<Icon name='check square outline' />
+						</Button>
+					)}
 
 					<Link
 						to={{
