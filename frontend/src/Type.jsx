@@ -13,8 +13,7 @@ export default class Type extends PureComponent {
 		super(props);
 
 		let lobby_users = JSON.parse(window.sessionStorage.getItem('lobby_users'));
-
-		console.log('lobby users in TYPE ', lobby_users);
+		let room_id = window.sessionStorage.getItem('roomID');
 
 		this.state = {
 			excerpt: '',
@@ -44,6 +43,7 @@ export default class Type extends PureComponent {
 			percentComplete: 0,
 			redirectToPlay: false,
 			lobby_users: lobby_users,
+			room_id: room_id,
 		};
 
 		this.displayText = this.displayText.bind(this);
@@ -56,7 +56,6 @@ export default class Type extends PureComponent {
 			let room_id = window.sessionStorage.getItem('roomID');
 			socket.emit('get_excerpt', room_id, function (received_excerpt) {
 				if (received_excerpt) {
-					console.log('received excerpt: ', received_excerpt);
 					resolve(received_excerpt);
 				} else {
 					reject('unable to get excerpt');
@@ -79,6 +78,18 @@ export default class Type extends PureComponent {
 					lobby_users[username]['percentComplete'] = percentComplete;
 					return { lobby_users };
 				});
+			});
+
+			socket.on('update_race_stats', function (username, wpm, rank) {
+				console.log('inside update');
+				parent.setState((prevState) => {
+					let lobby_users = Object.assign({}, prevState.lobby_users);
+					lobby_users[username]['wpm'] = wpm;
+					lobby_users[username]['finished'] = true;
+					lobby_users[username]['rank'] = rank;
+					return { lobby_users };
+				});
+				console.log('updated ', parent.state.lobby_users);
 			});
 
 			this.displayText();
@@ -113,8 +124,8 @@ export default class Type extends PureComponent {
 			}
 		);
 
-		contentText = this.state.excerpt;
-		// contentText = 'Test 123';
+		// contentText = this.state.excerpt;
+		contentText = 'Test123';
 
 		while (nextText === true && contentText === this.state.inputText) {
 			contentText = 'This was the next message in line';
@@ -304,9 +315,9 @@ export default class Type extends PureComponent {
 		}
 
 		// if the player has finished the race, send update to others
-		// if (this.state.showStats) {
-		// 	socket.broadcast.to(room_id).emit('race_finish', this.state.wpm);
-		// }
+		if (this.state.showStats) {
+			socket.emit('finished_race', room_id, selfUser.username, this.state.wpm);
+		}
 	}
 
 	handleWordEnd() {
@@ -350,6 +361,7 @@ export default class Type extends PureComponent {
 			percentComplete,
 			redirectToPlay,
 			lobby_users,
+			room_id,
 		} = this.state;
 
 		const { selfUser } = this.props;
@@ -387,6 +399,9 @@ export default class Type extends PureComponent {
 							wpm={wpm}
 							currentCount={currentCount}
 							incorrectArray={incorrectArray}
+							room_id={room_id}
+							lobby_users={lobby_users}
+							selfUser={selfUser}
 						/>
 					) : null}
 				</div>

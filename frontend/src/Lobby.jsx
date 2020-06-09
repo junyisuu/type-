@@ -111,6 +111,7 @@ export default class Lobby extends PureComponent {
 							wpm: 0,
 							finished: false,
 							ready: false,
+							rank: 0,
 						};
 					}
 					console.log('players ', players);
@@ -131,6 +132,7 @@ export default class Lobby extends PureComponent {
 						wpm: 0,
 						finished: false,
 						ready: false,
+						rank: 0,
 					};
 					return { lobby_users };
 				});
@@ -294,21 +296,6 @@ export default class Lobby extends PureComponent {
 							<Icon name='check square outline' />
 						</Button>
 					)}
-
-					<Link
-						to={{
-							pathname: '/type',
-							state: {
-								room_id: room_id,
-								lobby_users: lobby_users,
-							},
-						}}
-					>
-						<Button icon labelPosition='right'>
-							Play
-							<Icon name='play' />
-						</Button>
-					</Link>
 
 					<Link to='/play'>
 						<Button icon labelPosition='right' onClick={this.leaveRoom}>
