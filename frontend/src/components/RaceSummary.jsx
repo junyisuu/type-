@@ -3,7 +3,19 @@ import { Link } from 'react-router-dom';
 import { Container, Button, Grid, Icon } from 'semantic-ui-react';
 import './RaceSummary.css';
 
+import socket from '../socketConfig';
+
 export class RaceSummary extends PureComponent {
+	constructor(props) {
+		super(props);
+		this.endRace = this.endRace.bind(this);
+	}
+
+	endRace() {
+		let room_id = window.sessionStorage.getItem('roomID');
+		socket.emit('race_ended', room_id);
+	}
+
 	render() {
 		const {
 			title,
@@ -43,7 +55,7 @@ export class RaceSummary extends PureComponent {
 									pathname: '/lobby',
 								}}
 							>
-								<Button icon labelPosition='right'>
+								<Button onClick={this.endRace} icon labelPosition='right'>
 									Back to Lobby
 									<Icon name='home' />
 								</Button>

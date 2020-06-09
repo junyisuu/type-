@@ -56,6 +56,7 @@ export default class Type extends PureComponent {
 			let room_id = window.sessionStorage.getItem('roomID');
 			socket.emit('get_excerpt', room_id, function (received_excerpt) {
 				if (received_excerpt) {
+					console.log('received excerpt: ', received_excerpt);
 					resolve(received_excerpt);
 				} else {
 					reject('unable to get excerpt');

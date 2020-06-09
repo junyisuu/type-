@@ -56,6 +56,12 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 		callback(excerpt_obj);
 	});
 
+	socket.on('race_ended', async function (room_id) {
+		// gets called once for every player that ends race
+		let next_excerpt_obj = await getExcerpt();
+		all_rooms[room_id].excerpt_obj = next_excerpt_obj[0];
+	});
+
 	socket.on('ready', function (room_id, username, ready) {
 		io.in(room_id).emit('ready_toggle', username, ready);
 		if (!all_rooms[room_id]) {
