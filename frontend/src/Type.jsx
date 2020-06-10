@@ -124,8 +124,8 @@ export default class Type extends PureComponent {
 			}
 		);
 
-		// contentText = this.state.excerpt;
-		contentText = 'Test123';
+		contentText = this.state.excerpt;
+		// contentText = 'Test123';
 
 		while (nextText === true && contentText === this.state.inputText) {
 			contentText = 'This was the next message in line';

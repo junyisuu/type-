@@ -1,7 +1,7 @@
 const shortid = require('shortid');
 // const axios = require('axios');
 
-const { Excerpt } = require('../src/database');
+const { Excerpt, User } = require('../src/database');
 
 // https://stackoverflow.com/questions/24815106/can-i-separate-socket-io-event-listeners-into-different-modules
 module.exports = function (socket, io, username_socket_pair, all_rooms) {
@@ -90,7 +90,7 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 				if (all_rooms[room_id].start_race_counter === 0) {
 					io.in(room_id).emit('race_started');
 					clearInterval(raceCountdown);
-					all_rooms[room_id].start_race_counter = 10;
+					all_rooms[room_id].start_race_counter = 3;
 				}
 			}, 1000);
 		}
@@ -114,7 +114,7 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 			in_progress: false,
 			ready_count: 0,
 			user_count: 1,
-			start_race_counter: 10,
+			start_race_counter: 3,
 			race_rank: 1,
 		};
 
@@ -171,9 +171,50 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 			.emit('progress_update', username, percentComplete);
 	});
 
-	socket.on('finished_race', function (room_id, username, wpm) {
+	socket.on('finished_race', async function (room_id, username, wpm) {
 		let rank = all_rooms[room_id].race_rank;
 		io.in(room_id).emit('update_race_stats', username, wpm, rank);
 		all_rooms[room_id].race_rank++;
+
+		let racesWon;
+		let averageWPM;
+		const user = await User.findOne(
+			{ username: username },
+			'averageWPM racesCompleted racesWon'
+		)
+			.lean()
+			.exec(async function (err, user) {
+				if (err) {
+					console.log('Error finding user');
+					console.log(err);
+				} else {
+					console.log('Successfully found user');
+					racesWon = user.racesWon;
+					if (rank == 1) {
+						racesWon += 1;
+					}
+
+					averageWPM = Math.floor((Number(user.averageWPM) + Number(wpm)) / 2);
+
+					await User.findOneAndUpdate(
+						{ username: username },
+						{
+							$set: {
+								averageWPM: averageWPM,
+								racesCompleted: user.racesCompleted + 1,
+								racesWon: racesWon,
+							},
+						}
+					).exec(function (err, result) {
+						if (err) {
+							console.log('Error updating user stats');
+							console.log(err);
+						} else {
+							console.log('Successfully updated user stats');
+							console.log(result);
+						}
+					});
+				}
+			});
 	});
 };
