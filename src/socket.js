@@ -90,7 +90,7 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 				if (all_rooms[room_id].start_race_counter === 0) {
 					io.in(room_id).emit('race_started');
 					clearInterval(raceCountdown);
-					all_rooms[room_id].start_race_counter = 3;
+					all_rooms[room_id].start_race_counter = 10;
 				}
 			}, 1000);
 		}
@@ -114,7 +114,7 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 			in_progress: false,
 			ready_count: 0,
 			user_count: 1,
-			start_race_counter: 3,
+			start_race_counter: 10,
 			race_rank: 1,
 		};
 
