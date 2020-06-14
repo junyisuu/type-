@@ -188,7 +188,6 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 					console.log('Error finding user');
 					console.log(err);
 				} else {
-					console.log('Successfully found user');
 					racesWon = user.racesWon;
 					if (rank == 1) {
 						racesWon += 1;
@@ -211,7 +210,6 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 							console.log(err);
 						} else {
 							console.log('Successfully updated user stats');
-							console.log(result);
 						}
 					});
 				}

@@ -89,7 +89,6 @@ export default class Type extends PureComponent {
 					lobby_users[username]['rank'] = rank;
 					return { lobby_users };
 				});
-				console.log('updated ', parent.state.lobby_users);
 			});
 
 			this.displayText();
