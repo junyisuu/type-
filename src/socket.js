@@ -1,7 +1,7 @@
 const shortid = require('shortid');
 // const axios = require('axios');
 
-const { Excerpt } = require('../src/database');
+const { Excerpt, User } = require('../src/database');
 
 // https://stackoverflow.com/questions/24815106/can-i-separate-socket-io-event-listeners-into-different-modules
 module.exports = function (socket, io, username_socket_pair, all_rooms) {
@@ -56,6 +56,12 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 		callback(excerpt_obj);
 	});
 
+	socket.on('randomize_excerpt', async function (room_id) {
+		// gets called once for every player that ends race
+		let next_excerpt_obj = await getExcerpt();
+		all_rooms[room_id].excerpt_obj = next_excerpt_obj[0];
+	});
+
 	socket.on('ready', function (room_id, username, ready) {
 		io.in(room_id).emit('ready_toggle', username, ready);
 		if (!all_rooms[room_id]) {
@@ -70,6 +76,9 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 		}
 
 		if (all_rooms[room_id].ready_count === all_rooms[room_id].user_count) {
+			// reset the rank every time a race starts
+			all_rooms[room_id].race_rank = 1;
+
 			// https://stackoverflow.com/questions/42398795/countdown-timer-broadcast-with-socket-io-and-node-js
 			io.in(room_id).emit('race_starting');
 			let raceCountdown = setInterval(function () {
@@ -106,6 +115,7 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 			ready_count: 0,
 			user_count: 1,
 			start_race_counter: 10,
+			race_rank: 1,
 		};
 
 		callback(room_id);
@@ -159,5 +169,50 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 		socket.broadcast
 			.to(room_id)
 			.emit('progress_update', username, percentComplete);
+	});
+
+	socket.on('finished_race', async function (room_id, username, wpm) {
+		let rank = all_rooms[room_id].race_rank;
+		io.in(room_id).emit('update_race_stats', username, wpm, rank);
+		all_rooms[room_id].race_rank++;
+
+		let racesWon;
+		let averageWPM;
+		const user = await User.findOne(
+			{ username: username },
+			'averageWPM racesCompleted racesWon'
+		)
+			.lean()
+			.exec(async function (err, user) {
+				if (err) {
+					console.log('Error finding user');
+					console.log(err);
+				} else {
+					racesWon = user.racesWon;
+					if (rank == 1) {
+						racesWon += 1;
+					}
+
+					averageWPM = Math.floor((Number(user.averageWPM) + Number(wpm)) / 2);
+
+					await User.findOneAndUpdate(
+						{ username: username },
+						{
+							$set: {
+								averageWPM: averageWPM,
+								racesCompleted: user.racesCompleted + 1,
+								racesWon: racesWon,
+							},
+						}
+					).exec(function (err, result) {
+						if (err) {
+							console.log('Error updating user stats');
+							console.log(err);
+						} else {
+							console.log('Successfully updated user stats');
+						}
+					});
+				}
+			});
 	});
 };
