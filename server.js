@@ -42,7 +42,7 @@ io.listen(8000);
 
 app.use(require('./routes/index'));
 
-const mongoUrl = process.env.MONGO_URL;
+const mongoUrl = process.env.MONGO_ATLAS;
 mongoose
 	.connect(mongoUrl, {
 		useNewUrlParser: true,
