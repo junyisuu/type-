@@ -11,6 +11,18 @@ const userSchema = new Schema(
 			type: String,
 			required: true,
 		},
+		averageWPM: {
+			type: Number,
+			default: 0,
+		},
+		racesCompleted: {
+			type: Number,
+			default: 0,
+		},
+		racesWon: {
+			type: Number,
+			default: 0,
+		},
 	},
 	{
 		timestamps: true,
