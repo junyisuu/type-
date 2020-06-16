@@ -32,9 +32,15 @@ module.exports = (router) => {
 			}
 
 			const passwordHash = await bcrypt.hash(password, 10);
+			const averageWPM = 0;
+			const racesCompleted = 0;
+			const racesWon = 0;
 			const user = await User.create({
 				username,
 				passwordHash,
+				averageWPM,
+				racesCompleted,
+				racesWon,
 			});
 
 			const token = jwt.sign(

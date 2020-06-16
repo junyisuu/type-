@@ -6,6 +6,7 @@ const cors = require('cors');
 const compression = require('compression');
 const bodyParser = require('body-parser');
 const { mongoose } = require('./src/database');
+const path = require('path');
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use(
 	})
 );
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'frontend', 'build')));
 
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
@@ -40,9 +42,9 @@ io.on('connection', function (socket) {
 });
 io.listen(8000);
 
-app.use(require('./routes/index'));
+app.use('/api', require('./routes/index'));
 
-const mongoUrl = process.env.MONGO_URL;
+const mongoUrl = process.env.MONGO_ATLAS;
 mongoose
 	.connect(mongoUrl, {
 		useNewUrlParser: true,
