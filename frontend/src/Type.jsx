@@ -302,6 +302,9 @@ export default class Type extends PureComponent {
 		if (e.key === 'Backspace') {
 			e.preventDefault();
 		}
+		if (e.key === "'") {
+			e.preventDefault();
+		}
 	}
 
 	updateProgress() {
