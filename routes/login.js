@@ -1,6 +1,6 @@
 const rateLimit = require('express-rate-limit');
 const { check, validationResult } = require('express-validator');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const secret = process.env.JWT_SECRET;
