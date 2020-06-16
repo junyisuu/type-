@@ -1,5 +1,7 @@
-import openSocket from 'socket.io-client';
+// import openSocket from 'socket.io-client';
+// const socket = openSocket('http://localhost:3030');
 
-const socket = openSocket('http://localhost:8000');
+import io from 'socket.io-client';
+const socket = io();
 
 export default socket;

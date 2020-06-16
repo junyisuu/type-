@@ -7,6 +7,7 @@ const compression = require('compression');
 const bodyParser = require('body-parser');
 const { mongoose } = require('./src/database');
 const path = require('path');
+const socketHandler = require('./src/socket');
 
 const app = express();
 
@@ -29,10 +30,10 @@ app.use(
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'frontend', 'build')));
 
-const http = require('http').Server(app);
-const io = require('socket.io')(http);
+app.use('/api', require('./routes/index'));
 
-const socketHandler = require('./src/socket');
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
 var username_socket_pair = {};
 var all_rooms = {};
@@ -40,9 +41,7 @@ var all_rooms = {};
 io.on('connection', function (socket) {
 	socketHandler(socket, io, username_socket_pair, all_rooms);
 });
-io.listen(8000);
-
-app.use('/api', require('./routes/index'));
+// io.listen(8000);
 
 const mongoUrl = process.env.MONGO_ATLAS;
 mongoose
@@ -55,4 +54,6 @@ mongoose
 	.catch((err) => console.log(err));
 
 const port = process.env.APP_PORT || 5000;
-app.listen(port, () => console.log(`Server up and running on port ${port} !`));
+server.listen(port, () =>
+	console.log(`Server up and running on port ${port} !`)
+);
