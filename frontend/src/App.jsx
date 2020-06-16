@@ -21,7 +21,8 @@ export default class App extends PureComponent {
 	}
 
 	state = {
-		apiPath: process.env.REACT_APP_API_PATH,
+		// apiPath: process.env.REACT_APP_API_PATH,
+		apiPath: '/api',
 		selfUser: null,
 		loadingSelf: true,
 		inLobby: false,
