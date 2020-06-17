@@ -22,7 +22,6 @@ export default class Login extends PureComponent {
 
 	async getAccount(username, password) {
 		const { apiPath } = this.props;
-		console.log('apiPath: ', apiPath);
 
 		const res = await fetch(`${apiPath}/login`, {
 			signal: this.controller.signal,

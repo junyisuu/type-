@@ -1,6 +1,14 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Link, Redirect } from 'react-router-dom';
-import { Button, Icon, Card, Container, Message } from 'semantic-ui-react';
+import {
+	Button,
+	Icon,
+	Card,
+	Container,
+	Message,
+	Popup,
+} from 'semantic-ui-react';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import socket from './socketConfig';
 
@@ -244,9 +252,22 @@ export default class Lobby extends PureComponent {
 		return (
 			<Fragment>
 				<h1>Lobby</h1>
-				<p style={{ marginBottom: '3px' }}>
-					Invite your friends with the Room ID: {room_id}
-				</p>
+
+				<CopyToClipboard text={room_id}>
+					<p style={{ marginBottom: '3px' }}>
+						Invite your friends with the Room ID:&nbsp;
+						<Popup
+							content='Copied'
+							position='right center'
+							on='click'
+							trigger={
+								<Button basic compact>
+									{room_id}
+								</Button>
+							}
+						/>
+					</p>
+				</CopyToClipboard>
 				{race_starting ? (
 					<Message positive compact size='tiny'>
 						<Message.Header>Race starting in {countdown}</Message.Header>
