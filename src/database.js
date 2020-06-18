@@ -47,6 +47,11 @@ const excerptSchema = new Schema(
 			type: String,
 			required: true,
 		},
+		leaderboard: {
+			type: Array,
+			required: true,
+			default: [],
+		},
 	},
 	{
 		timestamps: true,

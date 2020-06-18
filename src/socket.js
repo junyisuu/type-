@@ -110,7 +110,8 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 		let next_excerpt_obj = await getExcerpt();
 		all_rooms[room_id] = {
 			room_id: room_id,
-			excerpt_obj: next_excerpt_obj[0],
+			// excerpt_obj: next_excerpt_obj[0],
+			excerpt_obj: next_excerpt_obj,
 			in_progress: false,
 			ready_count: 0,
 			user_count: 1,
@@ -122,7 +123,11 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 	});
 
 	async function getExcerpt() {
-		const excerpt = await Excerpt.aggregate().sample(1).exec();
+		// const excerpt = await Excerpt.aggregate().sample(1).exec();
+		const excerpt = await Excerpt.findById('5ecda72cc0149d67b229d917')
+			.lean()
+			.exec();
+		// console.log('got single excerpt: ', excerpt);
 		return excerpt;
 	}
 
@@ -171,9 +176,21 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 			.emit('progress_update', username, percentComplete);
 	});
 
-	socket.on('finished_race', async function (room_id, username, wpm) {
+	socket.on('finished_race', async function (
+		room_id,
+		username,
+		wpm,
+		excerpt_id,
+		incorrect_count
+	) {
 		let rank = all_rooms[room_id].race_rank;
-		io.in(room_id).emit('update_race_stats', username, wpm, rank);
+		io.in(room_id).emit(
+			'update_race_stats',
+			username,
+			wpm,
+			rank,
+			incorrect_count
+		);
 		all_rooms[room_id].race_rank++;
 
 		let racesWon;
@@ -212,6 +229,59 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 							console.log('Successfully updated user stats');
 						}
 					});
+				}
+			});
+
+		let leaderboard;
+		let update_leaderboard = false;
+		const excerpt = await Excerpt.findOne({ _id: excerpt_id }, 'leaderboard')
+			.lean()
+			.exec(async function (err, excerpt) {
+				if (err) {
+					console.log('Error finding excerpt');
+					console.log(err);
+				} else {
+					leaderboard = excerpt.leaderboard;
+
+					// https://stackoverflow.com/questions/1531093/how-do-i-get-the-current-date-in-javascript#:~:text=Use%20new%20Date()%20to,var%20mm%20%3D%20String(today.
+					let today = new Date();
+					let dd = String(today.getDate()).padStart(2, '0');
+					let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+					let yyyy = today.getFullYear();
+					today = mm + '/' + dd + '/' + yyyy;
+
+					if (leaderboard.length < 10) {
+						update_leaderboard = true;
+						leaderboard.push([username, wpm, incorrect_count, today]);
+					} else if (leaderboard.length >= 10) {
+						for (let i = 0; i < leaderboard.length; i++) {
+							if (wpm > leaderboard[i][1]) {
+								update_leaderboard = true;
+								leaderboard.pop();
+								leaderboard.push([username, wpm, incorrect_count, today]);
+								break;
+							}
+						}
+					}
+					leaderboard.sort((a, b) => b[1] - a[1]);
+
+					if (update_leaderboard) {
+						await Excerpt.findOneAndUpdate(
+							{ _id: excerpt_id },
+							{
+								$set: {
+									leaderboard: leaderboard,
+								},
+							}
+						).exec(function (err, result) {
+							if (err) {
+								console.log('Error updating excerpt leaderboard');
+								console.log(err);
+							} else {
+								console.log('Successfully updated excerpt leaderboard');
+							}
+						});
+					}
 				}
 			});
 	});

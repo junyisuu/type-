@@ -73,6 +73,7 @@ export class RaceSummary extends PureComponent {
 											<Table.HeaderCell>Rank</Table.HeaderCell>
 											<Table.HeaderCell>Player</Table.HeaderCell>
 											<Table.HeaderCell>WPM</Table.HeaderCell>
+											<Table.HeaderCell>Typos</Table.HeaderCell>
 										</Table.Row>
 									</Table.Header>
 									<Table.Body>
@@ -87,6 +88,9 @@ export class RaceSummary extends PureComponent {
 																{lobby_users[user].username}
 															</Table.Cell>
 															<Table.Cell>{lobby_users[user].wpm}</Table.Cell>
+															<Table.Cell>
+																{lobby_users[user].incorrect_count}
+															</Table.Cell>
 														</Table.Row>
 													) : (
 														<Table.Row>
@@ -95,6 +99,9 @@ export class RaceSummary extends PureComponent {
 																{lobby_users[user].username}
 															</Table.Cell>
 															<Table.Cell>{lobby_users[user].wpm}</Table.Cell>
+															<Table.Cell>
+																{lobby_users[user].incorrect_count}
+															</Table.Cell>
 														</Table.Row>
 													)
 												) : null
