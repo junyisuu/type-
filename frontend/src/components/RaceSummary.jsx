@@ -27,7 +27,15 @@ export class RaceSummary extends PureComponent {
 			incorrectArray,
 			lobby_users,
 			selfUser,
+			leaderboard,
 		} = this.props;
+
+		// https://stackoverflow.com/questions/1531093/how-do-i-get-the-current-date-in-javascript#:~:text=Use%20new%20Date()%20to,var%20mm%20%3D%20String(today.
+		let today = new Date();
+		let dd = String(today.getDate()).padStart(2, '0');
+		let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+		let yyyy = today.getFullYear();
+		today = mm + '/' + dd + '/' + yyyy;
 
 		return (
 			<>
@@ -66,49 +74,99 @@ export class RaceSummary extends PureComponent {
 							</Grid.Column>
 						</Grid.Row>
 						<Grid.Row className='race_ranking'>
-							<Container>
-								<Table celled collapsing>
-									<Table.Header>
-										<Table.Row>
-											<Table.HeaderCell>Rank</Table.HeaderCell>
-											<Table.HeaderCell>Player</Table.HeaderCell>
-											<Table.HeaderCell>WPM</Table.HeaderCell>
-											<Table.HeaderCell>Typos</Table.HeaderCell>
-										</Table.Row>
-									</Table.Header>
-									<Table.Body>
-										{Object.keys(lobby_users)
-											.sort((a, b) => lobby_users[a].rank - lobby_users[b].rank)
-											.map((user) =>
-												lobby_users[user].finished ? (
-													lobby_users[user].username === selfUser.username ? (
-														<Table.Row positive>
-															<Table.Cell>{lobby_users[user].rank}</Table.Cell>
-															<Table.Cell>
-																{lobby_users[user].username}
-															</Table.Cell>
-															<Table.Cell>{lobby_users[user].wpm}</Table.Cell>
-															<Table.Cell>
-																{lobby_users[user].incorrect_count}
-															</Table.Cell>
-														</Table.Row>
-													) : (
-														<Table.Row>
-															<Table.Cell>{lobby_users[user].rank}</Table.Cell>
-															<Table.Cell>
-																{lobby_users[user].username}
-															</Table.Cell>
-															<Table.Cell>{lobby_users[user].wpm}</Table.Cell>
-															<Table.Cell>
-																{lobby_users[user].incorrect_count}
-															</Table.Cell>
-														</Table.Row>
-													)
-												) : null
+							<Grid.Column width={8}>
+								<Container>
+									<Table celled collapsing>
+										<Table.Header>
+											<Table.Row>
+												<Table.HeaderCell width={1}>Rank</Table.HeaderCell>
+												<Table.HeaderCell width={2}>Player</Table.HeaderCell>
+												<Table.HeaderCell width={1}>WPM</Table.HeaderCell>
+												<Table.HeaderCell width={2}>Typos</Table.HeaderCell>
+											</Table.Row>
+										</Table.Header>
+										<Table.Body>
+											{Object.keys(lobby_users)
+												.sort(
+													(a, b) => lobby_users[a].rank - lobby_users[b].rank
+												)
+												.map((user) =>
+													lobby_users[user].finished ? (
+														lobby_users[user].username === selfUser.username ? (
+															<Table.Row
+																positive
+																key={lobby_users[user].username}
+															>
+																<Table.Cell>
+																	{lobby_users[user].rank}
+																</Table.Cell>
+																<Table.Cell>
+																	{lobby_users[user].username}
+																</Table.Cell>
+																<Table.Cell>{lobby_users[user].wpm}</Table.Cell>
+																<Table.Cell>
+																	{lobby_users[user].incorrect_count}
+																</Table.Cell>
+															</Table.Row>
+														) : (
+															<Table.Row key={lobby_users[user].username}>
+																<Table.Cell>
+																	{lobby_users[user].rank}
+																</Table.Cell>
+																<Table.Cell>
+																	{lobby_users[user].username}
+																</Table.Cell>
+																<Table.Cell>{lobby_users[user].wpm}</Table.Cell>
+																<Table.Cell>
+																	{lobby_users[user].incorrect_count}
+																</Table.Cell>
+															</Table.Row>
+														)
+													) : null
+												)}
+										</Table.Body>
+									</Table>
+								</Container>
+							</Grid.Column>
+							<Grid.Column width={8}>
+								<Container>
+									<Table celled collapsing>
+										<Table.Header>
+											<Table.Row>
+												<Table.HeaderCell width={1}>Rank</Table.HeaderCell>
+												<Table.HeaderCell width={2}>Player</Table.HeaderCell>
+												<Table.HeaderCell width={1}>WPM</Table.HeaderCell>
+												<Table.HeaderCell width={2}>Typos</Table.HeaderCell>
+												<Table.HeaderCell width={2}>Date</Table.HeaderCell>
+											</Table.Row>
+										</Table.Header>
+										<Table.Body>
+											{leaderboard.map((user, index) =>
+												user[0] === selfUser.username &&
+												user[1] === wpm &&
+												user[2] == incorrectArray.length &&
+												user[3] === today ? (
+													<Table.Row positive key={'excerpt' + index}>
+														<Table.Cell>{index + 1}</Table.Cell>
+														<Table.Cell>{user[0]}</Table.Cell>
+														<Table.Cell>{user[1]}</Table.Cell>
+														<Table.Cell>{user[2]}</Table.Cell>
+														<Table.Cell>{user[3]}</Table.Cell>
+													</Table.Row>
+												) : (
+													<Table.Row key={'excerpt' + index}>
+														<Table.Cell>{index + 1}</Table.Cell>
+														<Table.Cell>{user[0]}</Table.Cell>
+														<Table.Cell>{user[1]}</Table.Cell>
+														<Table.Cell>{user[2]}</Table.Cell>
+														<Table.Cell>{user[3]}</Table.Cell>
+													</Table.Row>
+												)
 											)}
-									</Table.Body>
-								</Table>
-							</Container>
+										</Table.Body>
+									</Table>
+								</Container>
+							</Grid.Column>
 						</Grid.Row>
 					</Grid>
 				</Container>

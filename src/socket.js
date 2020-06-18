@@ -184,14 +184,6 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 		incorrect_count
 	) {
 		let rank = all_rooms[room_id].race_rank;
-		io.in(room_id).emit(
-			'update_race_stats',
-			username,
-			wpm,
-			rank,
-			incorrect_count
-		);
-		all_rooms[room_id].race_rank++;
 
 		let racesWon;
 		let averageWPM;
@@ -264,6 +256,16 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 						}
 					}
 					leaderboard.sort((a, b) => b[1] - a[1]);
+
+					io.in(room_id).emit(
+						'update_race_stats',
+						username,
+						wpm,
+						rank,
+						incorrect_count,
+						leaderboard
+					);
+					all_rooms[room_id].race_rank++;
 
 					if (update_leaderboard) {
 						await Excerpt.findOneAndUpdate(

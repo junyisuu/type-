@@ -45,6 +45,7 @@ export default class Type extends PureComponent {
 			redirectToPlay: false,
 			lobby_users: lobby_users,
 			room_id: room_id,
+			leaderboard: [],
 		};
 
 		this.displayText = this.displayText.bind(this);
@@ -85,7 +86,8 @@ export default class Type extends PureComponent {
 				username,
 				wpm,
 				rank,
-				incorrect_count
+				incorrect_count,
+				excerpt_leaderboard
 			) {
 				console.log('inside update');
 				parent.setState((prevState) => {
@@ -95,6 +97,13 @@ export default class Type extends PureComponent {
 					lobby_users[username]['rank'] = rank;
 					lobby_users[username]['incorrect_count'] = incorrect_count;
 					return { lobby_users };
+				});
+
+				console.log('received leaderboard: ', excerpt_leaderboard);
+				parent.setState((prevState) => {
+					let leaderboard = prevState.leaderboard;
+					leaderboard = excerpt_leaderboard;
+					return { leaderboard };
 				});
 			});
 
@@ -382,6 +391,7 @@ export default class Type extends PureComponent {
 			redirectToPlay,
 			lobby_users,
 			room_id,
+			leaderboard,
 		} = this.state;
 
 		const { selfUser } = this.props;
@@ -421,6 +431,7 @@ export default class Type extends PureComponent {
 							incorrectArray={incorrectArray}
 							room_id={room_id}
 							lobby_users={lobby_users}
+							leaderboard={leaderboard}
 							selfUser={selfUser}
 						/>
 					) : null}
