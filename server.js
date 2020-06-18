@@ -41,7 +41,6 @@ var all_rooms = {};
 io.on('connection', function (socket) {
 	socketHandler(socket, io, username_socket_pair, all_rooms);
 });
-// io.listen(8000);
 
 const mongoUrl = process.env.MONGO_ATLAS;
 mongoose

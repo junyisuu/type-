@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 
 // https://stackoverflow.com/a/56562801
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { Container } from 'semantic-ui-react';
 
 import Navbar from './Navbar';
 import Landing from './Landing';
@@ -21,8 +22,8 @@ export default class App extends PureComponent {
 	}
 
 	state = {
-		// apiPath: process.env.REACT_APP_API_PATH,
-		apiPath: '/api',
+		apiPath: process.env.REACT_APP_API_PATH + '/api',
+		// apiPath: '/api',
 		selfUser: null,
 		loadingSelf: true,
 		inLobby: false,
@@ -82,13 +83,7 @@ export default class App extends PureComponent {
 		const setSelfUser = this.setSelfUser.bind(this);
 
 		return (
-			<div
-				className='ui container'
-				style={{
-					paddingTop: '1em',
-					paddingBottom: '1em',
-				}}
-			>
+			<Container>
 				<BrowserRouter>
 					<Navbar
 						selfUser={selfUser}
@@ -176,7 +171,7 @@ export default class App extends PureComponent {
 						/>
 					</Switch>
 				</BrowserRouter>
-			</div>
+			</Container>
 		);
 	}
 }

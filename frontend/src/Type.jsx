@@ -20,6 +20,7 @@ export default class Type extends PureComponent {
 			author: '',
 			title: '',
 			url: '',
+			excerpt_id: '',
 			inputText: '',
 			keyPressed: null,
 			keyCode: null,
@@ -44,6 +45,7 @@ export default class Type extends PureComponent {
 			redirectToPlay: false,
 			lobby_users: lobby_users,
 			room_id: room_id,
+			leaderboard: [],
 		};
 
 		this.displayText = this.displayText.bind(this);
@@ -80,14 +82,28 @@ export default class Type extends PureComponent {
 				});
 			});
 
-			socket.on('update_race_stats', function (username, wpm, rank) {
+			socket.on('update_race_stats', function (
+				username,
+				wpm,
+				rank,
+				incorrect_count,
+				excerpt_leaderboard
+			) {
 				console.log('inside update');
 				parent.setState((prevState) => {
 					let lobby_users = Object.assign({}, prevState.lobby_users);
 					lobby_users[username]['wpm'] = wpm;
 					lobby_users[username]['finished'] = true;
 					lobby_users[username]['rank'] = rank;
+					lobby_users[username]['incorrect_count'] = incorrect_count;
 					return { lobby_users };
+				});
+
+				console.log('received leaderboard: ', excerpt_leaderboard);
+				parent.setState((prevState) => {
+					let leaderboard = prevState.leaderboard;
+					leaderboard = excerpt_leaderboard;
+					return { leaderboard };
 				});
 			});
 
@@ -111,11 +127,13 @@ export default class Type extends PureComponent {
 
 		await this.getExcerpt().then(
 			(excerpt) => {
+				console.log('excerpt: ', excerpt);
 				this.setState({
 					excerpt: excerpt.excerpt,
 					author: excerpt.author,
 					title: excerpt.title,
 					url: excerpt.url,
+					excerpt_id: excerpt._id,
 				});
 			},
 			(error) => {
@@ -309,16 +327,25 @@ export default class Type extends PureComponent {
 
 	updateProgress() {
 		const { selfUser } = this.props;
-		const { percentComplete } = this.state;
+		const { percentComplete, excerpt_id, incorrectArray } = this.state;
 
 		let room_id = window.sessionStorage.getItem('roomID');
 		if (percentComplete !== 0) {
 			socket.emit('keypress', room_id, selfUser.username, percentComplete);
 		}
 
+		let incorrect_count = incorrectArray.length.toFixed(0);
+
 		// if the player has finished the race, send update to others
 		if (this.state.showStats) {
-			socket.emit('finished_race', room_id, selfUser.username, this.state.wpm);
+			socket.emit(
+				'finished_race',
+				room_id,
+				selfUser.username,
+				this.state.wpm,
+				excerpt_id,
+				incorrect_count
+			);
 		}
 	}
 
@@ -364,6 +391,7 @@ export default class Type extends PureComponent {
 			redirectToPlay,
 			lobby_users,
 			room_id,
+			leaderboard,
 		} = this.state;
 
 		const { selfUser } = this.props;
@@ -403,6 +431,7 @@ export default class Type extends PureComponent {
 							incorrectArray={incorrectArray}
 							room_id={room_id}
 							lobby_users={lobby_users}
+							leaderboard={leaderboard}
 							selfUser={selfUser}
 						/>
 					) : null}
