@@ -17,12 +17,14 @@ export default class Register extends PureComponent {
 		checked: false,
 		username: '',
 		password: '',
+		email: '',
 		errorMessage: '',
+		success: false,
 	};
 
 	controller = new AbortController();
 
-	async validateAccount(username, password) {
+	async validateAccount(username, password, email) {
 		const { apiPath } = this.props;
 
 		const res = await fetch(`${apiPath}/register`, {
@@ -34,6 +36,7 @@ export default class Register extends PureComponent {
 			body: JSON.stringify({
 				username,
 				password,
+				email,
 			}),
 		});
 		if (!res.ok) throw await res.json();
@@ -50,8 +53,8 @@ export default class Register extends PureComponent {
 
 		const { setSelfUser } = this.props;
 
-		const { username, password } = this.state;
-		console.log(username, password);
+		const { username, password, email } = this.state;
+		// console.log(username, password, email);
 
 		if (username.length < 3 || username.length > 32) {
 			this.setState({
@@ -74,14 +77,15 @@ export default class Register extends PureComponent {
 		}
 
 		try {
-			const { token, user } = await this.validateAccount(username, password);
+			const { user } = await this.validateAccount(username, password, email);
 
-			localStorage.setItem('token', token);
-			setSelfUser(user);
+			// localStorage.setItem('token', token);
+			// setSelfUser(user);
 
 			this.setState({
 				loading: false,
 				failed: false,
+				success: true,
 			});
 		} catch (err) {
 			if (err.name !== 'AbortError') {
@@ -102,6 +106,10 @@ export default class Register extends PureComponent {
 		this.setState({ password: event.target.value });
 	}
 
+	onEmailChange(event) {
+		this.setState({ email: event.target.value });
+	}
+
 	handleCheckboxChange = (event) =>
 		this.setState({ checked: event.target.checked });
 
@@ -115,10 +123,12 @@ export default class Register extends PureComponent {
 		const {
 			username,
 			password,
+			email,
 			loading,
 			failedUsername,
 			failedPassword,
 			errorMessage,
+			success,
 		} = this.state;
 
 		return (
@@ -128,61 +138,82 @@ export default class Register extends PureComponent {
 					style={{ height: '80vh' }}
 					verticalAlign='middle'
 				>
-					<Grid.Column style={{ maxWidth: 450 }}>
-						<Header as='h2' color='teal' textAlign='center'>
-							{/* <Image src='/logo.png' />  */}
-							Sign up for free to start typing!
-						</Header>
-						<Form size='large'>
-							<Segment stacked>
-								{failedUsername ? (
-									<div class='ui pointing below red basic label'>
-										{errorMessage}
-									</div>
-								) : null}
-								<Form.Input
-									autoFocus
-									fluid
-									icon='user'
-									iconPosition='left'
-									placeholder='Username'
-									maxLength='32'
-									value={username}
-									onChange={this.onUsernameChange.bind(this)}
-								/>
+					{success ? (
+						<Grid.Column style={{ maxWidth: 450 }}>
+							<Header as='h2' color='teal' textAlign='center'>
+								Account Registered!
+							</Header>
+							<Header as='h4' textAlign='center'>
+								Please check your email to verify your account.
+							</Header>
+						</Grid.Column>
+					) : (
+						<Grid.Column style={{ maxWidth: 450 }}>
+							<Header as='h2' color='teal' textAlign='center'>
+								{/* <Image src='/logo.png' />  */}
+								Sign up for free to start typing!
+							</Header>
+							<Form size='large'>
+								<Segment stacked>
+									{failedUsername ? (
+										<div class='ui pointing below red basic label'>
+											{errorMessage}
+										</div>
+									) : null}
+									<Form.Input
+										autoFocus
+										fluid
+										icon='user'
+										iconPosition='left'
+										placeholder='Username'
+										maxLength='32'
+										value={username}
+										onChange={this.onUsernameChange.bind(this)}
+									/>
 
-								{failedPassword ? (
-									<div class='ui pointing below red basic label'>
-										{errorMessage}
-									</div>
-								) : null}
+									<Form.Input
+										autoFocus
+										fluid
+										icon='envelope'
+										iconPosition='left'
+										placeholder='Email'
+										maxLength='32'
+										value={email}
+										onChange={this.onEmailChange.bind(this)}
+									/>
 
-								<Form.Input
-									fluid
-									icon='lock'
-									iconPosition='left'
-									placeholder='Password'
-									type='password'
-									maxLength='256'
-									value={password}
-									onChange={this.onPasswordChange.bind(this)}
-								/>
+									{failedPassword ? (
+										<div class='ui pointing below red basic label'>
+											{errorMessage}
+										</div>
+									) : null}
+									<Form.Input
+										fluid
+										icon='lock'
+										iconPosition='left'
+										placeholder='Password'
+										type='password'
+										maxLength='256'
+										value={password}
+										onChange={this.onPasswordChange.bind(this)}
+									/>
 
-								<Button
-									color='teal'
-									fluid
-									size='large'
-									disabled={loading}
-									onClick={() => this.createAccount()}
-								>
-									Sign Up
-								</Button>
-							</Segment>
-						</Form>
-						<Message>
-							Already have an account? <Link to='/login'>Log In</Link>
-						</Message>
-					</Grid.Column>
+									<Button
+										color='teal'
+										fluid
+										size='large'
+										disabled={loading}
+										onClick={() => this.createAccount()}
+									>
+										Sign Up
+									</Button>
+								</Segment>
+							</Form>
+							<Message>
+								Already have an account? <Link to='/login'>Log In</Link>
+							</Message>
+						</Grid.Column>
+					)}
 				</Grid>
 			</Fragment>
 		);

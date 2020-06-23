@@ -16,6 +16,7 @@ export default class Login extends PureComponent {
 		failed: false,
 		username: '',
 		password: '',
+		errorMsg: '',
 	};
 
 	controller = new AbortController();
@@ -34,8 +35,13 @@ export default class Login extends PureComponent {
 				password,
 			}),
 		});
-		if (!res.ok) throw res.status;
-
+		if (!res.ok) {
+			const errorMsg = await res.json();
+			this.setState({
+				errorMsg: errorMsg,
+			});
+			throw res.status;
+		}
 		return await res.json();
 	}
 
@@ -56,7 +62,7 @@ export default class Login extends PureComponent {
 			setSelfUser(user);
 		} catch (err) {
 			if (err.name !== 'AbortError') {
-				console.error(err);
+				// console.error('Login error: ', err);
 
 				this.setState({
 					loading: false,
@@ -85,7 +91,7 @@ export default class Login extends PureComponent {
 			return <Redirect to='/' />;
 		}
 
-		const { loading, failed, username, password } = this.state;
+		const { loading, failed, username, password, errorMsg } = this.state;
 
 		return (
 			<Fragment>
@@ -101,11 +107,7 @@ export default class Login extends PureComponent {
 						</Header>
 						<Form size='large'>
 							<Segment stacked>
-								{failed ? (
-									<p style={{ color: 'red' }}>
-										Incorrect username or password.
-									</p>
-								) : null}
+								{failed ? <p style={{ color: 'red' }}>{errorMsg.msg}</p> : null}
 								<Form.Input
 									autoFocus
 									fluid
