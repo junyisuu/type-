@@ -110,8 +110,8 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 		let next_excerpt_obj = await getExcerpt();
 		all_rooms[room_id] = {
 			room_id: room_id,
-			// excerpt_obj: next_excerpt_obj[0],
-			excerpt_obj: next_excerpt_obj,
+			excerpt_obj: next_excerpt_obj[0],
+			// excerpt_obj: next_excerpt_obj,
 			in_progress: false,
 			ready_count: 0,
 			user_count: 1,
@@ -123,11 +123,10 @@ module.exports = function (socket, io, username_socket_pair, all_rooms) {
 	});
 
 	async function getExcerpt() {
-		// const excerpt = await Excerpt.aggregate().sample(1).exec();
-		const excerpt = await Excerpt.findById('5ecda72cc0149d67b229d917')
-			.lean()
-			.exec();
-		// console.log('got single excerpt: ', excerpt);
+		const excerpt = await Excerpt.aggregate().sample(1).exec();
+		// const excerpt = await Excerpt.findById('5ecda72cc0149d67b229d917')
+		// 	.lean()
+		// 	.exec();
 		return excerpt;
 	}
 

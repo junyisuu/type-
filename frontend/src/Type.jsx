@@ -89,7 +89,6 @@ export default class Type extends PureComponent {
 				incorrect_count,
 				excerpt_leaderboard
 			) {
-				console.log('inside update');
 				parent.setState((prevState) => {
 					let lobby_users = Object.assign({}, prevState.lobby_users);
 					lobby_users[username]['wpm'] = wpm;
@@ -99,7 +98,6 @@ export default class Type extends PureComponent {
 					return { lobby_users };
 				});
 
-				console.log('received leaderboard: ', excerpt_leaderboard);
 				parent.setState((prevState) => {
 					let leaderboard = prevState.leaderboard;
 					leaderboard = excerpt_leaderboard;
@@ -127,7 +125,6 @@ export default class Type extends PureComponent {
 
 		await this.getExcerpt().then(
 			(excerpt) => {
-				console.log('excerpt: ', excerpt);
 				this.setState({
 					excerpt: excerpt.excerpt,
 					author: excerpt.author,
@@ -228,14 +225,11 @@ export default class Type extends PureComponent {
 			if (textLetter === '“' || textLetter === '”') {
 				textLetter = '"';
 			}
-			if (textLetter === '—') {
+			if (textLetter === '—' || textLetter === '–') {
 				textLetter = '-';
 			}
-			if (textLetter === '’') {
+			if (textLetter === '’' || textLetter === '‘') {
 				textLetter = "'";
-			}
-			if (textLetter === '–') {
-				textLetter = '-';
 			}
 
 			this.setState({
