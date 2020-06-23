@@ -28,7 +28,10 @@ module.exports = (router) => {
 
 			const { username, password } = req.body;
 
-			const user = await User.findOne({ username }, '_id username passwordHash')
+			const user = await User.findOne(
+				{ username },
+				'_id username passwordHash isVerified'
+			)
 				.lean()
 				.exec();
 			if (!user) {

@@ -66,7 +66,9 @@ module.exports = (router) => {
 					',' +
 					'<br><br>' +
 					'Please verify your account by clicking the link: <br>' +
-					'http://typedash.live/confirm/' +
+					// 'http://typedash.live' +
+					'http://localhost:3000' +
+					'/verify/' +
 					accountToken.token +
 					'<br>',
 			};

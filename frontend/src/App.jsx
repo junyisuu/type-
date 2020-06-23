@@ -10,6 +10,7 @@ import Landing from './Landing';
 import Login from './Login';
 import Profile from './Profile';
 import Register from './Register';
+import Verify from './Verify';
 
 import Play from './Play';
 import Lobby from './Lobby';
@@ -120,6 +121,17 @@ export default class App extends PureComponent {
 							path='/register'
 							render={(props) => (
 								<Register
+									{...props}
+									apiPath={apiPath}
+									selfUser={selfUser}
+									setSelfUser={setSelfUser}
+								/>
+							)}
+						/>
+						<Route
+							path='/verify/:id'
+							render={(props) => (
+								<Verify
 									{...props}
 									apiPath={apiPath}
 									selfUser={selfUser}

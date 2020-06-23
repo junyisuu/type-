@@ -6,6 +6,6 @@ require('./login')(router);
 require('./users')(router);
 require('./excerpts')(router);
 require('./profile')(router);
-require('./confirm')(router);
+require('./verify')(router);
 
 module.exports = router;
