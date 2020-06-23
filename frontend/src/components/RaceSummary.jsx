@@ -144,7 +144,7 @@ export class RaceSummary extends PureComponent {
 											{leaderboard.map((user, index) =>
 												user[0] === selfUser.username &&
 												user[1] === wpm &&
-												user[2] == incorrectArray.length &&
+												user[2] === incorrectArray.length.toFixed(0) &&
 												user[3] === today ? (
 													<Table.Row positive key={'excerpt' + index}>
 														<Table.Cell>{index + 1}</Table.Cell>
