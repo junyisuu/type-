@@ -22,21 +22,33 @@ module.exports = (router) => {
 		async (req, res) => {
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) {
-				return res.status(422).json({ errors: errors.array() });
+				// return res.status(422).json({ errors: errors.array() });
+				return res.status(422).send({ msg: 'Incorrect username or password' });
 			}
 
 			const { username, password } = req.body;
 
-			const user = await User.findOne({ username }, '_id username passwordHash')
+			const user = await User.findOne(
+				{ username },
+				'_id username passwordHash isVerified'
+			)
 				.lean()
 				.exec();
 			if (!user) {
-				return res.status(404).json({ error: 'User does not exist' });
+				// return res.status(404).json({ error: 'User does not exist' });
+				return res.status(404).send({ msg: 'Incorrect username or password' });
 			}
 
 			const isMatch = await bcrypt.compare(password, user.passwordHash);
 			if (!isMatch) {
-				return res.status(403).json({ error: 'Password does not match' });
+				// return res.status(403).json({ error: 'Password does not match.' });
+				return res.status(403).send({ msg: 'Incorrect username or password' });
+			}
+
+			if (!user.isVerified) {
+				return res
+					.status(401)
+					.send({ msg: 'Your account has not been verified.' });
 			}
 
 			const token = jwt.sign(

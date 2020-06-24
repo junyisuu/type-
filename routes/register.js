@@ -2,10 +2,13 @@ const rateLimit = require('express-rate-limit');
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const crypto = require('crypto');
+const sgMail = require('@sendgrid/mail');
 
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const secret = process.env.JWT_SECRET;
 
-const { User } = require('../src/database');
+const { User, AccountToken } = require('../src/database');
 
 module.exports = (router) => {
 	router.post(
@@ -25,10 +28,14 @@ module.exports = (router) => {
 				return res.status(422).json({ errors: errors.array() });
 			}
 
-			const { username, password } = req.body;
+			const { username, password, email } = req.body;
 
 			if (await User.exists({ username })) {
 				return res.status(423).json({ error: 'Username already exists' });
+			}
+
+			if (await User.exists({ email })) {
+				return res.status(423).json({ error: 'Email already in use' });
 			}
 
 			const passwordHash = await bcrypt.hash(password, 10);
@@ -38,20 +45,56 @@ module.exports = (router) => {
 			const user = await User.create({
 				username,
 				passwordHash,
+				email,
 				averageWPM,
 				racesCompleted,
 				racesWon,
 			});
 
-			const token = jwt.sign(
-				{
-					userId: user._id,
+			const accountToken = await AccountToken.create({
+				userId: user._id,
+				token: crypto.randomBytes(16).toString('hex'),
+			});
+
+			const msg = {
+				to: 'kirkwong33@gmail.com',
+				from: 'typedash.register@gmail.com',
+				subject: 'Typedash Account Verification',
+				html:
+					'Hello ' +
+					username +
+					',' +
+					'<br><br>' +
+					'Please verify your account by clicking the link: <br>' +
+					// 'http://typedash.live' +
+					'http://localhost:3000' +
+					'/verify/' +
+					accountToken.token +
+					'<br>',
+			};
+
+			sgMail.send(msg).then(
+				(response) => {
+					console.log('Email successfully sent!');
 				},
-				secret
+				(error) => {
+					console.error(error);
+
+					if (error.response) {
+						console.error(error.response.body);
+					}
+				}
 			);
 
+			// const token = jwt.sign(
+			// 	{
+			// 		userId: user._id,
+			// 	},
+			// 	secret
+			// );
+
 			res.json({
-				token,
+				// token,
 				user: {
 					_id: user._id,
 					username: user.username,
