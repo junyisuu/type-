@@ -142,7 +142,12 @@ export default class Login extends PureComponent {
 							</Segment>
 						</Form>
 						<Message>
-							Don't have an account? <Link to='/register'>Sign Up</Link>
+							<p>
+								Don't have an account? &nbsp;
+								<Link style={{ textDecoration: 'underline' }} to='/register'>
+									Sign Up
+								</Link>
+							</p>
 						</Message>
 					</Grid.Column>
 				</Grid>

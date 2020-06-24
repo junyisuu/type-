@@ -51,8 +51,6 @@ export default class Register extends PureComponent {
 			failedPassword: false,
 		});
 
-		const { setSelfUser } = this.props;
-
 		const { username, password, email } = this.state;
 		// console.log(username, password, email);
 
@@ -77,10 +75,7 @@ export default class Register extends PureComponent {
 		}
 
 		try {
-			const { user } = await this.validateAccount(username, password, email);
-
-			// localStorage.setItem('token', token);
-			// setSelfUser(user);
+			await this.validateAccount(username, password, email);
 
 			this.setState({
 				loading: false,
@@ -172,7 +167,6 @@ export default class Register extends PureComponent {
 									/>
 
 									<Form.Input
-										autoFocus
 										fluid
 										icon='envelope'
 										iconPosition='left'
@@ -210,7 +204,17 @@ export default class Register extends PureComponent {
 								</Segment>
 							</Form>
 							<Message>
-								Already have an account? <Link to='/login'>Log In</Link>
+								<p>
+									Already have an account? &nbsp;
+									<Link style={{ textDecoration: 'underline' }} to='/login'>
+										Log In
+									</Link>{' '}
+									<br />
+									Didn't receive a verification email? &nbsp;
+									<Link style={{ textDecoration: 'underline' }} to='/resend'>
+										Resend Verification
+									</Link>
+								</p>
 							</Message>
 						</Grid.Column>
 					)}

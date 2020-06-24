@@ -7,5 +7,6 @@ require('./users')(router);
 require('./excerpts')(router);
 require('./profile')(router);
 require('./verify')(router);
+require('./resend')(router);
 
 module.exports = router;

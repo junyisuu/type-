@@ -11,6 +11,7 @@ import Login from './Login';
 import Profile from './Profile';
 import Register from './Register';
 import Verify from './Verify';
+import Resend from './Resend';
 
 import Play from './Play';
 import Lobby from './Lobby';
@@ -132,6 +133,18 @@ export default class App extends PureComponent {
 							path='/verify/:id'
 							render={(props) => (
 								<Verify
+									{...props}
+									apiPath={apiPath}
+									selfUser={selfUser}
+									setSelfUser={setSelfUser}
+								/>
+							)}
+						/>
+						<Route
+							exact
+							path='/resend'
+							render={(props) => (
+								<Resend
 									{...props}
 									apiPath={apiPath}
 									selfUser={selfUser}

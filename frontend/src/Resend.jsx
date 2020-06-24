@@ -1,34 +1,32 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Redirect, Link } from 'react-router-dom';
 import { Segment, Button, Grid, Form, Header } from 'semantic-ui-react';
 
-export default class Verify extends PureComponent {
+export default class Resend extends PureComponent {
 	constructor(props) {
 		super(props);
 		this.onEmailChange = this.onEmailChange.bind(this);
-		this.verifyAccount = this.verifyAccount.bind(this);
+		this.onUsernameChange = this.onUsernameChange.bind(this);
+		this.resendToken = this.resendToken.bind(this);
 	}
 
 	state = {
 		failed: false,
 		errorMessage: '',
+		username: '',
 		email: '',
-		token: '',
-		verified: false,
+		resend: false,
 	};
 
-	async verifyToken(token, email) {
+	async regenerateToken(username, email) {
 		const { apiPath } = this.props;
 
-		console.log('fetching...');
-
-		const res = await fetch(`${apiPath}/verify`, {
+		const res = await fetch(`${apiPath}/resend`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				token,
+				username,
 				email,
 			}),
 		});
@@ -39,22 +37,21 @@ export default class Verify extends PureComponent {
 			});
 			throw res.status;
 		}
-		// return await res.json();
-		return;
+		return await res.json();
 	}
 
-	async verifyAccount() {
-		const { email, token } = this.state;
-		console.log('email, token', email, token);
+	async resendToken() {
+		const { username, email } = this.state;
+
 		try {
-			await this.verifyToken(token, email);
+			await this.regenerateToken(username, email);
 
 			this.setState({
-				verified: true,
+				resend: true,
 			});
 		} catch (err) {
 			if (err.name !== 'AbortError') {
-				console.error('Login error: ', err);
+				console.error('Resend error: ', err);
 
 				this.setState({
 					loading: false,
@@ -76,12 +73,12 @@ export default class Verify extends PureComponent {
 		this.setState({ email: event.target.value });
 	}
 
-	render() {
-		const { failed, errorMessage, email, verified } = this.state;
+	onUsernameChange(event) {
+		this.setState({ username: event.target.value });
+	}
 
-		if (verified) {
-			return <Redirect to='/' />;
-		}
+	render() {
+		const { failed, errorMessage, email, resend, username } = this.state;
 
 		return (
 			<Fragment>
@@ -92,23 +89,34 @@ export default class Verify extends PureComponent {
 				>
 					<Grid.Column style={{ maxWidth: 450 }}>
 						<Header as='h2' color='teal' textAlign='center'>
-							Enter email to verify your account
+							Resend email verification
 						</Header>
 						<Form size='large'>
 							<Segment stacked>
 								{failed ? (
 									<div className='ui pointing below red basic label'>
 										{errorMessage.msg}
-										<p>
-											<br />
-											Verification not working? &nbsp;
-											<Link to='/resend'>Resend Verification</Link>
-										</p>
+									</div>
+								) : null}
+
+								{resend ? (
+									<div className='ui pointing below green basic label'>
+										Email verification has been re-sent!
 									</div>
 								) : null}
 
 								<Form.Input
 									autoFocus
+									fluid
+									icon='user'
+									iconPosition='left'
+									placeholder='Username'
+									maxLength='32'
+									value={username}
+									onChange={this.onUsernameChange}
+								/>
+
+								<Form.Input
 									fluid
 									icon='envelope'
 									iconPosition='left'
@@ -118,14 +126,20 @@ export default class Verify extends PureComponent {
 									onChange={this.onEmailChange}
 								/>
 
-								<Button
-									color='teal'
-									fluid
-									size='large'
-									onClick={this.verifyAccount}
-								>
-									Verify Account
-								</Button>
+								{!resend ? (
+									<Button
+										color='teal'
+										fluid
+										size='large'
+										onClick={this.resendToken}
+									>
+										Resend Email
+									</Button>
+								) : (
+									<Button color='teal' fluid size='large' disabled>
+										Resend Email
+									</Button>
+								)}
 							</Segment>
 						</Form>
 					</Grid.Column>
