@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Redirect } from 'react-router-dom';
-import { Segment, Input, Button, Grid } from 'semantic-ui-react';
+import { Segment, Input, Button, Grid, Divider } from 'semantic-ui-react';
 
 // https://stackoverflow.com/questions/36120119/reactjs-how-to-share-a-websocket-between-components
 import socket from './socketConfig';
@@ -92,24 +92,18 @@ export default class Play extends PureComponent {
 
 		return (
 			<Segment placeholder>
-				<Grid>
-					<Grid.Row columns={2}>
-						{/* {joined_room_id ? (
-							<p style={{ color: 'red' }}>{joined_room_id}</p>
-						) : null} */}
-						<Grid.Column>
+				<Grid columns={2} stackable textAlign='center'>
+					<Divider vertical>Or</Divider>
+					<Grid.Row verticalAlign='middle' style={{ height: '40%' }}>
+						<Grid.Column className='play_buttons'>
 							<Button
 								color='teal'
 								content='Create New Lobby'
 								icon='add'
 								labelPosition='left'
-								style={{ marginBottom: '10px' }}
 								onClick={this.createRoom}
 							/>
 						</Grid.Column>
-						{/* <Grid.Column>
-							<Button color='teal'>Join Random Room</Button>
-						</Grid.Column> */}
 						<Grid.Column>
 							<Input
 								action={{
