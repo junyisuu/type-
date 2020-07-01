@@ -100,7 +100,7 @@ export default class Play extends PureComponent {
 						<Grid.Column>
 							<Button
 								color='teal'
-								content='Create New Room'
+								content='Create New Lobby'
 								icon='add'
 								labelPosition='left'
 								style={{ marginBottom: '10px' }}
@@ -119,7 +119,7 @@ export default class Play extends PureComponent {
 								}}
 								icon='search'
 								iconPosition='left'
-								placeholder='Room ID'
+								placeholder='Lobby ID'
 								centered='true'
 								onChange={this.handleRoomInputChange}
 							/>

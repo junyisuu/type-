@@ -257,7 +257,7 @@ export default class Lobby extends PureComponent {
 
 				<CopyToClipboard text={room_id}>
 					<p style={{ marginBottom: '3px' }}>
-						Invite your friends with the Room ID:&nbsp;
+						Invite your friends with the Lobby ID:&nbsp;
 						<Popup
 							content='Copied'
 							position='right center'
@@ -292,10 +292,14 @@ export default class Lobby extends PureComponent {
 									</Card.Header>
 								</Card.Content>
 
-								<Card.Content extra>
-									<p style={{ textAlign: 'center' }}>
-										{lobby_users[user].ready ? 'Ready' : 'Not Ready'}
-									</p>
+								<Card.Content extra textAlign='center'>
+									{lobby_users[user].ready ? (
+										<p>
+											Ready <Icon style={{ color: 'green' }} name='check' />
+										</p>
+									) : (
+										<p>Not Ready</p>
+									)}
 								</Card.Content>
 							</Card>
 						))}

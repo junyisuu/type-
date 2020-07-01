@@ -146,7 +146,7 @@ export default class Register extends PureComponent {
 						<Grid.Column style={{ maxWidth: 450 }}>
 							<Header as='h2' color='teal' textAlign='center'>
 								{/* <Image src='/logo.png' />  */}
-								Sign up for free to start typing!
+								Sign up for free!
 							</Header>
 							<Form size='large'>
 								<Segment stacked>

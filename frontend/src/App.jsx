@@ -96,7 +96,9 @@ export default class App extends PureComponent {
 						<Route
 							exact
 							path='/'
-							render={(props) => <Landing {...props} selfUser={selfUser} />}
+							render={(props) => (
+								<Landing {...props} apiPath={apiPath} selfUser={selfUser} />
+							)}
 						/>
 						<Route
 							exact
