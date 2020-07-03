@@ -1,3 +1,15 @@
+.landing_heading {
+	font-size: 50px;
+}
+
+.landing_subheading {
+	font-size: 23px;
+}
+
 .landing_element {
+	margin: 100px;
+}
+
+.landing_about {
 	margin: 50px;
 }

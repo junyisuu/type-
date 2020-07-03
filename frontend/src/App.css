@@ -1,3 +1,60 @@
 a {
 	color: black;
 }
+
+.app_container {
+	position: relative;
+}
+
+.button {
+	background-color: #fba21c !important;
+	color: #272727 !important;
+}
+
+.landing_background {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	height: 100vh;
+	width: 100vw;
+	z-index: -1;
+	background-image: url(./images/spray5.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.login_background {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	height: 100vh;
+	width: 100vw;
+	z-index: -1;
+	background-image: url(./images/spray4.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.lobby_background {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	height: 100vh;
+	width: 100vw;
+	z-index: -1;
+	background-image: url(./images/circle4.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.play_background {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	height: 100vh;
+	width: 100vw;
+	z-index: -1;
+	background-image: url(./images/spray2.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+}

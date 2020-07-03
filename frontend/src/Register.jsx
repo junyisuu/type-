@@ -128,6 +128,7 @@ export default class Register extends PureComponent {
 
 		return (
 			<Fragment>
+				<div class='login_background'></div>
 				<Grid
 					textAlign='center'
 					style={{ height: '80vh' }}
@@ -193,7 +194,6 @@ export default class Register extends PureComponent {
 									/>
 
 									<Button
-										color='teal'
 										fluid
 										size='large'
 										disabled={loading}

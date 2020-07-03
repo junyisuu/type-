@@ -1,6 +1,7 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { Redirect } from 'react-router-dom';
 import { Segment, Input, Button, Grid, Divider } from 'semantic-ui-react';
+import './Play.css';
 
 // https://stackoverflow.com/questions/36120119/reactjs-how-to-share-a-websocket-between-components
 import socket from './socketConfig';
@@ -91,41 +92,42 @@ export default class Play extends PureComponent {
 		}
 
 		return (
-			<Segment placeholder>
-				<Grid columns={2} stackable textAlign='center'>
-					<Divider vertical>Or</Divider>
-					<Grid.Row verticalAlign='middle' style={{ height: '40%' }}>
-						<Grid.Column className='play_buttons'>
-							<Button
-								color='teal'
-								content='Create New Lobby'
-								icon='add'
-								labelPosition='left'
-								onClick={this.createRoom}
-							/>
-						</Grid.Column>
-						<Grid.Column>
-							<Input
-								action={{
-									color: 'teal',
-									content: 'Join',
-									onClick: () => this.joinRoom(this),
-								}}
-								icon='search'
-								iconPosition='left'
-								placeholder='Lobby ID'
-								centered='true'
-								onChange={this.handleRoomInputChange}
-							/>
-							{no_room ? (
-								<p style={{ color: 'red' }}>
-									Room ID not found. Please try again.
-								</p>
-							) : null}
-						</Grid.Column>
-					</Grid.Row>
-				</Grid>
-			</Segment>
+			<Fragment>
+				<div class='play_background'></div>
+				<Segment placeholder className='play_section'>
+					<Grid columns={2} stackable textAlign='center'>
+						<Divider vertical>Or</Divider>
+						<Grid.Row verticalAlign='middle' style={{ height: '40%' }}>
+							<Grid.Column className='play_buttons'>
+								<Button
+									content='Create Lobby'
+									icon='add'
+									labelPosition='left'
+									onClick={this.createRoom}
+								/>
+							</Grid.Column>
+							<Grid.Column>
+								<Input
+									action={{
+										content: 'Join',
+										onClick: () => this.joinRoom(this),
+									}}
+									icon='search'
+									iconPosition='left'
+									placeholder='Lobby ID'
+									centered='true'
+									onChange={this.handleRoomInputChange}
+								/>
+								{no_room ? (
+									<p style={{ color: 'red' }}>
+										Room ID not found. Please try again.
+									</p>
+								) : null}
+							</Grid.Column>
+						</Grid.Row>
+					</Grid>
+				</Segment>
+			</Fragment>
 		);
 	}
 }

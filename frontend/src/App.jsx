@@ -12,6 +12,7 @@ import Profile from './Profile';
 import Register from './Register';
 import Verify from './Verify';
 import Resend from './Resend';
+import About from './About';
 
 import Play from './Play';
 import Lobby from './Lobby';
@@ -85,7 +86,7 @@ export default class App extends PureComponent {
 		const setSelfUser = this.setSelfUser.bind(this);
 
 		return (
-			<Container>
+			<Container className='app_container'>
 				<BrowserRouter>
 					<Navbar
 						selfUser={selfUser}
@@ -110,6 +111,13 @@ export default class App extends PureComponent {
 									selfUser={selfUser}
 									setSelfUser={setSelfUser}
 								/>
+							)}
+						/>
+						<Route
+							exact
+							path='/about'
+							render={(props) => (
+								<About {...props} apiPath={apiPath} selfUser={selfUser} />
 							)}
 						/>
 						<Route
