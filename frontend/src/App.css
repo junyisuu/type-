@@ -6,7 +6,7 @@ a {
 	position: relative;
 }
 
-.button {
+.orange_button {
 	background-color: #fba21c !important;
 	color: #272727 !important;
 }
@@ -48,6 +48,18 @@ a {
 }
 
 .play_background {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	height: 100vh;
+	width: 100vw;
+	z-index: -1;
+	background-image: url(./images/spray2.jpg);
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.profile_background {
 	position: fixed;
 	left: 0px;
 	top: 0px;

@@ -1,3 +1,8 @@
 .play_section {
 	margin-top: 75px !important;
 }
+
+.play_create {
+	background-color: #fba21c !important;
+	/* color: white !important; */
+}

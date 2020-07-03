@@ -9,7 +9,7 @@ export default class About extends PureComponent {
 
 		return (
 			<Fragment>
-				<h1>Start</h1>
+				<h1>How to Play</h1>
 				<Container>
 					<Grid>
 						<Grid.Row>

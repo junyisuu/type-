@@ -98,8 +98,9 @@ export default class Play extends PureComponent {
 					<Grid columns={2} stackable textAlign='center'>
 						<Divider vertical>Or</Divider>
 						<Grid.Row verticalAlign='middle' style={{ height: '40%' }}>
-							<Grid.Column className='play_buttons'>
+							<Grid.Column>
 								<Button
+									className='play_create'
 									content='Create Lobby'
 									icon='add'
 									labelPosition='left'

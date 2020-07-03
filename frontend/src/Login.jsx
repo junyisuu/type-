@@ -132,6 +132,7 @@ export default class Login extends PureComponent {
 								/>
 
 								<Button
+									className='orange_button'
 									fluid
 									size='large'
 									disabled={loading}

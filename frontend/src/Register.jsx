@@ -194,6 +194,7 @@ export default class Register extends PureComponent {
 									/>
 
 									<Button
+										className='orange_button'
 										fluid
 										size='large'
 										disabled={loading}

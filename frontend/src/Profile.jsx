@@ -43,6 +43,7 @@ export default class Profile extends PureComponent {
 
 		return (
 			<Fragment>
+				<div class='profile_background'></div>
 				<h1>Profile Page</h1>
 				<Card>
 					<Card.Content>

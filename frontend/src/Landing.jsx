@@ -17,11 +17,16 @@ export default class Landing extends PureComponent {
 						today!
 					</p>
 					{selfUser ? (
-						<Button as={Link} to='/play'>
+						<Button className='orange_button' size='large' as={Link} to='/play'>
 							Play
 						</Button>
 					) : (
-						<Button as={Link} to='/register'>
+						<Button
+							className='orange_button'
+							size='large'
+							as={Link}
+							to='/register'
+						>
 							Sign Up
 						</Button>
 					)}
