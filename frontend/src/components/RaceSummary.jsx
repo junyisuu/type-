@@ -1,6 +1,13 @@
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Button, Grid, Icon, Table } from 'semantic-ui-react';
+import {
+	Container,
+	Button,
+	Grid,
+	Icon,
+	Table,
+	Divider,
+} from 'semantic-ui-react';
 import './RaceSummary.css';
 
 import socket from '../socketConfig';
@@ -66,13 +73,19 @@ export class RaceSummary extends PureComponent {
 										pathname: '/lobby',
 									}}
 								>
-									<Button onClick={this.endRace} icon labelPosition='right'>
+									<Button
+										onClick={this.endRace}
+										icon
+										labelPosition='right'
+										className='orange_button'
+									>
 										Back to Lobby
 										<Icon name='home' />
 									</Button>
 								</Link>
 							</Grid.Column>
 						</Grid.Row>
+						<Grid.Row></Grid.Row>
 
 						<Grid.Row className='race_ranking'>
 							<Grid.Column width={8}>
