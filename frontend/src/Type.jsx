@@ -36,7 +36,6 @@ export default class Type extends PureComponent {
 			timeIncreasing: false,
 			correctLetter: '',
 			correctLetterCase: '',
-			inputSelected: null,
 			showStats: false,
 			incorrectWordsArray: [],
 			incorrectWordCurrent: false,
@@ -114,14 +113,8 @@ export default class Type extends PureComponent {
 		}
 	}
 
-	async displayText(inputType, fromResults = false) {
+	async displayText() {
 		let contentText = '';
-		let nextText = false;
-
-		if (inputType === 'nextText') {
-			nextText = true;
-			inputType = this.state.inputSelected;
-		}
 
 		await this.getExcerpt().then(
 			(excerpt) => {
@@ -141,11 +134,6 @@ export default class Type extends PureComponent {
 		contentText = this.state.excerpt;
 		// contentText = 'Test123';
 
-		while (nextText === true && contentText === this.state.inputText) {
-			contentText = 'This was the next message in line';
-			nextText = false;
-		}
-
 		this.setState({
 			inputText: contentText,
 			remainingText: contentText,
@@ -163,18 +151,14 @@ export default class Type extends PureComponent {
 				contentText.charAt(0) === contentText.charAt(0).toUpperCase()
 					? 'uppercase'
 					: 'lowercase',
-			inputSelected: inputType,
 			showStats: false,
 			incorrectWordsArray: [],
 			incorrectWordCurrent: false,
 			screenFade: false,
 		});
 		clearInterval(this.intervalID);
-		// setTimeout(() => this.refs.screen.setScrollPosition(), 0);
 
 		let fadeTime = 1;
-		// fromResults ? (fadeTime = 1000) : (fadeTime = 1);
-		fadeTime = fromResults ? 1000 : 1;
 
 		setTimeout(
 			() =>
@@ -235,7 +219,6 @@ export default class Type extends PureComponent {
 			this.setState({
 				// if Shift then gets e.code which is either "ShiftLeft" or "ShiftRight"
 				keyPressed: e.key === 'Shift' ? e.code : e.key,
-				// keyCode: e.keyCode,
 			});
 
 			const { keyPressed } = this.state;
@@ -267,11 +250,6 @@ export default class Type extends PureComponent {
 				if (inputText.charAt(progress + 1) === ' ') {
 					this.handleWordEnd();
 				}
-
-				// if it's a space character
-				// if (keyPressed == ' ') {
-				// 	this.refs.screen.setScrollPosition();
-				// }
 
 				// if we're at the end of the excerpt
 				if (

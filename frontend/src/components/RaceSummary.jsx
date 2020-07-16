@@ -78,7 +78,6 @@ export class RaceSummary extends PureComponent {
 								</Link>
 							</Grid.Column>
 						</Grid.Row>
-						<Grid.Row></Grid.Row>
 
 						<Grid.Row className='race_ranking'>
 							<Grid.Column width={8}>
