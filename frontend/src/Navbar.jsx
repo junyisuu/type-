@@ -1,7 +1,8 @@
 import React, { PureComponent, Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Menu, Button } from 'semantic-ui-react';
+import { Menu, Button, Image } from 'semantic-ui-react';
 import './Navbar.css';
+import logo from './images/typedash_logo3.png';
 
 export default class Navbar extends PureComponent {
 	state = { activeItem: 'home' };
@@ -27,8 +28,9 @@ export default class Navbar extends PureComponent {
 						name='home'
 						active={activeItem === 'home'}
 						onClick={this.handleItemClick}
+						className='navbar_logo'
 					>
-						Type-
+						<Image src={logo} size='small' />
 					</Menu.Item>
 
 					<Menu.Menu position='right'>

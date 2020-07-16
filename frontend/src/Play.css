@@ -3,6 +3,10 @@
 }
 
 .play_create {
-	background-color: #fba21c !important;
+	background-color: #f7987a !important;
 	/* color: white !important; */
+}
+
+.join_column .button {
+	background-color: #f7987a !important;
 }

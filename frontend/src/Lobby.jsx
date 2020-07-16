@@ -253,7 +253,7 @@ export default class Lobby extends PureComponent {
 
 		return (
 			<Fragment>
-				<div class='lobby_background'></div>
+				<div className='lobby_background'></div>
 				<h1>Lobby</h1>
 				<CopyToClipboard text={room_id}>
 					<p style={{ marginBottom: '3px' }}>

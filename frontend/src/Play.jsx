@@ -93,7 +93,7 @@ export default class Play extends PureComponent {
 
 		return (
 			<Fragment>
-				<div class='play_background'></div>
+				<div className='play_background'></div>
 				<Segment placeholder className='play_section'>
 					<Grid columns={2} stackable textAlign='center'>
 						<Divider vertical>Or</Divider>
@@ -107,7 +107,7 @@ export default class Play extends PureComponent {
 									onClick={this.createRoom}
 								/>
 							</Grid.Column>
-							<Grid.Column>
+							<Grid.Column className='join_column'>
 								<Input
 									action={{
 										content: 'Join',
