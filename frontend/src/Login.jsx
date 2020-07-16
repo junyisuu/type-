@@ -95,6 +95,7 @@ export default class Login extends PureComponent {
 
 		return (
 			<Fragment>
+				<div class='login_background'></div>
 				<Grid
 					textAlign='center'
 					style={{ height: '80vh' }}
@@ -103,7 +104,7 @@ export default class Login extends PureComponent {
 					<Grid.Column style={{ maxWidth: 450 }}>
 						<Header as='h2' color='teal' textAlign='center'>
 							{/* <Image src='/logo.png' />  */}
-							Log-in to your account
+							Sign in to your account
 						</Header>
 						<Form size='large'>
 							<Segment stacked>
@@ -131,13 +132,13 @@ export default class Login extends PureComponent {
 								/>
 
 								<Button
-									color='teal'
+									className='orange_button'
 									fluid
 									size='large'
 									disabled={loading}
 									onClick={() => this.login()}
 								>
-									Login
+									Log In
 								</Button>
 							</Segment>
 						</Form>

@@ -1,0 +1,13 @@
+/* .navbar_play {
+	color: rgba(255, 145, 0, 0.925) !important;
+	font-weight: 900 !important;
+} */
+
+.navbar_items {
+	font-size: 120% !important;
+}
+
+.navbar_logo {
+	padding-top: 0px !important;
+	padding-bottom: 5px !important;
+}
