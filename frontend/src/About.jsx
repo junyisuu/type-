@@ -1,12 +1,9 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Link } from 'react-router-dom';
-import { Container, Button, Grid, Image, Header } from 'semantic-ui-react';
+import { Container, Grid } from 'semantic-ui-react';
 // import './About.css';
 
 export default class About extends PureComponent {
 	render() {
-		const { selfUser } = this.props;
-
 		return (
 			<Fragment>
 				<h1>How to Play</h1>

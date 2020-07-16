@@ -1,13 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
-import {
-	Container,
-	Button,
-	Grid,
-	Icon,
-	Table,
-	Divider,
-} from 'semantic-ui-react';
+import { Container, Button, Grid, Icon, Table } from 'semantic-ui-react';
 import './RaceSummary.css';
 
 import socket from '../socketConfig';
