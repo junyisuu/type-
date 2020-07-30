@@ -12,7 +12,7 @@
 - AWS EC2
 - Socket.io
 - Semantic UI React
-- 
+- SendGrid
 
 ## References
 
@@ -67,4 +67,4 @@
   - UI Changes / Color Scheme
   - Favicon / Logo
 ## Challenges
-
+- Hosting on AWS
