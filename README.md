@@ -32,10 +32,13 @@ Setting up HTTPS: https://blog.cloudboost.io/setting-up-an-https-sever-with-node
 - Leaderboards
 - Thousands of Excerpts
 
-## Step-by-step Summary
-- Research / watch MERN stack videos to learn best practices for setting up and learning the various components involved with making React work
-- Look up typing applications based on React for reference
-  - Figure out how I can implement typing functionality that looks good
+## Full Step-by-step Summary
+### Research MERN
+First, I needed to learn more about the MERN stack. Although I had used the web stack once before, it was part of a group project and therefore, I was not fully familiar with every part of the components. My main focus was to learn how to set up the project and learn more about how to use React. This involved watching several youtube tutorials (https://youtu.be/Ke90Tje7VS0) and reading React documentation (https://reactjs.org/docs/introducing-jsx.html).
+
+### Typing functionality
+I wanted to start the project by developing the single player portion of the typing game. This meant that I needed to build a functioning application where the application determines whether the user's typed characters are correct, the speed at which the user types at, and a progress bar. In order to tackle this, I started to research and take ideas from others on how they approached developing typing applications. I searched for typing applications, with a focus on ones made with React, on Github and Google. There were many that I came across: https://github.com/p-society/typeracer-cli, https://github.com/itssamuelrowe/typify, https://github.com/brodavi/supersimpletypingpractice, https://github.com/RodneyCumming/react-typing, https://github.com/awran5/react-typing-speed-test-game. They all had a different approaches where some determined correctness based on fully typed words whereas others used individual characters. Some allowed the use of backspace to correct mistakes whereas others ignored backspaces to let users focus on everything after their correctly typed characters. From all of these ideas, I was able to determine the approach that I thought would work best, which was the approach used by https://github.com/RodneyCumming/react-typing.
+
 - Implement base application 
   - Login / Register
 - Create Single Player Typing Game 
