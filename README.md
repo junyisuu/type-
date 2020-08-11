@@ -82,3 +82,5 @@ Now that I had a working typing game, I needed to populate a database with excer
   - Favicon / Logo
 ## Challenges
 - Hosting on AWS
+- Saving lobby details and reconnecting to lobby
+- Connecting to socket rooms
