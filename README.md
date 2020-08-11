@@ -1,4 +1,13 @@
-# Type-
+# Typedash
+## Description
+Typedash is a online multiplayer type racing game created using the MERN stack (MongoDB, Express, React, Node). It utilizes Socket.IO for real-time race progress as well as lobby management. Typedash is hosted on AWS EC2 and can be accessed via this link: http://www.typedash.live/. Its features include:
+- User Registration, Email Verification, and Login
+- Lobby 
+  - Create/Join - Use ShortID
+  - Real-time Race Progress
+- HTTPS/SSL
+- Lobby and Excerpt Leaderboards
+- Thousands of Excerpts
 
 ## Languages
 - Javascript
@@ -17,26 +26,11 @@
 - Selenium 
 
 ## Links/References
-React Typing: https://github.com/RodneyCumming/react-typing
-
-Deploying MERN app on AWS EC2: https://medium.com/@rksmith369/how-to-deploy-mern-stack-app-on-aws-ec2-with-ssl-nginx-the-right-way-e76c1a8cd6c6
-
-Setting up HTTPS: https://blog.cloudboost.io/setting-up-an-https-sever-with-node-amazon-ec2-nginx-and-lets-encrypt-46f869159469
-
-League of Legends scraper: https://github.com/kshiftw/league_scraper/blob/master/scraper.py
-
-Project Gutenberg scraper: https://github.com/kshiftw/league_scraper/blob/master/gutenberg.py
-
-## Features
-- Copy to Clipboard
-- Lobby 
-  - Create/Join - Use ShortID
-  - Real-time Race Progress
-- Registration/Login
-- Email Verification
-- HTTPS/SSL
-- Leaderboards
-- Thousands of Excerpts
+- React Typing: https://github.com/RodneyCumming/react-typing
+- Deploying MERN app on AWS EC2: https://medium.com/@rksmith369/how-to-deploy-mern-stack-app-on-aws-ec2-with-ssl-nginx-the-right-way-e76c1a8cd6c6
+- Setting up HTTPS: https://blog.cloudboost.io/setting-up-an-https-sever-with-node-amazon-ec2-nginx-and-lets-encrypt-46f869159469
+- League of Legends scraper: https://github.com/kshiftw/league_scraper/blob/master/scraper.py
+- Project Gutenberg scraper: https://github.com/kshiftw/league_scraper/blob/master/gutenberg.py
 
 ## Full Step-by-step Summary
 ### Research MERN
@@ -54,14 +48,17 @@ After implementing registration and login, I moved on to creating the single pla
 ### Excerpts database
 Now that I had a working typing game, I needed to populate a database with excerpts that I could pull from so that the user would have many excerpts to type from. For the first iteration of excerpts, I decided to pull paragraphs from League of Legends short stories: https://universe.leagueoflegends.com/en_US/explore/short-stories/newest/. I chose to do this because the short stories had good content and they all followed the same format. I decided to write a python script (https://github.com/kshiftw/league_scraper/blob/master/scraper.py) that would access the web pages and extract paragraphs as excerpts into a MongoDB database. The script accesses all short stories by scrolling down through the dynamic main page and copying all the short story links. It then extracts data including the title, author, url, and all paragraphs which are all then inserted into a MongoDB database.
 
-- Research socket.io rooms 
-- Implement multiplayer functionality
-  - Create / Join Rooms
-  - Rooms display list of all users joined
-  - User list is updated when user leaves
-  - Save room id to local storage to stay in room upon page refresh
+### Implement Multiplayer Functionality
+With everything set up on the single player portion of the game, it was time for me to move on to implementing multiplayer functionality. I wanted to use Socket.IO for its real-time bidirectional communication so that every player would get real time progress of other player's completion status during a race. Socket.IO was also chosen because I had used the library previously but only in a basic capacity, so I wanted to take the opportunity to learn more about websocket usage. The first goal was for users to be able to create their own lobbies and have a lobby ID that other users could join the lobby with. Most of the server-client interaction is done through socket communication. 
+
+### Additional Multiplayer Functionality
+Now that users were able to create and join rooms, I needed to implement functionality to have the application update if users left a room. Specifically, I needed to update the lobby's user list when a user clicked "Leave Lobby". I also needed to decide on what happens when users refresh their page because on Socket.IO side, it would be seen as a new client. I decided that the user should still remain in the lobby, so I needed to save the lobby ID to local storage so that the client would rejoin the room upon page refresh if they were already in a lobby. 
+
+I also needed to decide on how a lobby's race started. I had occasionally played TypeRacer (https://play.typeracer.com/) which had the approach of only have a race start for players who manually joined a race. This meant that a race was always happening and that players could be in a lobby but not in a race. I took a different approach and instead required all users to "ready up" before the race started. The application would then ensure that all players were ready before starting a countdown for the race to start. It would also ensure that the excerpt was displayed at the same time for all players (ie. they all start at the same time).  
+
+Another feature I needed to implement was for all player's race progress to be synchronized for the entire lobby. This meant that all players could see where every other player was at in the race. This required attaching a socket event to each keyboard type event that would be sent from the client to server and then broadcasted from server to all other clients. 
+
   - Progress Bar synchromized across all users in room
-  - Implement ready button and synchronized race start
   - Excerpts are randomly selected per lobby and another is selected for next race
   - Implement Race Summary that displays lobby leaderboard
 - Profile Page
@@ -74,12 +71,10 @@ Now that I had a working typing game, I needed to populate a database with excer
    - Change to backhend hosting frontend build content
   - Get domain name from Name.com
   - Implement HTTP/SSL following a tutorial
-- Finalize
-  - Click to copy room id
-  - Implement Excerpt Leaderboard
-  - Email verification 
-  - UI Changes / Color Scheme
-  - Favicon / Logo
+
+### Finalize
+To finish up the application, I wanted to add a few more features. This included a "click to copy lobby ID" function, implementing a leaderboard for each excerpt that would keep track of users' high scores based on WPM, email verification when registering for an account, UI changes such as adding backgrounds and changing color schemes, and adding a favicon as well as a logo. 
+
 ## Challenges
 - Hosting on AWS
 - Saving lobby details and reconnecting to lobby
