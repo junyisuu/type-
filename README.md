@@ -78,6 +78,21 @@ Now that I was done the bulk of the application, I wanted to move onto deploymen
 To finish up the application, I wanted to add a few more features. This included a "click to copy lobby ID" function, implementing a leaderboard for each excerpt that would keep track of users' high scores based on WPM, email verification when registering for an account, UI changes such as adding backgrounds and changing color schemes, and adding a favicon as well as a logo. 
 
 ## Screenshots
+### Sign Up
+![Sign Up](https://github.com/kshiftw/type-/blob/master/frontend/src/images/screenshots/sign_up.gif)
+
+### Create or Join Lobby
+![Create Join](https://github.com/kshiftw/type-/blob/master/frontend/src/images/screenshots/create_join.gif)
+
+### Get Ready to Race
+![Ready](https://github.com/kshiftw/type-/blob/master/frontend/src/images/screenshots/ready.gif)
+
+### Type!
+![Race](https://github.com/kshiftw/type-/blob/master/frontend/src/images/screenshots/race.gif)
+
+### View Race Standings
+![Leaderboard](https://github.com/kshiftw/type-/blob/master/frontend/src/images/screenshots/leaderboard.gif)
+
 
 ## Challenges
 - Hosting on AWS
