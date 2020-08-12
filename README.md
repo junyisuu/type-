@@ -56,21 +56,13 @@ Now that users were able to create and join rooms, I needed to implement functio
 
 I also needed to decide on how a lobby's race started. I had occasionally played TypeRacer (https://play.typeracer.com/) which had the approach of only have a race start for players who manually joined a race. This meant that a race was always happening and that players could be in a lobby but not in a race. I took a different approach and instead required all users to "ready up" before the race started. The application would then ensure that all players were ready before starting a countdown for the race to start. It would also ensure that the excerpt was displayed at the same time for all players (ie. they all start at the same time).  
 
-Another feature I needed to implement was for all player's race progress to be synchronized for the entire lobby. This meant that all players could see where every other player was at in the race. This required attaching a socket event to each keyboard type event that would be sent from the client to server and then broadcasted from server to all other clients. 
+Another feature I needed to implement was for all player's race progress to be synchronized for the entire lobby. This meant that all players could see where every other player was at in the race. This required attaching a socket event to each keyboard type event that would be sent from the client to server and then broadcasted from server to all other clients. After that, I added two more features, one for having lobbies randomly select excerpts for each race and the other for a lobby leaderboard at the end of the race for users to see how they rank up against their lobby.
 
-  - Progress Bar synchromized across all users in room
-  - Excerpts are randomly selected per lobby and another is selected for next race
-  - Implement Race Summary that displays lobby leaderboard
-- Profile Page
-  - Add statistics tracking at end of race
-  - Display profile statistics on profile page
-- Host Application
-  - Research and learn more about AWS
-   - Learn more about their products, their differences, and what I should use
-  - Follow a tutorial
-   - Change to backhend hosting frontend build content
-  - Get domain name from Name.com
-  - Implement HTTP/SSL following a tutorial
+### Profile
+Next, I wanted to add a Profile page for users to see their race statistics such as average WPM and how many races they had completed. This required two parts, the first being that I needed to store a user's race summary at the end of each race. This required adding a new field to the existing user document in the database. The second part was for me to have the profile page pull those statistics from the database. 
+
+### Deployment
+Now that I was done the bulk of the application, I wanted to move onto deployment before working on the remaining features I had in mind. I knew that deployment would be a challenge for me because I had only used Heroku in the past, which provides a very user friendly way of deploying without having to worry about the details. For this project, I wanted to try using AWS so I started doing research into their various products: AWS EC2, AWS Elastic Beanstalk, AWS Lambda, etc. It seemed that AWS EC2 was the way for me to take, so I signed up for an AWS Educate account which gave 100$ worth of free AWS credits. I then needed to find a tutorial that showed how to host a MERN app on AWS EC2. Surprisingly, there were not a lot of full tutorials on this topic. Some tutorials involved MERN apps, but not EC2 and instead used Elastic Beanstalk. Other tutorials seemed to be very brief and didn't describe the full process. I ended up coming across a very detailed tutorial: https://medium.com/@rksmith369/how-to-deploy-mern-stack-app-on-aws-ec2-with-ssl-nginx-the-right-way-e76c1a8cd6c6 which I used to follow. I then used Github Student Developer Pack's credits to get a free domain name from Name.com and tied it together with the deployed AWS EC2 instance for a fully functioning hosted app along with HTTPS. 
 
 ### Finalize
 To finish up the application, I wanted to add a few more features. This included a "click to copy lobby ID" function, implementing a leaderboard for each excerpt that would keep track of users' high scores based on WPM, email verification when registering for an account, UI changes such as adding backgrounds and changing color schemes, and adding a favicon as well as a logo. 
