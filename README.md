@@ -1,13 +1,13 @@
 # Typedash
 ## Description
 Typedash is a online multiplayer type racing game created using the MERN stack (MongoDB, Express, React, Node). It utilizes Socket.IO for real-time race progress as well as lobby management. Typedash is hosted on AWS EC2 and can be accessed via this link: http://www.typedash.live/. Its features include:
-- User Registration, Email Verification, and Login
-- Lobby 
-  - Create/Join - Use ShortID
-  - Real-time Race Progress
-- HTTPS/SSL
-- Lobby and Excerpt Leaderboards
-- Thousands of Excerpts
+- User registration, email verification, and login
+- Online type racing against other players
+- Create and join private lobbies
+- Real-time race progress
+- Race statistics
+- Lobby and excerpt leaderboards
+- Thousands of excerpts to type from
 
 ## Languages
 - Javascript
