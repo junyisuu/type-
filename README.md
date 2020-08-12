@@ -9,7 +9,7 @@ Typedash is a online multiplayer type racing game created using the MERN stack (
 - Lobby and excerpt leaderboards
 - Thousands of excerpts to type from
 
-This was a summer project for me to learn new tools and get more familiar with using the MERN stack. I started planning and setting up the base application on May 16, 2020 and my last coding commit was on July 2, 2020. I had initially planned for this project to take one month, but there were always new ideas and features that I would think of which increased the scope over time.
+This was a summer project for me to learn new tools and get more familiar with using the MERN stack. I started planning and setting up the base application on May 16, 2020 and my last coding commit was on July 15, 2020. I had initially planned for this project to take one month, but there were always new ideas and features that I would think of which increased the scope over time.
 
 My main learning takeaways:
 - Scripting with Python is quite interesting
