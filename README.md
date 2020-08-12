@@ -1,6 +1,6 @@
 # Typedash
 ## Description
-Typedash is a online multiplayer type racing game created using the MERN stack (MongoDB, Express, React, Node). It utilizes Socket.IO for real-time race progress as well as lobby management. Typedash is hosted on AWS EC2 and can be accessed via this link: http://www.typedash.live/. Its features include:
+Typedash is a online multiplayer type racing game created using the MERN stack (MongoDB, Express, React, Node). It utilizes Socket.IO for real-time race progress as well as lobby management. Typedash is hosted on AWS EC2 and can be accessed via this link: https://www.typedash.live/. Its features include:
 - User registration, email verification, and login
 - Online type racing against other players
 - Create and join private lobbies
@@ -29,7 +29,7 @@ Typedash is a online multiplayer type racing game created using the MERN stack (
 ### Research MERN
 First, I needed to learn more about the MERN stack. Although I had used the web stack once before, it was part of a group project and therefore, I was not fully familiar with every part of the components. My main focus was to learn how to set up the project and learn more about how to use React. This involved watching several youtube tutorials (https://youtu.be/Ke90Tje7VS0) and reading React documentation (https://reactjs.org/docs/introducing-jsx.html).
 
-### Typing functionality
+### Typing Functionality
 I wanted to start the project by developing the single player portion of the typing game. This meant that I needed to build a functioning application where the application determines whether the user's typed characters are correct, the speed at which the user types at, and a progress bar. In order to tackle this, I started to research and take ideas from others on how they approached developing typing applications. I searched for typing applications, with a focus on ones made with React, on Github and Google. There were many that I came across: https://github.com/p-society/typeracer-cli, https://github.com/itssamuelrowe/typify, https://github.com/brodavi/supersimpletypingpractice, https://github.com/RodneyCumming/react-typing, https://github.com/awran5/react-typing-speed-test-game. They all had a different approaches where some determined correctness based on fully typed words whereas others used individual characters. Some allowed the use of backspace to correct mistakes whereas others ignored backspaces to let users focus on everything after their correctly typed characters. From all of these ideas, I was able to determine the approach that I thought would work best, which was the approach used by https://github.com/RodneyCumming/react-typing.
 
 ### Implement Base Application
@@ -38,7 +38,7 @@ Now that I had an approach in mind, I begun to actually code. But before I start
 ### Create Single Player Typing Game
 After implementing registration and login, I moved on to creating the single player functionality. The goal of this part was to create a fully functioning single player typing game, including a progress bar, an excerpt display that showed where the user was at and what characters they should be typing, a functioning typing component that read the user's input and compared it to the expected characters, and a race summary at the end that displayed statistics. The idea would be for me to later on build on this single player functionality in order to make it work as an online multiplayer game. 
 
-### Excerpts database
+### Excerpts Database
 Now that I had a working typing game, I needed to populate a database with excerpts that I could pull from so that the user would have many excerpts to type from. For the first iteration of excerpts, I decided to pull paragraphs from League of Legends short stories: https://universe.leagueoflegends.com/en_US/explore/short-stories/newest/. I chose to do this because the short stories had good content and they all followed the same format. I decided to write a python script (https://github.com/kshiftw/league_scraper/blob/master/scraper.py) that would access the web pages and extract paragraphs as excerpts into a MongoDB database. The script accesses all short stories by scrolling down through the dynamic main page and copying all the short story links. It then extracts data including the title, author, url, and all paragraphs which are all then inserted into a MongoDB database.
 
 ### Implement Multiplayer Functionality
@@ -51,7 +51,7 @@ I also needed to decide on how a lobby's race started. I had occasionally played
 
 Another feature I needed to implement was for all player's race progress to be synchronized for the entire lobby. This meant that all players could see where every other player was at in the race. This required attaching a socket event to each keyboard type event that would be sent from the client to server and then broadcasted from server to all other clients. After that, I added two more features, one for having lobbies randomly select excerpts for each race and the other for a lobby leaderboard at the end of the race for users to see how they rank up against their lobby.
 
-### Profile
+### Profile Page
 Next, I wanted to add a Profile page for users to see their race statistics such as average WPM and how many races they had completed. This required two parts, the first being that I needed to store a user's race summary at the end of each race. This required adding a new field to the existing user document in the database. The second part was for me to have the profile page pull those statistics from the database. 
 
 ### Deployment
