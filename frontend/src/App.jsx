@@ -28,7 +28,7 @@ export default class App extends PureComponent {
 		// REACT_APP_API_PATH = localhost:3030 <- use this when running in local environment to avoid building frontend
 		// apiPath: process.env.REACT_APP_API_PATH + '/api',
 
-		// Use this when deploying on AWS
+		// Use this when having backend server frontend (when deploying on AWS)
 		apiPath: '/api',
 
 		selfUser: null,
