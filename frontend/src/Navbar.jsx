@@ -1,6 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Menu, Button, Image } from 'semantic-ui-react';
+import { Menu, Image } from 'semantic-ui-react';
 import './Navbar.css';
 import logo from './images/typedash_logo3.png';
 

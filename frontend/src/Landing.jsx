@@ -1,6 +1,6 @@
 import React, { PureComponent, Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Button, Grid, Image, Header } from 'semantic-ui-react';
+import { Container, Button } from 'semantic-ui-react';
 import './Landing.css';
 
 export default class Landing extends PureComponent {

@@ -30,18 +30,23 @@ app.use(
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'frontend', 'build')));
 
+// distinguish api calls by using /api as prefix
 app.use('/api', require('./routes/index'));
 
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
+// An object used to store username/socket ID pairs
 var username_socket_pair = {};
+
+// An object used to store lobby data
 var all_rooms = {};
 
 io.on('connection', function (socket) {
 	socketHandler(socket, io, username_socket_pair, all_rooms);
 });
 
+// Connect to MongoDB Database
 const mongoUrl = process.env.MONGO_ATLAS;
 mongoose
 	.connect(mongoUrl, {
