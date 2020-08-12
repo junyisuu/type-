@@ -46,6 +46,7 @@ I wanted to start the project by developing the single player portion of the typ
 - https://github.com/brodavi/supersimpletypingpractice
 - https://github.com/RodneyCumming/react-typing 
 - https://github.com/awran5/react-typing-speed-test-game
+
 They all had a different approaches where some determined correctness based on fully typed words whereas others used individual characters. Some allowed the use of backspace to correct mistakes whereas others ignored backspaces to let users focus on everything after their correctly typed characters. From all of these ideas, I was able to determine the approach that I thought would work best, which was the approach used by https://github.com/RodneyCumming/react-typing.
 
 ### Implement Base Application
