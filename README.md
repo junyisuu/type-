@@ -25,14 +25,7 @@ Typedash is a online multiplayer type racing game created using the MERN stack (
 - BeautifulSoup
 - Selenium 
 
-## Links/References
-- React Typing: https://github.com/RodneyCumming/react-typing
-- Deploying MERN app on AWS EC2: https://medium.com/@rksmith369/how-to-deploy-mern-stack-app-on-aws-ec2-with-ssl-nginx-the-right-way-e76c1a8cd6c6
-- Setting up HTTPS: https://blog.cloudboost.io/setting-up-an-https-sever-with-node-amazon-ec2-nginx-and-lets-encrypt-46f869159469
-- League of Legends scraper: https://github.com/kshiftw/league_scraper/blob/master/scraper.py
-- Project Gutenberg scraper: https://github.com/kshiftw/league_scraper/blob/master/gutenberg.py
-
-## Full Step-by-step Summary
+## Full step-by-step summary
 ### Research MERN
 First, I needed to learn more about the MERN stack. Although I had used the web stack once before, it was part of a group project and therefore, I was not fully familiar with every part of the components. My main focus was to learn how to set up the project and learn more about how to use React. This involved watching several youtube tutorials (https://youtu.be/Ke90Tje7VS0) and reading React documentation (https://reactjs.org/docs/introducing-jsx.html).
 
@@ -67,7 +60,16 @@ Now that I was done the bulk of the application, I wanted to move onto deploymen
 ### Finalize
 To finish up the application, I wanted to add a few more features. This included a "click to copy lobby ID" function, implementing a leaderboard for each excerpt that would keep track of users' high scores based on WPM, email verification when registering for an account, UI changes such as adding backgrounds and changing color schemes, and adding a favicon as well as a logo. 
 
+## Screenshots
+
 ## Challenges
 - Hosting on AWS
 - Saving lobby details and reconnecting to lobby
 - Connecting to socket rooms
+
+## Links/References
+- React Typing: https://github.com/RodneyCumming/react-typing
+- Deploying MERN app on AWS EC2: https://medium.com/@rksmith369/how-to-deploy-mern-stack-app-on-aws-ec2-with-ssl-nginx-the-right-way-e76c1a8cd6c6
+- Setting up HTTPS: https://blog.cloudboost.io/setting-up-an-https-sever-with-node-amazon-ec2-nginx-and-lets-encrypt-46f869159469
+- League of Legends scraper: https://github.com/kshiftw/league_scraper/blob/master/scraper.py
+- Project Gutenberg scraper: https://github.com/kshiftw/league_scraper/blob/master/gutenberg.py
