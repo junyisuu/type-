@@ -12,7 +12,30 @@ export default class About extends PureComponent {
 	render() {
 		return (
 			<Fragment>
-				<h1>How to Play</h1>
+				<h1>About</h1>
+				<Container className='landing_about'>
+					<p>
+						Typedash is a online multiplayer type racing game created using the
+						MERN stack (MongoDB, Express, React, Node) and hosted on AWS EC2. It
+						utilizes Socket.IO for real-time race progress as well as lobby
+						management. Its features include:
+						<ul>
+							<li>User registration, email verification, and login</li>
+							<li>Online type racing against other players</li>
+							<li>Create and join private lobbies</li>
+							<li>Real-time race progress</li>
+							<li>Race statistics</li>
+							<li>Lobby and excerpt leaderboards</li>
+							<li>Thousands of excerpts to type from</li>
+						</ul>
+					</p>
+					<p>
+						Learn more about the project by visiting:&nbsp;
+						<a href='https://github.com/kshiftw/type-'>
+							<u>https://github.com/kshiftw/type-</u>
+						</a>
+					</p>
+				</Container>
 				<Container>
 					<Grid>
 						<Grid.Row style={{ height: '70vh' }}>
@@ -56,30 +79,6 @@ export default class About extends PureComponent {
 							</Grid.Column>
 						</Grid.Row>
 					</Grid>
-				</Container>
-				<Container className='landing_about'>
-					<h1>About</h1>
-					<p>
-						Typedash is a online multiplayer type racing game created using the
-						MERN stack (MongoDB, Express, React, Node) and hosted on AWS EC2. It
-						utilizes Socket.IO for real-time race progress as well as lobby
-						management. Its features include:
-						<ul>
-							<li>User registration, email verification, and login</li>
-							<li>Online type racing against other players</li>
-							<li>Create and join private lobbies</li>
-							<li>Real-time race progress</li>
-							<li>Race statistics</li>
-							<li>Lobby and excerpt leaderboards</li>
-							<li>Thousands of excerpts to type from</li>
-						</ul>
-					</p>
-					<p>
-						Learn more about the project by visiting:&nbsp;
-						<a href='https://github.com/kshiftw/type-'>
-							<u>https://github.com/kshiftw/type-</u>
-						</a>
-					</p>
 				</Container>
 			</Fragment>
 		);
