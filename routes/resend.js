@@ -27,7 +27,9 @@ module.exports = (router) => {
 			});
 
 			const msg = {
-				to: 'kirkwong33@gmail.com',
+				// For testing
+				// to: 'kirkwong33@gmail.com',
+				to: email,
 				from: 'typedash.register@gmail.com',
 				subject: 'Typedash Account Verification Resend',
 				html:
@@ -36,11 +38,16 @@ module.exports = (router) => {
 					',' +
 					'<br><br>' +
 					'Please verify your account by clicking the link: <br>' +
-					// 'http://typedash.live' +
-					'http://localhost:3000' +
+					// for testing
+					// 'http://localhost:3000' +
+					// for production
+					'http://typedash.live' +
 					'/verify/' +
 					accountToken.token +
-					'<br>',
+					'<br><br>' +
+					'Thank you for your interest in playing Typedash. We hope that you enjoy your time here! <br><br>' +
+					'Cheers,<br>' +
+					'Typedash Team',
 			};
 
 			sgMail.send(msg).then(
