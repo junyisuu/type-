@@ -1,2 +1,4 @@
+# Ignore node_modules -> npm install on local development
+# Ignore .env to hide important environment variables
 /node_modules/
 /.env
