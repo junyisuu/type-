@@ -100,6 +100,12 @@ To finish up the application, I wanted to add a few more features. This included
 - Saving lobby details and reconnecting to lobby
 - Connecting to socket rooms
 
+## Future Features
+- Additional Login methods: Google or Facebook login. Currently the only way to sign up is through a username/email/password combination. 
+- Excerpt Categories: Users are able to select excerpt categories to type. Currently a random excerpt is selected out of the entire excerpts database.
+- Public Lobbies: Players are able to race against anybody by joining a public lobby. Currently lobbies are private only and require the lobby ID to be shared.
+- Forgot Password / Password Reset: Players are able to reset their password if they forgot it. Currently users have no way of retrieving an account if the password was forgotten.
+
 ## Links / References
 - React Typing: https://github.com/RodneyCumming/react-typing
 - Deploying MERN app on AWS EC2: https://medium.com/@rksmith369/how-to-deploy-mern-stack-app-on-aws-ec2-with-ssl-nginx-the-right-way-e76c1a8cd6c6
