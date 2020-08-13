@@ -18,7 +18,7 @@ My main learning takeaways:
   - Deploying was difficult because of all the steps involved that aren't very clear from AWS documentation
   - A lot of trial and error was required for my first time deploying on AWS
 - Expected features of applications actually require a lot more effort to develop than expected
-  - Things that I now expect from usage of other applications (ex. user lobbies, real-time updates, email verification) require a lot more planning and steps to implement
+  - I learned that seemingly small features that I typically expect from applications (ex. user lobbies, real-time updates, email verification) require a lot more planning and steps to implement
 
 ## Languages
 - Javascript
