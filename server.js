@@ -33,6 +33,12 @@ app.use(express.static(path.join(__dirname, 'frontend', 'build')));
 // distinguish api calls by using /api as prefix
 app.use('/api', require('./routes/index'));
 
+// https://stackoverflow.com/questions/53234140/react-expressjs-backend-cant-serve-static-frontend
+// Serve index.html to get subpaths
+app.use('*', (req, res) =>
+	res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'))
+);
+
 const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
