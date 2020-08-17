@@ -43,6 +43,8 @@ First, I needed to learn more about the MERN stack. Although I had used the web 
 ### Project Management 
 I wanted to practice using a project board to help with prioritizing and viewing the work I had to do. For this, I used Github's project functionality and tracked all of the features in statuses of "Product Backlog", "Sprint Backlog", "In Progress", "Done". I also used Github Issues to track the features and bugs along with their descriptions. Another feature I utilized was connecting git commits with the issues they were associated with using Github's issue linking functionality. I used all of this to practice the concept of picking up issues and working on them, writing down useful comments on the issue, and putting all relevant links and references on the issues. 
 
+![Project Board](https://github.com/kshiftw/type-/blob/master/frontend/src/images/screenshots/project_board.jpg)
+
 ### Typing Functionality
 I wanted to start the project by developing the single player portion of the typing game. This meant that I needed to build a functioning application where the application determines whether the user's typed characters are correct, the speed at which the user types at, and a progress bar. In order to tackle this, I started to research and take ideas from others on how they approached developing typing applications. I searched for typing applications, with a focus on ones made with React, on Github and Google. There were many that I came across: 
 - https://github.com/p-society/typeracer-cli 
@@ -97,6 +99,8 @@ To finish up the application, I wanted to add a few more features. This included
 ### View Race Standings
 ![Leaderboard](https://github.com/kshiftw/type-/blob/master/frontend/src/images/screenshots/leaderboard.gif)
 
+## Diagram
+![Diagram](https://github.com/kshiftw/type-/blob/master/frontend/src/images/screenshots/diagram.jpg)
 
 ## Main Challenges
 ### Deploying on AWS
