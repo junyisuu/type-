@@ -115,7 +115,7 @@ Related issues:
 - [#68 Can't access server side on different machine](/../../issues/68)
 - [#74 Fix socket.io client connection](/../../issues/74)
 
-### Saving lobby details and reconnecting to lobby
+### Reconnecting to Lobby
 While manually testing lobby access, I realized that the user would not reconnect to the lobby if they refreshed their page. This seemed unintuitive to me and had not been considered, so I decided to add a feature that would have the user reconnect to the lobby. This was relatively straightforward and I used sessionStorage to save the room_id. If there was an existing room_id, then the application would try to reconnect to the lobby using it. However, this created another bug. When I would refresh the lobby, the application would crash because it would try to reconnect to a nonexistent socket. I realized that this only occured with single user lobbies because a page refresh would disconnect the socket from the room, which would actually remove the socket room because there had only been one socket connected. From there, instead of trying to create a fix for it by keeping the socket room alive, I made the decision to have a user create a new lobby if they had disconnected from a single user lobby because it was more aligned with how I had been developing. 
 
 Related issues:
