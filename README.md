@@ -40,6 +40,9 @@ My main learning takeaways:
 ### Research MERN
 First, I needed to learn more about the MERN stack. Although I had used the web stack once before, it was part of a group project and therefore, I was not fully familiar with every part of the components. My main focus was to learn how to set up the project and learn more about how to use React. This involved watching several youtube tutorials (https://youtu.be/Ke90Tje7VS0) and reading React documentation (https://reactjs.org/docs/introducing-jsx.html).
 
+### Project Management 
+I wanted to practice using a project board to help with prioritizing and viewing the work I had to do. For this, I used Github's project functionality and tracked all of the features in statuses of "Product Backlog", "Sprint Backlog", "In Progress", "Done". I also used Github Issues to track the features and bugs along with their descriptions. Another feature I utilized was connecting git commits with the issues they were associated with using Github's issue linking functionality. I used all of this to practice the concept of picking up issues and working on them, writing down useful comments on the issue, and putting all relevant links and references on the issues. 
+
 ### Typing Functionality
 I wanted to start the project by developing the single player portion of the typing game. This meant that I needed to build a functioning application where the application determines whether the user's typed characters are correct, the speed at which the user types at, and a progress bar. In order to tackle this, I started to research and take ideas from others on how they approached developing typing applications. I searched for typing applications, with a focus on ones made with React, on Github and Google. There were many that I came across: 
 - https://github.com/p-society/typeracer-cli 
@@ -109,13 +112,21 @@ Deploying Typedash on AWS was one of the most challenging parts of this project.
 I mainly worked through this stage by reading a lot of different tutorials to get a sense of what was required for a deployment as well as figuring out what my application required. Luckily, I found a very helpful guide at https://medium.com/@rksmith369/how-to-deploy-mern-stack-app-on-aws-ec2-with-ssl-nginx-the-right-way-e76c1a8cd6c6
 
 Related issues:
-[#68](/../../issues/68)
-[#74](/../../issues/74)
+
+- [#68](/../../issues/68)
+- [#74](/../../issues/74)
 
 ### Saving lobby details and reconnecting to lobby
-While manually testing lobby access, I realized that the user would not reconnect to the lobby if they refreshed their page. This seemed unintuitive to me and had not been considered, so I decided to add a feature that would have the user reconnect to the lobby. This was relatively straightforward and I used sessionStorage to save the room_id. If there was an existing room_id, then the application would try to reconnect to the lobby using it. However, this created another bug. 
+While manually testing lobby access, I realized that the user would not reconnect to the lobby if they refreshed their page. This seemed unintuitive to me and had not been considered, so I decided to add a feature that would have the user reconnect to the lobby. This was relatively straightforward and I used sessionStorage to save the room_id. If there was an existing room_id, then the application would try to reconnect to the lobby using it. However, this created another bug. When I would refresh the lobby, the application would crash because it would try to reconnect to a nonexistent socket. I realized that this only occured with single user lobbies because a page refresh would disconnect the socket from the room, which would actually remove the socket room because there had only been one socket connected. From there, instead of trying to create a fix for it by keeping the socket room alive, I made the decision to have a user create a new lobby if they had disconnected from a single user lobby because it was more aligned with how I had been developing. 
+
+Related issues:
+
+- [#38](/../../issues/38)
+- [#40](/../../issues/40)
+- [#46](/../../issues/46)
 
 ### Connecting to socket rooms
+
 
 ## Future Features
 - Additional Login methods: Google or Facebook login. Currently the only way to sign up is through a username/email/password combination. 
