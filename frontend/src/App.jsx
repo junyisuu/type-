@@ -37,6 +37,7 @@ export default class App extends PureComponent {
 	};
 
 	async componentDidMount() {
+		// Try to retrieve the login token
 		const token = localStorage.getItem('token');
 		if (!token) {
 			return this.setState({
@@ -47,6 +48,7 @@ export default class App extends PureComponent {
 		const { apiPath } = this.state;
 
 		try {
+			// Authenticate the token and user using API route
 			const res = await fetch(`${apiPath}/users/self`, {
 				headers: {
 					Authorization: token,
@@ -74,6 +76,7 @@ export default class App extends PureComponent {
 	}
 
 	// https://stackoverflow.com/questions/34734301/passing-data-between-two-sibling-react-js-components
+	// updateLobbyStatus is a function that is passed between the lobby, play, and type components so that there is synchronization of the user's inLobby status
 	updateLobbyStatus(status) {
 		this.setState({
 			inLobby: status,
@@ -83,6 +86,7 @@ export default class App extends PureComponent {
 	render() {
 		const { apiPath, selfUser, loadingSelf, inLobby } = this.state;
 
+		// If still loading, render a loader on the page
 		if (loadingSelf) {
 			return <div className='ui massive active loader' />;
 		}

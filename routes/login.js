@@ -1,3 +1,7 @@
+/*
+API route for handling account login
+*/
+
 const rateLimit = require('express-rate-limit');
 const { check, validationResult } = require('express-validator');
 const bcrypt = require('bcryptjs');
@@ -10,6 +14,7 @@ const { User } = require('../src/database');
 module.exports = (router) => {
 	router.post(
 		'/login',
+
 		// Limit to 20 requests per hour
 		rateLimit({
 			windowMS: 60 * 60 * 1000,
@@ -21,30 +26,34 @@ module.exports = (router) => {
 		],
 		async (req, res) => {
 			const errors = validationResult(req);
+
+			// If there are validation errors, return
 			if (!errors.isEmpty()) {
-				// return res.status(422).json({ errors: errors.array() });
 				return res.status(422).send({ msg: 'Incorrect username or password' });
 			}
 
 			const { username, password } = req.body;
 
+			// Find a user in database based on the username given
 			const user = await User.findOne(
 				{ username },
 				'_id username passwordHash isVerified'
 			)
 				.lean()
 				.exec();
+
+			// If the user can't be found, return
 			if (!user) {
-				// return res.status(404).json({ error: 'User does not exist' });
 				return res.status(404).send({ msg: 'Incorrect username or password' });
 			}
 
+			// Compare the passwordHash with the password using bcrypt
 			const isMatch = await bcrypt.compare(password, user.passwordHash);
 			if (!isMatch) {
-				// return res.status(403).json({ error: 'Password does not match.' });
 				return res.status(403).send({ msg: 'Incorrect username or password' });
 			}
 
+			// If the user complete email verification yet, return
 			if (!user.isVerified) {
 				return res
 					.status(401)

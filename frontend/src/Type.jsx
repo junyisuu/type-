@@ -1,3 +1,7 @@
+/*
+React component for typing game.
+*/
+
 import React, { PureComponent } from 'react';
 import { Redirect } from 'react-router-dom';
 import { RaceProgress } from './components/RaceProgress';

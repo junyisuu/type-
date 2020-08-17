@@ -28,9 +28,13 @@ export default class Play extends PureComponent {
 		});
 	}
 
+	// Handle room creation
 	createRoom() {
 		const { selfUser } = this.props;
+		// Save 'this' as variable, parent, so that we can access it later in the socket function.
+		// 'this' will not work in socket function because the scope will have changed
 		let parent = this;
+
 		socket.emit('create_room', selfUser.username, function (created_room_id) {
 			if (created_room_id) {
 				parent.setState({
@@ -42,19 +46,18 @@ export default class Play extends PureComponent {
 				window.sessionStorage.setItem('roomID', created_room_id);
 			}
 		});
-
-		// this.props.updateLobbyStatus(true);
-		// window.localStorage.setItem('roomID', joined_room_id);
-		// console.log('from play storage ', window.localStorage);
 	}
 
+	// Handle joining a room. "this" is passed as a parameter, so we refer to it as parent in this function
 	joinRoom(parent) {
 		const { selfUser } = this.props;
 		socket.emit(
 			'join_room',
 			this.state.input_room_id,
 			selfUser.username,
+			// Check the callback
 			function (data) {
+				// If room doesn't exist, set no_room state to true so that an error notification is displayed
 				if (data === "room doesn't exist") {
 					parent.setState({
 						no_room: true,
@@ -66,6 +69,8 @@ export default class Play extends PureComponent {
 						room_joined: true,
 					});
 					parent.props.updateLobbyStatus(true);
+
+					// Save the roomID to sessionStorage
 					window.sessionStorage.setItem('roomID', parent.state.input_room_id);
 				}
 			}
@@ -76,10 +81,12 @@ export default class Play extends PureComponent {
 		const { room_joined, no_room, joined_room_id } = this.state;
 		const { selfUser } = this.props;
 
+		// If there is no valid user, redirect to home page
 		if (!selfUser) {
 			return <Redirect to='/' />;
 		}
 
+		// Once a room has been joined, redirect to the lobby component and pass the room_id in state
 		if (room_joined) {
 			return (
 				<Redirect
