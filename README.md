@@ -95,10 +95,27 @@ To finish up the application, I wanted to add a few more features. This included
 ![Leaderboard](https://github.com/kshiftw/type-/blob/master/frontend/src/images/screenshots/leaderboard.gif)
 
 
-## Challenges
-- Hosting on AWS
-- Saving lobby details and reconnecting to lobby
-- Connecting to socket rooms
+## Main Challenges
+### Deploying on AWS
+Deploying Typedash on AWS was one of the most challenging parts of this project. Although most of the application development was already completed by this stage, it was a completely new topic for me, so there was a lot to learn and work through. I think one of the reasons why deployment felt particularly difficult is because I was not sure of what I was doing and whether it would do what I expected it to do. I also would only really find out whether it worked or not after following many steps of a guide and if there were problems that occurred, I would not be able to identify whether I had incorrectly following the guide, if the guide didn't provide the correct instructions, or the guide was not suitable for the deployment I was targeting. Some of the issues with deployment included:
+
+- Troubles with remote accessing using SSH
+  - I also needed to learn some basic commands to navigate the Ubuntu server
+- Connecting the frontend with backend
+  - At some point, I had the application deployed and it appeared to be working. However, it was only working on my personal computer and all other computers would run into an error with logging in. After some time, I realized that my frontend was connected to the localhost path for my backend server which was why it was working on my personal computer (which had been also running the local backend server). I then needed to figure out how to change the path so that the frontend would connect to backend. While researching this, I realized there was another approach which seemed more intuitive and that was to have the backend serve a production build version of the frontend. 
+- HTTPS setup
+  - I had never considered HTTPS until Google Chrome displayed an unsecure notification after I got Typedash deployed. I then realized there was quite a lot to setup in order to get HTTPS working, so I looked for tutorials on how to accomplish. After some trial and error with other guides, I managed to find https://blog.cloudboost.io/setting-up-an-https-sever-with-node-amazon-ec2-nginx-and-lets-encrypt-46f869159469 which was very helpful. It helped me with using Certbot to enable HTTPS as well as modifying the NGINX config files to redirecting HTTP traffic to HTTPS ports.
+
+I mainly worked through this stage by reading a lot of different tutorials to get a sense of what was required for a deployment as well as figuring out what my application required. Luckily, I found a very helpful guide at https://medium.com/@rksmith369/how-to-deploy-mern-stack-app-on-aws-ec2-with-ssl-nginx-the-right-way-e76c1a8cd6c6
+
+Related issues:
+[#68](/../../issues/68)
+[#74](/../../issues/74)
+
+### Saving lobby details and reconnecting to lobby
+While manually testing lobby access, I realized that the user would not reconnect to the lobby if they refreshed their page. This seemed unintuitive to me and had not been considered, so I decided to add a feature that would have the user reconnect to the lobby. This was relatively straightforward and I used sessionStorage to save the room_id. If there was an existing room_id, then the application would try to reconnect to the lobby using it. However, this created another bug. 
+
+### Connecting to socket rooms
 
 ## Future Features
 - Additional Login methods: Google or Facebook login. Currently the only way to sign up is through a username/email/password combination. 
