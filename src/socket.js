@@ -1,3 +1,7 @@
+/*
+Defines all socket events from client-side sockets and the interactions.
+*/
+
 const shortid = require('shortid');
 // const axios = require('axios');
 

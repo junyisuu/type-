@@ -1,3 +1,7 @@
+/*
+API route for resending a verification email.
+*/
+
 const crypto = require('crypto');
 const sgMail = require('@sendgrid/mail');
 
@@ -13,19 +17,25 @@ module.exports = (router) => {
 			err,
 			user
 		) {
+			// Check for invalid user
 			if (!user) {
 				return res.status(400).send({ msg: 'Unable to find the user.' });
 			}
+
+			// If the user is already verified, no need to resend verification email
 			if (user.isVerified) {
 				return res
 					.status(400)
 					.send({ msg: 'The account has already been verified.' });
 			}
+
+			// Create a new accountToken using crypto library
 			const accountToken = await AccountToken.create({
 				userId: user._id,
 				token: crypto.randomBytes(16).toString('hex'),
 			});
 
+			// Setup email template
 			const msg = {
 				// For testing
 				// to: 'kirkwong33@gmail.com',
@@ -50,6 +60,7 @@ module.exports = (router) => {
 					'Typedash Team',
 			};
 
+			// Use SendGrid API to send email
 			sgMail.send(msg).then(
 				(response) => {
 					console.log('Email successfully sent!');

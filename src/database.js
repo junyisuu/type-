@@ -1,3 +1,7 @@
+/*
+Defines all document schemas used in MongoDB database. 
+*/
+
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 

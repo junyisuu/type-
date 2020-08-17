@@ -20,6 +20,7 @@ export default class Resend extends PureComponent {
 	async regenerateToken(username, email) {
 		const { apiPath } = this.props;
 
+		// Call /resend API route to resend the verification email
 		const res = await fetch(`${apiPath}/resend`, {
 			method: 'POST',
 			headers: {
@@ -46,6 +47,7 @@ export default class Resend extends PureComponent {
 		try {
 			await this.regenerateToken(username, email);
 
+			// If no errors were thrown, set resend state to True
 			this.setState({
 				resend: true,
 			});
@@ -62,6 +64,7 @@ export default class Resend extends PureComponent {
 	}
 
 	componentDidMount() {
+		// Get token from url and set it in state
 		const { pathname } = this.props.location;
 		let token = pathname.substring(pathname.length - 32, pathname.length);
 		this.setState({

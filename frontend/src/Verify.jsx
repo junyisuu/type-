@@ -1,3 +1,7 @@
+/*
+React component for verification page.
+*/
+
 import React, { PureComponent, Fragment } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import { Segment, Button, Grid, Form, Header } from 'semantic-ui-react';
@@ -17,11 +21,13 @@ export default class Verify extends PureComponent {
 		verified: false,
 	};
 
+	// Verifies a token given a token and email
 	async verifyToken(token, email) {
 		const { apiPath } = this.props;
 
 		console.log('fetching...');
 
+		// Pass the token and email to /verify API route
 		const res = await fetch(`${apiPath}/verify`, {
 			method: 'POST',
 			headers: {
@@ -32,6 +38,7 @@ export default class Verify extends PureComponent {
 				email,
 			}),
 		});
+		// If there was an error, throw it
 		if (!res.ok) {
 			const errorMsg = await res.json();
 			this.setState({
@@ -39,7 +46,6 @@ export default class Verify extends PureComponent {
 			});
 			throw res.status;
 		}
-		// return await res.json();
 		return;
 	}
 
@@ -49,6 +55,7 @@ export default class Verify extends PureComponent {
 		try {
 			await this.verifyToken(token, email);
 
+			// If verifyToken() didn't throw any errors, then the account has been verified. Change verified state to redirect back to home page
 			this.setState({
 				verified: true,
 			});
@@ -65,13 +72,17 @@ export default class Verify extends PureComponent {
 	}
 
 	componentDidMount() {
+		// Get the token string from the url
 		const { pathname } = this.props.location;
 		let token = pathname.substring(pathname.length - 32, pathname.length);
+
+		// Set the token in state
 		this.setState({
 			token: token,
 		});
 	}
 
+	// Handle email input and set it in state
 	onEmailChange(event) {
 		this.setState({ email: event.target.value });
 	}
@@ -79,6 +90,7 @@ export default class Verify extends PureComponent {
 	render() {
 		const { failed, errorMessage, email, verified } = this.state;
 
+		// Once the account is verified, redirect to home page
 		if (verified) {
 			return <Redirect to='/' />;
 		}
