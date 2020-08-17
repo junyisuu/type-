@@ -1,7 +1,3 @@
-/*
-React component for typing game.
-*/
-
 import React, { PureComponent } from 'react';
 import { Redirect } from 'react-router-dom';
 import { RaceProgress } from './components/RaceProgress';
@@ -56,6 +52,7 @@ export default class Type extends PureComponent {
 		this.getExcerpt = this.getExcerpt.bind(this);
 	}
 
+	// Get the next excerpt to type
 	async getExcerpt() {
 		return new Promise((resolve, reject) => {
 			let room_id = window.sessionStorage.getItem('roomID');
@@ -77,6 +74,7 @@ export default class Type extends PureComponent {
 		});
 		if (window.sessionStorage.getItem('roomID')) {
 			// https://stackoverflow.com/questions/43638938/updating-an-object-with-setstate-in-react
+			// When other sockets send progress_update event, update it in lobby_users object
 			socket.on('progress_update', function (username, percentComplete) {
 				parent.setState((prevState) => {
 					let lobby_users = Object.assign({}, prevState.lobby_users);
@@ -85,6 +83,7 @@ export default class Type extends PureComponent {
 				});
 			});
 
+			// WHen other sockets have finished the race, update their wpm, finished status, rank, incorrect_count
 			socket.on('update_race_stats', function (
 				username,
 				wpm,
@@ -101,6 +100,7 @@ export default class Type extends PureComponent {
 					return { lobby_users };
 				});
 
+				// Update the lobby leaderboard
 				parent.setState((prevState) => {
 					let leaderboard = prevState.leaderboard;
 					leaderboard = excerpt_leaderboard;
@@ -120,6 +120,7 @@ export default class Type extends PureComponent {
 	async displayText() {
 		let contentText = '';
 
+		// Get the excerpt to be typed
 		await this.getExcerpt().then(
 			(excerpt) => {
 				this.setState({
@@ -173,6 +174,7 @@ export default class Type extends PureComponent {
 		);
 	}
 
+	// Handle key press events
 	handleKeyPress(e) {
 		if (
 			e.key !== 'Tab' &&
@@ -191,6 +193,7 @@ export default class Type extends PureComponent {
 				timeIncreasing,
 			} = this.state;
 
+			// Count the seconds elapsed in currentCount variable
 			if (progress === 0 && timeIncreasing === false) {
 				this.intervalID = setInterval(
 					function () {
@@ -207,6 +210,7 @@ export default class Type extends PureComponent {
 				});
 			}
 
+			// Get the next character
 			let textLetter = inputText.charAt(progress);
 
 			// Check for special unicode characters and standardize them
@@ -221,15 +225,19 @@ export default class Type extends PureComponent {
 			}
 
 			this.setState({
-				// if Shift then gets e.code which is either "ShiftLeft" or "ShiftRight"
+				// if Shift, get e.code which is either "ShiftLeft" or "ShiftRight", else get the key
 				keyPressed: e.key === 'Shift' ? e.code : e.key,
 			});
 
 			const { keyPressed } = this.state;
 
+			// If the keypress matches the next character to be typed
 			if (keyPressed === textLetter) {
 				this.setState({
+					// Add the character to completedText
 					completedText: completedText + remainingText.charAt(0),
+
+					// Remove the first character of the remaining text
 					remainingText: remainingText.slice(1),
 					correctLetter: inputText.charAt(progress + 1).toLowerCase(),
 					correctLetterCase:
@@ -301,10 +309,12 @@ export default class Type extends PureComponent {
 		}
 	}
 
+	// For each character typed, update variables
 	updateProgress() {
 		const { selfUser } = this.props;
 		const { percentComplete, excerpt_id, incorrectArray } = this.state;
 
+		// Emit a socket event to other sockets so that they can view our progress
 		let room_id = window.sessionStorage.getItem('roomID');
 		if (percentComplete !== 0) {
 			socket.emit('keypress', room_id, selfUser.username, percentComplete);
@@ -325,8 +335,10 @@ export default class Type extends PureComponent {
 		}
 	}
 
+	// At the end of each correctly typed word
 	handleWordEnd() {
 		this.setState({
+			// Update WPM. WPM is calculated as the number of words divided by the number of seconds elapsed (currentCount) divided by 60 (60 seconds in a minute)
 			wpm:
 				this.state.currentCount > 0
 					? (
@@ -334,13 +346,18 @@ export default class Type extends PureComponent {
 							(this.state.currentCount / 60)
 					  ).toFixed(0)
 					: 0,
+
+			// Update the wordCount by 1
 			wordCount: this.state.wordCount + 1,
 			incorrectWordCurrent: false,
 		});
 	}
 
+	// Calculate the percent of excerpt completed
 	calculatePercentComplete() {
 		const { completedText, inputText } = this.state;
+
+		// Calculate percentage of excerpt completed by dividing the number of completed characters by the entire excerpt character length
 		let percentComplete = (
 			(completedText.length / inputText.length) *
 			100
@@ -372,10 +389,12 @@ export default class Type extends PureComponent {
 
 		const { selfUser } = this.props;
 
+		// If there is no valid user logged in, redirect to main page
 		if (!selfUser) {
 			return <Redirect to='/' />;
 		}
 
+		// Redirect to play when state has been set to True
 		if (redirectToPlay) {
 			return <Redirect to='/play' />;
 		}

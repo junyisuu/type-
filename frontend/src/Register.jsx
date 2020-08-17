@@ -24,6 +24,7 @@ export default class Register extends PureComponent {
 
 	controller = new AbortController();
 
+	// Send the username, password, and email combination to /register API path
 	async validateAccount(username, password, email) {
 		const { apiPath } = this.props;
 
@@ -52,8 +53,8 @@ export default class Register extends PureComponent {
 		});
 
 		const { username, password, email } = this.state;
-		// console.log(username, password, email);
 
+		// Validate username length
 		if (username.length < 3 || username.length > 32) {
 			this.setState({
 				failedUsername: true,
@@ -64,6 +65,7 @@ export default class Register extends PureComponent {
 			return;
 		}
 
+		// Validate password length
 		if (password.length < 5 || password.length > 256) {
 			this.setState({
 				failedPassword: true,
@@ -77,6 +79,7 @@ export default class Register extends PureComponent {
 		try {
 			await this.validateAccount(username, password, email);
 
+			// If there are no errors thrown, then we have successfully registered the account
 			this.setState({
 				loading: false,
 				failed: false,
@@ -111,6 +114,7 @@ export default class Register extends PureComponent {
 	render() {
 		const { selfUser } = this.props;
 
+		// If the user is logged in already, redirect to main page
 		if (selfUser) {
 			return <Redirect to='/' />;
 		}

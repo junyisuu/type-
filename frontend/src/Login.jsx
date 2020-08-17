@@ -21,9 +21,11 @@ export default class Login extends PureComponent {
 
 	controller = new AbortController();
 
+	// Verify login credentials using the given username/password combination
 	async getAccount(username, password) {
 		const { apiPath } = this.props;
 
+		// Use /login API route to verify credentials
 		const res = await fetch(`${apiPath}/login`, {
 			signal: this.controller.signal,
 			method: 'POST',
@@ -45,6 +47,7 @@ export default class Login extends PureComponent {
 		return await res.json();
 	}
 
+	// This function is called when 'login' button is clicked
 	async login() {
 		this.setState({
 			loading: true,
@@ -56,8 +59,10 @@ export default class Login extends PureComponent {
 		const { username, password } = this.state;
 
 		try {
+			// Get a authentication token and user object using getAccount() function
 			const { token, user } = await this.getAccount(username, password);
 
+			// Store the token in localStorage
 			localStorage.setItem('token', token);
 			setSelfUser(user);
 		} catch (err) {
@@ -87,6 +92,7 @@ export default class Login extends PureComponent {
 	render() {
 		const { selfUser } = this.props;
 
+		// Once the user has logged in, redirect to home page
 		if (selfUser) {
 			return <Redirect to='/' />;
 		}

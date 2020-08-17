@@ -22,8 +22,6 @@ export default class Lobby extends PureComponent {
 	}
 
 	state = {
-		// https://stackoverflow.com/questions/52064303/reactjs-pass-props-with-redirect-component
-		// room_id: this.props.location.state.room_id,
 		room_id: '',
 		lobby_users: {},
 		redirectToPlay: false,
@@ -39,7 +37,9 @@ export default class Lobby extends PureComponent {
 			const { selfUser } = this.props;
 			const parent = this;
 
+			// Emit a join_room event in socket
 			socket.emit('join_room', room_id, selfUser.username, function (data) {
+				// If the room exists, set the room_id in state and update sessionStorage
 				if (data === 'room exists') {
 					if (this._isMounted) {
 						parent.setState({
@@ -67,15 +67,11 @@ export default class Lobby extends PureComponent {
 		let room_id = '';
 		let joined = true;
 		const { inLobby } = this.props;
-		console.log('local storage...', window.sessionStorage);
 
-		// correct use of inLobby?
-		console.log('In a lobby? ', inLobby);
-
-		// upon page refresh, props are refreshed and therefore inLobby will be false
+		// Upon page refresh, props are refreshed and therefore inLobby will be false.
 		// right now if user navigates back to lobby from type page, they will re-join as a new user to that socket room
 		if (window.sessionStorage.getItem('roomID')) {
-			console.log('true');
+			// If there is a roomID is sessionStorage, get it and try to rejoin the room
 			room_id = window.sessionStorage.getItem('roomID');
 			try {
 				await this.rejoinRoom(room_id);
@@ -85,25 +81,26 @@ export default class Lobby extends PureComponent {
 				joined = false;
 			}
 		} else {
-			console.log('false');
+			// If the current session doesn't have a roomID stored, then get it from the props
 			room_id = this.props.location.state.room_id;
 		}
-		console.log('roomID check ', room_id);
-		console.log('joined check ', joined);
 
+		// Redirect to play if we weren't able to rejoin room
 		if (!joined) {
 			this.setState({
 				redirectToPlay: true,
 			});
 		} else {
-			console.log('in here');
 			this.setState({
 				room_id: room_id,
 				lobby_users: {},
 				redirectToPlay: false,
 			});
 
+			// Save 'this' into variable, parent, for later use when the scope changes within socket function
 			const parent = this;
+
+			// Get a list of the users in the lobby
 			socket.emit('get_lobby_users', room_id, function (usernames) {
 				if (usernames === 'Lobby error') {
 					console.log('Error getting lobby users');
@@ -112,6 +109,8 @@ export default class Lobby extends PureComponent {
 					// initialize players object using the list of usernames
 					let players = {};
 					console.log('usernames ', usernames);
+
+					// For every username, initialize the players object which contains multiple player objects
 					for (let i = 0; i < usernames.length; i++) {
 						players[usernames[i]] = {
 							username: usernames[i],
@@ -124,17 +123,24 @@ export default class Lobby extends PureComponent {
 						};
 					}
 					console.log('players ', players);
+
+					// Save players object to state
 					parent.setState({
 						lobby_users: players,
 					});
+
+					// Store the players object in sessionStorage for future retrieval
 					window.sessionStorage.setItem('lobby_users', JSON.stringify(players));
 				}
 			});
 
-			// when a new user has joined the lobby
+			// When a new user has joined our lobby, update the lobby_users variable in state
 			socket.on('lobby_new_user', function (room_id, username) {
 				parent.setState((prevState) => {
+					// Get the previous state of lobby_users
 					let lobby_users = Object.assign({}, prevState.lobby_users);
+
+					// Add the new users to the lobby_users object
 					lobby_users[username] = {
 						username: username,
 						percentComplete: 0,
@@ -144,28 +150,39 @@ export default class Lobby extends PureComponent {
 						ready: false,
 						rank: 0,
 					};
+
+					// Return the modified lobby_users object
 					return { lobby_users };
 				});
+
+				// Update sessionStorage with new lobby_users object
 				window.sessionStorage.setItem(
 					'lobby_users',
 					JSON.stringify(parent.state.lobby_users)
 				);
 			});
 
-			// update lobby user list when a user has disconnected
+			// Update lobby user list when a user has disconnected
 			socket.on('user_disconnect', function (room_id, username) {
 				parent.setState((prevState) => {
+					// Get previous state of lobby_users
 					let lobby_users = Object.assign({}, prevState.lobby_users);
+
+					// Delete the user from the object
 					delete lobby_users[username];
 					return { lobby_users };
 				});
+
+				// Update sessionStorage
 				window.sessionStorage.setItem(
 					'lobby_users',
 					JSON.stringify(parent.state.lobby_users)
 				);
 			});
 
+			// When another socket has ready toggled
 			socket.on('ready_toggle', function (username, ready_status) {
+				// Change the ready_status in the lobby_users object for that username
 				parent.setState((prevState) => {
 					let lobby_users = Object.assign({}, prevState.lobby_users);
 					lobby_users[username].ready = ready_status;
@@ -177,18 +194,21 @@ export default class Lobby extends PureComponent {
 				);
 			});
 
+			// Handle race starting
 			socket.on('race_starting', function () {
 				parent.setState({
 					race_starting: true,
 				});
 			});
 
+			// When race start is counting down, get the countdown and set to state
 			socket.on('start_counter', function (countdown) {
 				parent.setState({
 					countdown: countdown,
 				});
 			});
 
+			// Update state when race has started
 			socket.on('race_started', function () {
 				parent.setState({
 					race_started: true,
@@ -203,9 +223,14 @@ export default class Lobby extends PureComponent {
 
 	leaveRoom() {
 		const { room_id } = this.state;
+
+		// Clear sessionStorage of the saved roomID
 		window.sessionStorage.setItem('roomID', '');
+
+		// Emit 'leave_room' event for other sockets to register
 		socket.emit('leave_room', room_id);
 
+		// Update parent prop inLobby status
 		this.props.updateLobbyStatus(false);
 	}
 
@@ -213,6 +238,8 @@ export default class Lobby extends PureComponent {
 		const { room_id, ready } = this.state;
 		const { selfUser } = this.props;
 		this.setState((prevState) => ({ ready: !prevState.ready }));
+
+		// Emit 'ready' event for other sockets to receive ready status
 		socket.emit('ready', room_id, selfUser.username, !ready);
 	}
 
@@ -229,14 +256,17 @@ export default class Lobby extends PureComponent {
 			race_started,
 		} = this.state;
 
+		// If there is no valid user logged in, redirect to home page
 		if (!selfUser) {
 			return <Redirect to='/' />;
 		}
 
+		// Redirect to play page
 		if (redirectToPlay) {
 			return <Redirect to='/play' />;
 		}
 
+		// Once race has started, redirect to /type component and pass room_id and lobby_users list
 		if (race_started) {
 			return (
 				<Redirect
