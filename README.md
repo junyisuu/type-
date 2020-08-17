@@ -112,21 +112,16 @@ Deploying Typedash on AWS was one of the most challenging parts of this project.
 I mainly worked through this stage by reading a lot of different tutorials to get a sense of what was required for a deployment as well as figuring out what my application required. Luckily, I found a very helpful guide at https://medium.com/@rksmith369/how-to-deploy-mern-stack-app-on-aws-ec2-with-ssl-nginx-the-right-way-e76c1a8cd6c6
 
 Related issues:
-
-- [#68](/../../issues/68)
-- [#74](/../../issues/74)
+- [#68 Can't access server side on different machine](/../../issues/68)
+- [#74 Fix socket.io client connection](/../../issues/74)
 
 ### Saving lobby details and reconnecting to lobby
 While manually testing lobby access, I realized that the user would not reconnect to the lobby if they refreshed their page. This seemed unintuitive to me and had not been considered, so I decided to add a feature that would have the user reconnect to the lobby. This was relatively straightforward and I used sessionStorage to save the room_id. If there was an existing room_id, then the application would try to reconnect to the lobby using it. However, this created another bug. When I would refresh the lobby, the application would crash because it would try to reconnect to a nonexistent socket. I realized that this only occured with single user lobbies because a page refresh would disconnect the socket from the room, which would actually remove the socket room because there had only been one socket connected. From there, instead of trying to create a fix for it by keeping the socket room alive, I made the decision to have a user create a new lobby if they had disconnected from a single user lobby because it was more aligned with how I had been developing. 
 
 Related issues:
-
-- [#38](/../../issues/38)
-- [#40](/../../issues/40)
-- [#46](/../../issues/46)
-
-### Connecting to socket rooms
-
+- [#38 Upon page refresh, user should still be in the lobby](/../../issues/38)
+- [#40 Refreshing on lobby page crashes the application](/../../issues/40)
+- [#46 When refreshing a page of a single user lobby, socket room is deleted](/../../issues/46)
 
 ## Future Features
 - Additional Login methods: Google or Facebook login. Currently the only way to sign up is through a username/email/password combination. 
