@@ -12,15 +12,14 @@ Typedash is a online multiplayer type racing game created using the MERN stack (
 This was a summer project for me to learn new tools and get more familiar with using the MERN stack. I started planning and setting up the base application on May 16, 2020 and my last coding commit was on July 15, 2020. I had initially planned for this project to take one month, but there were always new ideas and features that I would think of which increased the scope over time.
 
 My main learning takeaways:
-- Automating tasks with Python is quite rewarding
-  - Because most of my other projects so far were school related or basic applications for learning a language/tool/technology, I had only written code to solve problems that were already defined for me. 
-  - With Typedash, I had the opportunity to discover my own problems as well as solutions to them. One of these problems was that I needed a database that contained many excerpts to type from. I decided to create a web scraping script using Python to extract excerpts from websites. 
-  - It was a rewarding experience and it was nice to see my script actually work as expected in the end. 
-- Deploying on AWS takes a lot of effort and is challenging
-  - Deploying was difficult because of all the steps involved that aren't very clear from AWS documentation
-  - A lot of trial and error was required for my first time deploying on AWS
-- Expected features of applications actually require a lot more effort to develop than expected
-  - I learned that seemingly small features that I typically expect from applications (ex. user lobbies, real-time updates, email verification) require a lot more planning and steps to implement
+##### Automating tasks with Python is quite rewarding
+Because most of my other projects so far were school related or basic applications for learning a language/tool/technology, I had only written code to solve problems that were already defined for me. With Typedash, I had the opportunity to discover my own problems as well as solutions to them. One of these problems was that I needed a database that contained many excerpts to type from. I decided to create a web scraping script using Python to extract excerpts from websites. It was a rewarding experience and it was nice to see my script actually work as expected in the end. 
+
+##### Deploying on AWS takes a lot of effort and is challenging
+Deploying was difficult because of all the steps involved that aren't very clear from AWS documentation. A lot of trial and error was required for my first time deploying on AWS.
+
+##### Expected features of applications actually require a lot more effort to develop than expected
+I learned that seemingly small features that I typically expect from applications (ex. user lobbies, real-time updates, email verification) require a lot more planning and steps to implement.
 
 ## Languages
 - Javascript
