@@ -13,7 +13,9 @@ This was a summer project for me to learn new tools and get more familiar with u
 
 My main learning takeaways:
 - Automating tasks with Python is quite rewarding
-  - For this project, I created my first web scraping script to extract excerpts from websites. I enjoyed the process of putting the code together and seeing it actually work as expected was awesome
+  - Because most of my other projects so far were school related or basic applications for learning a language/tool/technology, I had only written code to solve problems that were already defined for me. 
+  - With Typedash, I had the opportunity to discover my own problems as well as solutions to them. One of these problems was that I needed a database that contained many excerpts to type from. I decided to create a web scraping script using Python to extract excerpts from websites. 
+  - It was a rewarding experience and it was nice to see my script actually work as expected in the end. 
 - Deploying on AWS takes a lot of effort and is challenging
   - Deploying was difficult because of all the steps involved that aren't very clear from AWS documentation
   - A lot of trial and error was required for my first time deploying on AWS
